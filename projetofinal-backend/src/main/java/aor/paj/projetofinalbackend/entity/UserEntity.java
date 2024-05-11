@@ -64,6 +64,9 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserProjectEntity> userProjects = new HashSet<>();
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjectEntity> ownedProjects = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_skill",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -205,6 +208,14 @@ public class UserEntity implements Serializable {
 
     public void setVisibility(Boolean visibility) {
         this.visibility = visibility;
+    }
+
+    public Set<ProjectEntity> getOwnedProjects() {
+        return ownedProjects;
+    }
+
+    public void setOwnedProjects(Set<ProjectEntity> ownedProjects) {
+        this.ownedProjects = ownedProjects;
     }
 
     public Boolean getActiveProject() {
