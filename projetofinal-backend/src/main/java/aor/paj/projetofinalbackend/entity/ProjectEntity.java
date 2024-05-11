@@ -1,12 +1,8 @@
 package aor.paj.projetofinalbackend.entity;
 
 import jakarta.persistence.*;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.*;
-
-import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
 @Table(name="project")
@@ -22,8 +18,8 @@ public class ProjectEntity implements Serializable {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
-    private Set<UserEntity> users = new HashSet<>();
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserProjectEntity> userProjects = new HashSet<>();
 
     // Constructors, getters, and setters
 
@@ -53,11 +49,21 @@ public class ProjectEntity implements Serializable {
         this.name = name;
     }
 
-    public Set<UserEntity> getUsers() {
-        return users;
+    public Set<UserProjectEntity> getUserProjects() {
+        return userProjects;
     }
 
-    public void setUsers(Set<UserEntity> users) {
-        this.users = users;
+    public void setUserProjects(Set<UserProjectEntity> userProjects) {
+        this.userProjects = userProjects;
+    }
+
+    public void addUserProject(UserProjectEntity userProject) {
+        userProjects.add(userProject);
+        userProject.setProject(this);
+    }
+
+    public void removeUserProject(UserProjectEntity userProject) {
+        userProjects.remove(userProject);
+        userProject.setProject(null);
     }
 }
