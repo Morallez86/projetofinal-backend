@@ -7,7 +7,6 @@ import java.util.*;
 
 @Entity
 @Table(name="user")
-
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -66,6 +65,9 @@ public class UserEntity implements Serializable {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjectEntity> ownedProjects = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TokenEntity> tokens = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_skill",
@@ -247,5 +249,19 @@ public class UserEntity implements Serializable {
     public void removeSkill(SkillEntity skill) {
         this.skills.remove(skill);
         skill.getUsers().remove(this);
+    }
+
+    public void setTokens(Set<TokenEntity> tokens) {
+        this.tokens = tokens;
+    }
+
+    public void addToken(TokenEntity token) {
+        tokens.add(token);
+        token.setUser(this);
+    }
+
+    public void removeToken(TokenEntity token) {
+        tokens.remove(token);
+        token.setUser(null);
     }
 }
