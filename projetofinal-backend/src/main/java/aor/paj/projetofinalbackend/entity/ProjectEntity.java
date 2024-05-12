@@ -1,12 +1,10 @@
 package aor.paj.projetofinalbackend.entity;
 
+import aor.paj.projetofinalbackend.utils.ProjectStatus;
 import jakarta.persistence.*;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
-
-import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
 @Table(name="project")
@@ -19,11 +17,46 @@ public class ProjectEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
+    @Column(name = "title", nullable = false, unique = true)
+    private String title;
 
-    @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
-    private Set<UserEntity> users = new HashSet<>();
+    @Column(name = "description", nullable = false, unique = true)
+    private String description;
+
+    @Column(name = "motivation", nullable = false, unique = true)
+    private String motivation;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "status", nullable = false)
+    private ProjectStatus status;
+
+    @Column(name = "max_users", nullable = false, unique = true)
+    private int maxUsers;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private UserEntity owner;
+
+    @Column(name="approved")
+    private Boolean approved;
+
+    @Column(name = "creation_date", nullable = false)
+    private LocalDateTime creationDate;
+
+    @Column(name = "approved_date")
+    private LocalDateTime approvedDate;
+
+    @Column(name = "starting_date")
+    private LocalDateTime startingDate;
+
+    @Column(name = "planned_end_date")
+    private LocalDateTime plannedEndDate;
+
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserProjectEntity> userProjects = new HashSet<>();
 
     // Constructors, getters, and setters
 
@@ -31,8 +64,8 @@ public class ProjectEntity implements Serializable {
         // Default constructor
     }
 
-    public ProjectEntity(String name) {
-        this.name = name;
+    public ProjectEntity(String title) {
+        this.title = title;
     }
 
     // Getters and Setters
@@ -45,19 +78,121 @@ public class ProjectEntity implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String title) {
+        this.title = title;
     }
 
-    public Set<UserEntity> getUsers() {
-        return users;
+    public Set<UserProjectEntity> getUserProjects() {
+        return userProjects;
     }
 
-    public void setUsers(Set<UserEntity> users) {
-        this.users = users;
+    public void setUserProjects(Set<UserProjectEntity> userProjects) {
+        this.userProjects = userProjects;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getMotivation() {
+        return motivation;
+    }
+
+    public void setMotivation(String motivation) {
+        this.motivation = motivation;
+    }
+
+    public ProjectStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProjectStatus status) {
+        this.status = status;
+    }
+
+    public int getMaxUsers() {
+        return maxUsers;
+    }
+
+    public void setMaxUsers(int maxUsers) {
+        this.maxUsers = maxUsers;
+    }
+
+    public UserEntity getOwner() {
+        return owner;
+    }
+
+    public void setOwner(UserEntity owner) {
+        this.owner = owner;
+    }
+
+    public Boolean getApproved() {
+        return approved;
+    }
+
+    public void setApproved(Boolean approved) {
+        this.approved = approved;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDateTime getApprovedDate() {
+        return approvedDate;
+    }
+
+    public void setApprovedDate(LocalDateTime approvedDate) {
+        this.approvedDate = approvedDate;
+    }
+
+    public LocalDateTime getStartingDate() {
+        return startingDate;
+    }
+
+    public void setStartingDate(LocalDateTime startingDate) {
+        this.startingDate = startingDate;
+    }
+
+    public LocalDateTime getPlannedEndDate() {
+        return plannedEndDate;
+    }
+
+    public void setPlannedEndDate(LocalDateTime plannedEndDate) {
+        this.plannedEndDate = plannedEndDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    public void addUserProject(UserProjectEntity userProject) {
+        userProjects.add(userProject);
+        userProject.setProject(this);
+    }
+
+    public void removeUserProject(UserProjectEntity userProject) {
+        userProjects.remove(userProject);
+        userProject.setProject(null);
     }
 }
