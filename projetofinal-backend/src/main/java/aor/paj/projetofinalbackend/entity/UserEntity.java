@@ -75,6 +75,12 @@ public class UserEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private Set<SkillEntity> skills = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_interest",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "interest_id"))
+    private Set<SkillEntity> interests = new HashSet<>();
+
     // Constructors, getters, and setters
 
     public UserEntity() {
@@ -263,5 +269,13 @@ public class UserEntity implements Serializable {
     public void removeToken(TokenEntity token) {
         tokens.remove(token);
         token.setUser(null);
+    }
+
+    public Set<SkillEntity> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(Set<SkillEntity> interests) {
+        this.interests = interests;
     }
 }
