@@ -78,6 +78,10 @@ public class ProjectEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
     private Set<InterestEntity> interests = new HashSet<>();
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjectHistoryEntity> historyRecords = new HashSet<>();
+
+
     public ProjectEntity() {
         // Default constructor
     }
@@ -288,5 +292,23 @@ public class ProjectEntity implements Serializable {
     public void removeInterest(InterestEntity interest) {
         interests.remove(interest);
         interest.getProjects().remove(this);
+    }
+
+    public Set<ProjectHistoryEntity> getHistoryRecords() {
+        return historyRecords;
+    }
+
+    public void setHistoryRecords(Set<ProjectHistoryEntity> historyRecords) {
+        this.historyRecords = historyRecords;
+    }
+
+    public void addHistoryRecord(ProjectHistoryEntity historyRecord) {
+        historyRecords.add(historyRecord);
+        historyRecord.setProject(this);
+    }
+
+    public void removeHistoryRecord(ProjectHistoryEntity historyRecord) {
+        historyRecords.remove(historyRecord);
+        historyRecord.setProject(null);
     }
 }
