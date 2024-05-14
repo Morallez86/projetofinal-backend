@@ -29,10 +29,7 @@ public class InterestEntity implements Serializable {
     private Set<ProjectEntity> projects = new HashSet<>();
 
     public InterestEntity() {
-        // Default constructor
     }
-
-    // Getters and Setters
 
     public Long getId() {
         return id;

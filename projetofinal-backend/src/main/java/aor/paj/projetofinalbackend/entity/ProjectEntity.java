@@ -82,11 +82,9 @@ public class ProjectEntity implements Serializable {
     private Set<ProjectHistoryEntity> historyRecords = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ChatEntity> chats = new HashSet<>();
-
+    private Set<ChatMessageEntity> chatMessages = new HashSet<>();
 
     public ProjectEntity() {
-        // Default constructor
     }
 
     public ProjectEntity(String title) {
@@ -315,20 +313,23 @@ public class ProjectEntity implements Serializable {
         historyRecord.setProject(null);
     }
 
-    public Set<ChatEntity> getChats() {
-        return chats;
+
+
+    public Set<ChatMessageEntity> getChatMessages() {
+        return chatMessages;
     }
 
-    public void setChats(Set<ChatEntity> chats) {
-        this.chats = chats;
-    }
-    public void addChat(ChatEntity chat) {
-        chats.add(chat);
-        chat.setProject(this);
+    public void setChatMessages(Set<ChatMessageEntity> chatMessages) {
+        this.chatMessages = chatMessages;
     }
 
-    public void removeChat(ChatEntity chat) {
-        chats.remove(chat);
-        chat.setProject(null);
+    public void addChatMessage(ChatMessageEntity chatMessage) {
+        chatMessages.add(chatMessage);
+        chatMessage.setProject(this);
+    }
+
+    public void removeChatMessage(ChatMessageEntity chatMessage) {
+        chatMessages.remove(chatMessage);
+        chatMessage.setProject(null);
     }
 }

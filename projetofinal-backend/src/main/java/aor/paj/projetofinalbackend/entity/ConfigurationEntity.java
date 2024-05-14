@@ -12,19 +12,12 @@ public class ConfigurationEntity implements Serializable{
     @Column(name = "id")
     private int id;
 
-    @Column(name = "token_expiration_time")
-    private int tokenExpirationTime;
+    @Column(name = "time_out")
+    private int timeOut;
 
-    // Default constructor
     public ConfigurationEntity() {
     }
 
-    // Constructor with token expiration time
-    public ConfigurationEntity(int tokenExpirationTime) {
-        this.tokenExpirationTime = tokenExpirationTime;
-    }
-
-    // Getter and setter methods
     public int getId() {
         return id;
     }
@@ -33,19 +26,19 @@ public class ConfigurationEntity implements Serializable{
         this.id = id;
     }
 
-    public int getTokenExpirationTime() {
-        return tokenExpirationTime;
+    public int getTimeOut() {
+        return timeOut;
     }
 
-    public void setTokenExpirationTime(int tokenExpirationTime) {
-        this.tokenExpirationTime = tokenExpirationTime;
+    public void setTimeOut(int timeOut) {
+        this.timeOut = timeOut;
     }
 
     @Override
     public String toString() {
         return "ConfigurationEntity{" +
                 "id=" + id +
-                ", tokenExpirationTime=" + tokenExpirationTime +
+                ", tokenExpirationTime=" + timeOut +
                 '}';
     }
 }

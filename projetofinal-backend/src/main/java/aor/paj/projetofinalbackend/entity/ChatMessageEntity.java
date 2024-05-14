@@ -14,25 +14,23 @@ public class ChatMessageEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_id", nullable = false)
-    private ChatEntity chat;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity sender;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", nullable = false)
+    private ProjectEntity project;
+
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "sent_at", nullable = false)
-    private LocalDateTime sentAt;
+    @Column(name = "timestamp", nullable = false)
+    private LocalDateTime timestamp;
 
     public ChatMessageEntity() {
-        // Default constructor
     }
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -40,14 +38,6 @@ public class ChatMessageEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public ChatEntity getChat() {
-        return chat;
-    }
-
-    public void setChat(ChatEntity chat) {
-        this.chat = chat;
     }
 
     public UserEntity getSender() {
@@ -66,11 +56,19 @@ public class ChatMessageEntity implements Serializable {
         this.content = content;
     }
 
-    public LocalDateTime getSentAt() {
-        return sentAt;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setSentAt(LocalDateTime sentAt) {
-        this.sentAt = sentAt;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
     }
 }

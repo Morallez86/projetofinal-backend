@@ -103,8 +103,10 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ChatMessageEntity> chatmessages = new HashSet<>();
 
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<NotificationEntity> sentNotifications = new HashSet<>();
+
     public UserEntity() {
-        // Default constructor
     }
 
     public UserEntity(String username) {
@@ -389,5 +391,22 @@ public class UserEntity implements Serializable {
     public void removeChatMessage(ChatMessageEntity chatMessage) {
         chatmessages.remove(chatMessage);
         chatMessage.setSender(null);
+    }
+
+    public Set<NotificationEntity> getSentNotifications() {
+        return sentNotifications;
+    }
+
+    public void setSentNotifications(Set<NotificationEntity> sentNotifications) {
+        this.sentNotifications = sentNotifications;
+    }
+    public void addSentNotification(NotificationEntity notification) {
+        sentNotifications.add(notification);
+        notification.setSender(this);
+    }
+
+    public void removeSentNotification(NotificationEntity notification) {
+        sentNotifications.remove(notification);
+        notification.setSender(null);
     }
 }
