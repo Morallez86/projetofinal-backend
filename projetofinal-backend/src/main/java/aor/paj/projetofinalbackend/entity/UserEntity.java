@@ -69,6 +69,7 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TokenEntity> tokens = new HashSet<>();
 
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_skill",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -80,6 +81,16 @@ public class UserEntity implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
     private Set<InterestEntity> interests = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workplace_id", nullable = false)
+    private WorkplaceEntity workplace;
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MessageEntity> sentMessages = new HashSet<>();
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MessageEntity> receivedMessages = new HashSet<>();
 
     // Constructors, getters, and setters
 
@@ -277,5 +288,29 @@ public class UserEntity implements Serializable {
 
     public void setInterests(Set<InterestEntity> interests) {
         this.interests = interests;
+    }
+
+    public WorkplaceEntity getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(WorkplaceEntity workplace) {
+        this.workplace = workplace;
+    }
+
+    public Set<MessageEntity> getSentMessages() {
+        return sentMessages;
+    }
+
+    public void setSentMessages(Set<MessageEntity> sentMessages) {
+        this.sentMessages = sentMessages;
+    }
+
+    public Set<MessageEntity> getReceivedMessages() {
+        return receivedMessages;
+    }
+
+    public void setReceivedMessages(Set<MessageEntity> receivedMessages) {
+        this.receivedMessages = receivedMessages;
     }
 }
