@@ -58,7 +58,11 @@ public class ProjectEntity implements Serializable {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserProjectEntity> userProjects = new HashSet<>();
 
-    // Constructors, getters, and setters
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ComponentEntity> components = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "projects")
+    private Set<ResourceEntity> resources = new HashSet<>();
 
     public ProjectEntity() {
         // Default constructor
@@ -194,5 +198,27 @@ public class ProjectEntity implements Serializable {
     public void removeUserProject(UserProjectEntity userProject) {
         userProjects.remove(userProject);
         userProject.setProject(null);
+    }
+
+    public void setComponents(Set<ComponentEntity> components) {
+        this.components = components;
+    }
+
+    public void addComponent(ComponentEntity component) {
+        components.add(component);
+        component.setProject(this);
+    }
+
+    public void removeComponent(ComponentEntity component) {
+        components.remove(component);
+        component.setProject(null);
+    }
+
+    public Set<ResourceEntity> getResources() {
+        return resources;
+    }
+
+    public void setResources(Set<ResourceEntity> resources) {
+        this.resources = resources;
     }
 }
