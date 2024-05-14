@@ -79,7 +79,7 @@ public class UserEntity implements Serializable {
     @JoinTable(name = "user_interest",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
-    private Set<SkillEntity> interests = new HashSet<>();
+    private Set<InterestEntity> interests = new HashSet<>();
 
     // Constructors, getters, and setters
 
@@ -271,11 +271,11 @@ public class UserEntity implements Serializable {
         token.setUser(null);
     }
 
-    public Set<SkillEntity> getInterests() {
+    public Set<InterestEntity> getInterests() {
         return interests;
     }
 
-    public void setInterests(Set<SkillEntity> interests) {
+    public void setInterests(Set<InterestEntity> interests) {
         this.interests = interests;
     }
 }
