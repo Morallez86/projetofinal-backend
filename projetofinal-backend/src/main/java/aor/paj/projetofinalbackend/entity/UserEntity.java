@@ -97,7 +97,8 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MessageEntity> receivedMessages = new HashSet<>();
 
-    // Constructors, getters, and setters
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjectHistoryEntity> projectHistories = new HashSet<>();
 
     public UserEntity() {
         // Default constructor
@@ -349,5 +350,23 @@ public class UserEntity implements Serializable {
     public void removeNotification(NotificationEntity notification) {
         notifications.remove(notification);
         notification.getUsers().remove(this);
+    }
+
+    public Set<ProjectHistoryEntity> getProjectHistories() {
+        return projectHistories;
+    }
+
+    public void setProjectHistories(Set<ProjectHistoryEntity> projectHistories) {
+        this.projectHistories = projectHistories;
+    }
+
+    public void addProjectHistory(ProjectHistoryEntity projectHistory) {
+        projectHistories.add(projectHistory);
+        projectHistory.setUser(this);
+    }
+
+    public void removeProjectHistory(ProjectHistoryEntity projectHistory) {
+        projectHistories.remove(projectHistory);
+        projectHistory.setUser(null);
     }
 }
