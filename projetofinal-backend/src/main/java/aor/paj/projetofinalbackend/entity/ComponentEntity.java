@@ -23,16 +23,16 @@ public class ComponentEntity implements Serializable {
     @Column(name = "supplier", nullable = false)
     private String supplier;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
 
     @Column(name = "contact", nullable = false)
     private String contact;
 
-    @Column(name = "observation", nullable = true)
+    @Column(name = "observation")
     private String observation;
 
-    @Column(name = "identifier", nullable = false, unique = true)
+    @Column(name = "identifier", nullable = false)
     private String identifier;
 
     @ManyToOne(fetch = FetchType.LAZY)

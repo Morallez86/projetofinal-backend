@@ -30,7 +30,6 @@ public class NotificationEntity implements Serializable {
     @Column(name = "time", nullable = false, unique = false, updatable = false)
     private Instant time;
 
-    // Define the many-to-many relationship with UserEntity
     @ManyToMany
     @JoinTable(
             name = "user_notification",
@@ -38,6 +37,13 @@ public class NotificationEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<UserEntity> users = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id", nullable = false)
+    private UserEntity sender;
+
+    public NotificationEntity() {
+    }
 
     public Long getId() {
         return id;
@@ -95,5 +101,12 @@ public class NotificationEntity implements Serializable {
     public void removeUser(UserEntity user) {
         this.users.remove(user);
         user.getNotifications().remove(this);
+    }
+
+    public UserEntity getSender() {
+        return sender;
+    }
+    public void setSender(UserEntity sender) {
+        this.sender = sender;
     }
 }

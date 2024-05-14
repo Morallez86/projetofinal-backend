@@ -44,7 +44,6 @@ public class ResourceEntity implements Serializable {
     
 
     public ResourceEntity() {
-        // Default constructor
     }
 
     public Long getId() {

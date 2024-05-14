@@ -33,10 +33,7 @@ public class SkillEntity implements Serializable {
     private Set<ProjectEntity> projects = new HashSet<>();
 
     public SkillEntity() {
-        // Default constructor
     }
-
-    // Getters and setters
 
     public Long getId() {
         return id;

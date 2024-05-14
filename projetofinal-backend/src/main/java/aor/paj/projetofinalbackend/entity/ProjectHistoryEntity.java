@@ -37,10 +37,7 @@ public class ProjectHistoryEntity implements Serializable {
     private UserEntity user;
 
     public ProjectHistoryEntity() {
-        // Default constructor
     }
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
