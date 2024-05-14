@@ -7,7 +7,6 @@ import java.util.*;
 
 @Entity
 @Table(name="skill")
-
 public class SkillEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,16 +29,11 @@ public class SkillEntity implements Serializable {
     @ManyToMany(mappedBy = "skills")
     private Set<UserEntity> users = new HashSet<>();
 
-    // Constructors, getters, setters
+    @ManyToMany(mappedBy = "skills")
+    private Set<ProjectEntity> projects = new HashSet<>();
 
     public SkillEntity() {
         // Default constructor
-    }
-
-    public SkillEntity(String name, SkillType type, UserEntity creator) {
-        this.name = name;
-        this.type = type;
-        this.creator = creator;
     }
 
     // Getters and setters
@@ -92,5 +86,23 @@ public class SkillEntity implements Serializable {
     public void removeUser(UserEntity user) {
         this.users.remove(user);
         user.getSkills().remove(this);
+    }
+
+    public Set<ProjectEntity> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<ProjectEntity> projects) {
+        this.projects = projects;
+    }
+
+    public void addProject(ProjectEntity project) {
+        this.projects.add(project);
+        project.getSkills().add(this);
+    }
+
+    public void removeProject(ProjectEntity project) {
+        this.projects.remove(project);
+        project.getSkills().remove(this);
     }
 }

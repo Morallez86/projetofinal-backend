@@ -69,6 +69,8 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TokenEntity> tokens = new HashSet<>();
 
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    private Set<NotificationEntity> notifications = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_skill",
@@ -85,6 +87,9 @@ public class UserEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workplace_id", nullable = false)
     private WorkplaceEntity workplace;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TaskEntity> tasks = new HashSet<>();
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MessageEntity> sentMessages = new HashSet<>();
@@ -312,5 +317,37 @@ public class UserEntity implements Serializable {
 
     public void setReceivedMessages(Set<MessageEntity> receivedMessages) {
         this.receivedMessages = receivedMessages;
+    }
+
+    public void setTasks(Set<TaskEntity> tasks) {
+        this.tasks = tasks;
+    }
+
+    public void addTask(TaskEntity task) {
+        tasks.add(task);
+        task.setUser(this);
+    }
+
+    public void removeTask(TaskEntity task) {
+        tasks.remove(task);
+        task.setUser(null);
+    }
+
+    public Set<NotificationEntity> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<NotificationEntity> notifications) {
+        this.notifications = notifications;
+    }
+
+    public void addNotification(NotificationEntity notification) {
+        notifications.add(notification);
+        notification.getUsers().add(this);
+    }
+
+    public void removeNotification(NotificationEntity notification) {
+        notifications.remove(notification);
+        notification.getUsers().remove(this);
     }
 }
