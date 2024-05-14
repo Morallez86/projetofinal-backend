@@ -2,7 +2,7 @@ package aor.paj.projetofinalbackend.utils;
 
 public enum NotificationType {
 
-    MESSAGE(100), PROJECT(200);
+    MESSAGE(100), PROJECT(200), TASK(300);
 
     private final int value;
 

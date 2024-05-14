@@ -69,6 +69,9 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TokenEntity> tokens = new HashSet<>();
 
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    private Set<NotificationEntity> notifications = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_skill",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -81,7 +84,24 @@ public class UserEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
     private Set<InterestEntity> interests = new HashSet<>();
 
-    // Constructors, getters, and setters
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workplace_id", nullable = false)
+    private WorkplaceEntity workplace;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TaskEntity> tasks = new HashSet<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MessageEntity> sentMessages = new HashSet<>();
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MessageEntity> receivedMessages = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjectHistoryEntity> projectHistories = new HashSet<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChatMessageEntity> chatmessages = new HashSet<>();
 
     public UserEntity() {
         // Default constructor
@@ -277,5 +297,97 @@ public class UserEntity implements Serializable {
 
     public void setInterests(Set<InterestEntity> interests) {
         this.interests = interests;
+    }
+
+    public WorkplaceEntity getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(WorkplaceEntity workplace) {
+        this.workplace = workplace;
+    }
+
+    public Set<MessageEntity> getSentMessages() {
+        return sentMessages;
+    }
+
+    public void setSentMessages(Set<MessageEntity> sentMessages) {
+        this.sentMessages = sentMessages;
+    }
+
+    public Set<MessageEntity> getReceivedMessages() {
+        return receivedMessages;
+    }
+
+    public void setReceivedMessages(Set<MessageEntity> receivedMessages) {
+        this.receivedMessages = receivedMessages;
+    }
+
+    public void setTasks(Set<TaskEntity> tasks) {
+        this.tasks = tasks;
+    }
+
+    public void addTask(TaskEntity task) {
+        tasks.add(task);
+        task.setUser(this);
+    }
+
+    public void removeTask(TaskEntity task) {
+        tasks.remove(task);
+        task.setUser(null);
+    }
+
+    public Set<NotificationEntity> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<NotificationEntity> notifications) {
+        this.notifications = notifications;
+    }
+
+    public void addNotification(NotificationEntity notification) {
+        notifications.add(notification);
+        notification.getUsers().add(this);
+    }
+
+    public void removeNotification(NotificationEntity notification) {
+        notifications.remove(notification);
+        notification.getUsers().remove(this);
+    }
+
+    public Set<ProjectHistoryEntity> getProjectHistories() {
+        return projectHistories;
+    }
+
+    public void setProjectHistories(Set<ProjectHistoryEntity> projectHistories) {
+        this.projectHistories = projectHistories;
+    }
+
+    public void addProjectHistory(ProjectHistoryEntity projectHistory) {
+        projectHistories.add(projectHistory);
+        projectHistory.setUser(this);
+    }
+
+    public void removeProjectHistory(ProjectHistoryEntity projectHistory) {
+        projectHistories.remove(projectHistory);
+        projectHistory.setUser(null);
+    }
+
+    public Set<ChatMessageEntity> getChatmessages() {
+        return chatmessages;
+    }
+
+    public void setChatmessages(Set<ChatMessageEntity> chatmessages) {
+        this.chatmessages = chatmessages;
+    }
+
+    public void addChatMessage(ChatMessageEntity chatMessage) {
+        chatmessages.add(chatMessage);
+        chatMessage.setSender(this);
+    }
+
+    public void removeChatMessage(ChatMessageEntity chatMessage) {
+        chatmessages.remove(chatMessage);
+        chatMessage.setSender(null);
     }
 }

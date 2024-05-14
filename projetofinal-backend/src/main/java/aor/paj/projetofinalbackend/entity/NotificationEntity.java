@@ -1,18 +1,17 @@
 package aor.paj.projetofinalbackend.entity;
 
 import aor.paj.projetofinalbackend.utils.NotificationType;
-import aor.paj.projetofinalbackend.utils.SkillType;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name="notification")
-public class NotificationEntity {
-
+public class NotificationEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +30,14 @@ public class NotificationEntity {
     @Column(name = "time", nullable = false, unique = false, updatable = false)
     private Instant time;
 
-    @Column(name = "owner_id", nullable = false, unique = false, updatable = false)
-    private long owner_id;
-
-    @ManyToOne
-    @JoinColumn (name = "user")
-    private UserEntity user;
+    // Define the many-to-many relationship with UserEntity
+    @ManyToMany
+    @JoinTable(
+            name = "user_notification",
+            joinColumns = @JoinColumn(name = "notification_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<UserEntity> users = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -58,12 +59,8 @@ public class NotificationEntity {
         return time;
     }
 
-    public long getOwner_id() {
-        return owner_id;
-    }
-
-    public UserEntity getUser() {
-        return user;
+    public Set<UserEntity> getUsers() {
+        return users;
     }
 
     public void setId(Long id) {
@@ -86,11 +83,17 @@ public class NotificationEntity {
         this.time = time;
     }
 
-    public void setOwner_id(long owner_id) {
-        this.owner_id = owner_id;
+    public void setUsers(Set<UserEntity> users) {
+        this.users = users;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public void addUser(UserEntity user) {
+        this.users.add(user);
+        user.getNotifications().add(this);
+    }
+
+    public void removeUser(UserEntity user) {
+        this.users.remove(user);
+        user.getNotifications().remove(this);
     }
 }
