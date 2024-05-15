@@ -7,6 +7,10 @@ import java.util.*;
 
 @Entity
 @Table(name="user")
+@NamedQueries({
+        @NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email"),
+        @NamedQuery(name = "User.countTotalUsers", query = "SELECT COUNT(u) FROM UserEntity u")
+})
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,7 +55,7 @@ public class UserEntity implements Serializable {
     @Column(name = "password_stamp")
     private LocalDateTime passwordRetrieveTime;
 
-    @Column(name="biography", nullable = false, unique = false, updatable = true)
+    @Column(name="biography")
     private Boolean biography;
 
     @Column(name="visibility", nullable = false, unique = false, updatable = true)
@@ -85,7 +89,7 @@ public class UserEntity implements Serializable {
     private Set<InterestEntity> interests = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workplace_id", nullable = false)
+    @JoinColumn(name = "workplace_id")
     private WorkplaceEntity workplace;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -117,10 +121,6 @@ public class UserEntity implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -240,14 +240,6 @@ public class UserEntity implements Serializable {
         this.visibility = visibility;
     }
 
-    public Set<ProjectEntity> getOwnedProjects() {
-        return ownedProjects;
-    }
-
-    public void setOwnedProjects(Set<ProjectEntity> ownedProjects) {
-        this.ownedProjects = ownedProjects;
-    }
-
     public Boolean getActiveProject() {
         return activeProject;
     }
@@ -256,9 +248,28 @@ public class UserEntity implements Serializable {
         this.activeProject = activeProject;
     }
 
-    public void removeUserProject(UserProjectEntity userProject) {
-        userProjects.remove(userProject);
-        userProject.setUser(null);
+    public Set<ProjectEntity> getOwnedProjects() {
+        return ownedProjects;
+    }
+
+    public void setOwnedProjects(Set<ProjectEntity> ownedProjects) {
+        this.ownedProjects = ownedProjects;
+    }
+
+    public Set<TokenEntity> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(Set<TokenEntity> tokens) {
+        this.tokens = tokens;
+    }
+
+    public Set<NotificationEntity> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<NotificationEntity> notifications) {
+        this.notifications = notifications;
     }
 
     public Set<SkillEntity> getSkills() {
@@ -267,30 +278,6 @@ public class UserEntity implements Serializable {
 
     public void setSkills(Set<SkillEntity> skills) {
         this.skills = skills;
-    }
-
-    public void addSkill(SkillEntity skill) {
-        this.skills.add(skill);
-        skill.getUsers().add(this);
-    }
-
-    public void removeSkill(SkillEntity skill) {
-        this.skills.remove(skill);
-        skill.getUsers().remove(this);
-    }
-
-    public void setTokens(Set<TokenEntity> tokens) {
-        this.tokens = tokens;
-    }
-
-    public void addToken(TokenEntity token) {
-        tokens.add(token);
-        token.setUser(this);
-    }
-
-    public void removeToken(TokenEntity token) {
-        tokens.remove(token);
-        token.setUser(null);
     }
 
     public Set<InterestEntity> getInterests() {
@@ -309,6 +296,14 @@ public class UserEntity implements Serializable {
         this.workplace = workplace;
     }
 
+    public Set<TaskEntity> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<TaskEntity> tasks) {
+        this.tasks = tasks;
+    }
+
     public Set<MessageEntity> getSentMessages() {
         return sentMessages;
     }
@@ -325,54 +320,12 @@ public class UserEntity implements Serializable {
         this.receivedMessages = receivedMessages;
     }
 
-    public void setTasks(Set<TaskEntity> tasks) {
-        this.tasks = tasks;
-    }
-
-    public void addTask(TaskEntity task) {
-        tasks.add(task);
-        task.setUser(this);
-    }
-
-    public void removeTask(TaskEntity task) {
-        tasks.remove(task);
-        task.setUser(null);
-    }
-
-    public Set<NotificationEntity> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(Set<NotificationEntity> notifications) {
-        this.notifications = notifications;
-    }
-
-    public void addNotification(NotificationEntity notification) {
-        notifications.add(notification);
-        notification.getUsers().add(this);
-    }
-
-    public void removeNotification(NotificationEntity notification) {
-        notifications.remove(notification);
-        notification.getUsers().remove(this);
-    }
-
     public Set<ProjectHistoryEntity> getProjectHistories() {
         return projectHistories;
     }
 
     public void setProjectHistories(Set<ProjectHistoryEntity> projectHistories) {
         this.projectHistories = projectHistories;
-    }
-
-    public void addProjectHistory(ProjectHistoryEntity projectHistory) {
-        projectHistories.add(projectHistory);
-        projectHistory.setUser(this);
-    }
-
-    public void removeProjectHistory(ProjectHistoryEntity projectHistory) {
-        projectHistories.remove(projectHistory);
-        projectHistory.setUser(null);
     }
 
     public Set<ChatMessageEntity> getChatmessages() {
@@ -383,30 +336,11 @@ public class UserEntity implements Serializable {
         this.chatmessages = chatmessages;
     }
 
-    public void addChatMessage(ChatMessageEntity chatMessage) {
-        chatmessages.add(chatMessage);
-        chatMessage.setSender(this);
-    }
-
-    public void removeChatMessage(ChatMessageEntity chatMessage) {
-        chatmessages.remove(chatMessage);
-        chatMessage.setSender(null);
-    }
-
     public Set<NotificationEntity> getSentNotifications() {
         return sentNotifications;
     }
 
     public void setSentNotifications(Set<NotificationEntity> sentNotifications) {
         this.sentNotifications = sentNotifications;
-    }
-    public void addSentNotification(NotificationEntity notification) {
-        sentNotifications.add(notification);
-        notification.setSender(this);
-    }
-
-    public void removeSentNotification(NotificationEntity notification) {
-        sentNotifications.remove(notification);
-        notification.setSender(null);
     }
 }

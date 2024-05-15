@@ -24,16 +24,7 @@ public class UserProjectEntity implements Serializable {
     @Column(name = "is_admin", nullable = false)
     private boolean isAdmin;
 
-    // Constructors, getters, setters
-
     public UserProjectEntity() {
-        // Default constructor
-    }
-
-    public UserProjectEntity(UserEntity user, ProjectEntity project, boolean isAdmin) {
-        this.user = user;
-        this.project = project;
-        this.isAdmin = isAdmin;
     }
 
     public Long getId() {

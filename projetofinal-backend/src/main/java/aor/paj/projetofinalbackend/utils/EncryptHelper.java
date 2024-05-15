@@ -1,36 +1,16 @@
 package aor.paj.projetofinalbackend.utils;
-import jakarta.ejb.Singleton;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import jakarta.ejb.Singleton;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Singleton
 public class EncryptHelper {
 
-    public EncryptHelper() {
-        try {
-            this.m = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }
-
-    MessageDigest m;
-
-
     public String encryptPassword(String plainPassword) {
-        m.update(plainPassword.getBytes());
-
-        /* Convert the hash value into bytes */
-        byte[] bytes = m.digest();
-
-        /* The bytes array has bytes in decimal form. Converting it into hexadecimal format. */
-        StringBuilder s = new StringBuilder();
-        for(int i=0; i< bytes.length ;i++)
-        {
-            s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-        }
-        return s.toString();
+        return BCrypt.hashpw(plainPassword, BCrypt.gensalt());
     }
 
+    public boolean checkPassword(String plainPassword, String hashedPassword) {
+        return BCrypt.checkpw(plainPassword, hashedPassword);
+    }
 }

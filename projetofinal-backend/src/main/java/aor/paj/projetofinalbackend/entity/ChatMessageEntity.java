@@ -36,16 +36,20 @@ public class ChatMessageEntity implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public UserEntity getSender() {
         return sender;
     }
 
     public void setSender(UserEntity sender) {
         this.sender = sender;
+    }
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
     }
 
     public String getContent() {
@@ -62,13 +66,5 @@ public class ChatMessageEntity implements Serializable {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public ProjectEntity getProject() {
-        return project;
-    }
-
-    public void setProject(ProjectEntity project) {
-        this.project = project;
     }
 }

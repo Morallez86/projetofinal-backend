@@ -39,10 +39,6 @@ public class SkillEntity implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -75,31 +71,11 @@ public class SkillEntity implements Serializable {
         this.users = users;
     }
 
-    public void addUser(UserEntity user) {
-        this.users.add(user);
-        user.getSkills().add(this);
-    }
-
-    public void removeUser(UserEntity user) {
-        this.users.remove(user);
-        user.getSkills().remove(this);
-    }
-
     public Set<ProjectEntity> getProjects() {
         return projects;
     }
 
     public void setProjects(Set<ProjectEntity> projects) {
         this.projects = projects;
-    }
-
-    public void addProject(ProjectEntity project) {
-        this.projects.add(project);
-        project.getSkills().add(this);
-    }
-
-    public void removeProject(ProjectEntity project) {
-        this.projects.remove(project);
-        project.getSkills().remove(this);
     }
 }

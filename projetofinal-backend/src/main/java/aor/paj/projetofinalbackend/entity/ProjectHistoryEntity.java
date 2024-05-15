@@ -43,16 +43,20 @@ public class ProjectHistoryEntity implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getOldDescription() {
         return oldDescription;
     }
 
-    public void setOldDescription(String description) {
-        this.oldDescription = description;
+    public void setOldDescription(String oldDescription) {
+        this.oldDescription = oldDescription;
+    }
+
+    public String getNewDescription() {
+        return newDescription;
+    }
+
+    public void setNewDescription(String newDescription) {
+        this.newDescription = newDescription;
     }
 
     public HistoryType getType() {
@@ -85,13 +89,5 @@ public class ProjectHistoryEntity implements Serializable {
 
     public void setUser(UserEntity user) {
         this.user = user;
-    }
-
-    public String getNewDescription() {
-        return newDescription;
-    }
-
-    public void setNewDescription(String newDescription) {
-        this.newDescription = newDescription;
     }
 }

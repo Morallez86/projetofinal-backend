@@ -53,59 +53,46 @@ public class NotificationEntity implements Serializable {
         return description;
     }
 
-    public NotificationType getType() {
-        return type;
-    }
-
-    public boolean isSeen() {
-        return seen;
-    }
-
-    public Instant getTime() {
-        return time;
-    }
-
-    public Set<UserEntity> getUsers() {
-        return users;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public NotificationType getType() {
+        return type;
     }
 
     public void setType(NotificationType type) {
         this.type = type;
     }
 
+    public boolean isSeen() {
+        return seen;
+    }
+
     public void setSeen(boolean seen) {
         this.seen = seen;
+    }
+
+    public Instant getTime() {
+        return time;
     }
 
     public void setTime(Instant time) {
         this.time = time;
     }
 
+    public Set<UserEntity> getUsers() {
+        return users;
+    }
+
     public void setUsers(Set<UserEntity> users) {
         this.users = users;
-    }
-
-    public void addUser(UserEntity user) {
-        this.users.add(user);
-        user.getNotifications().add(this);
-    }
-
-    public void removeUser(UserEntity user) {
-        this.users.remove(user);
-        user.getNotifications().remove(this);
     }
 
     public UserEntity getSender() {
         return sender;
     }
+
     public void setSender(UserEntity sender) {
         this.sender = sender;
     }

@@ -35,10 +35,6 @@ public class InterestEntity implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -69,25 +65,5 @@ public class InterestEntity implements Serializable {
 
     public void setProjects(Set<ProjectEntity> projects) {
         this.projects = projects;
-    }
-
-    public void addProject(ProjectEntity project) {
-        this.projects.add(project);
-        project.getInterests().add(this);
-    }
-
-    public void removeProject(ProjectEntity project) {
-        this.projects.remove(project);
-        project.getInterests().remove(this);
-    }
-
-    public void addUser(UserEntity user) {
-        this.users.add(user);
-        user.getInterests().add(this);
-    }
-
-    public void removeUser(UserEntity user) {
-        this.users.remove(user);
-        user.getInterests().remove(this);
     }
 }

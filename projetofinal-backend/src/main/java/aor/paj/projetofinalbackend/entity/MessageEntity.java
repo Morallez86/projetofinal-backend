@@ -34,7 +34,6 @@ public class MessageEntity implements Serializable {
     public MessageEntity() {
     }
 
-
     public Long getId() {
         return id;
     }

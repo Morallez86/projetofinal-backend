@@ -91,8 +91,6 @@ public class ProjectEntity implements Serializable {
         this.title = title;
     }
 
-    // Getters and Setters
-
     public Long getId() {
         return id;
     }
@@ -245,56 +243,6 @@ public class ProjectEntity implements Serializable {
         this.interests = interests;
     }
 
-    public void addUserProject(UserProjectEntity userProject) {
-        userProjects.add(userProject);
-        userProject.setProject(this);
-    }
-
-    public void removeUserProject(UserProjectEntity userProject) {
-        userProjects.remove(userProject);
-        userProject.setProject(null);
-    }
-
-    public void addComponent(ComponentEntity component) {
-        components.add(component);
-        component.setProject(this);
-    }
-
-    public void removeComponent(ComponentEntity component) {
-        components.remove(component);
-        component.setProject(null);
-    }
-
-    public void addTask(TaskEntity task) {
-        tasks.add(task);
-        task.setProject(this);
-    }
-
-    public void removeTask(TaskEntity task) {
-        tasks.remove(task);
-        task.setProject(null);
-    }
-
-    public void addSkill(SkillEntity skill) {
-        skills.add(skill);
-        skill.getProjects().add(this);
-    }
-
-    public void removeSkill(SkillEntity skill) {
-        skills.remove(skill);
-        skill.getProjects().remove(this);
-    }
-
-    public void addInterest(InterestEntity interest) {
-        interests.add(interest);
-        interest.getProjects().add(this);
-    }
-
-    public void removeInterest(InterestEntity interest) {
-        interests.remove(interest);
-        interest.getProjects().remove(this);
-    }
-
     public Set<ProjectHistoryEntity> getHistoryRecords() {
         return historyRecords;
     }
@@ -303,33 +251,11 @@ public class ProjectEntity implements Serializable {
         this.historyRecords = historyRecords;
     }
 
-    public void addHistoryRecord(ProjectHistoryEntity historyRecord) {
-        historyRecords.add(historyRecord);
-        historyRecord.setProject(this);
-    }
-
-    public void removeHistoryRecord(ProjectHistoryEntity historyRecord) {
-        historyRecords.remove(historyRecord);
-        historyRecord.setProject(null);
-    }
-
-
-
     public Set<ChatMessageEntity> getChatMessages() {
         return chatMessages;
     }
 
     public void setChatMessages(Set<ChatMessageEntity> chatMessages) {
         this.chatMessages = chatMessages;
-    }
-
-    public void addChatMessage(ChatMessageEntity chatMessage) {
-        chatMessages.add(chatMessage);
-        chatMessage.setProject(this);
-    }
-
-    public void removeChatMessage(ChatMessageEntity chatMessage) {
-        chatMessages.remove(chatMessage);
-        chatMessage.setProject(null);
     }
 }

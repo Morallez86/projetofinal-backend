@@ -30,10 +30,6 @@ public class WorkplaceEntity implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -42,32 +38,20 @@ public class WorkplaceEntity implements Serializable {
         this.name = name;
     }
 
+    public Set<UserEntity> getUsers() {
+        return users;
+    }
+
     public void setUsers(Set<UserEntity> users) {
         this.users = users;
     }
 
-    public void addUser(UserEntity user) {
-        users.add(user);
-        user.setWorkplace(this);
-    }
-
-    public void removeUser(UserEntity user) {
-        users.remove(user);
-        user.setWorkplace(null);
+    public Set<ComponentEntity> getComponents() {
+        return components;
     }
 
     public void setComponents(Set<ComponentEntity> components) {
         this.components = components;
-    }
-
-    public void addComponent(ComponentEntity component) {
-        components.add(component);
-        component.setWorkplace(this);
-    }
-
-    public void removeComponent(ComponentEntity component) {
-        components.remove(component);
-        component.setWorkplace(null);
     }
 }
 
