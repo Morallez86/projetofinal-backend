@@ -19,8 +19,6 @@ public class StartupBean {
     @Inject
     private UserDao userdao;
 
-    @Inject
-    private EncryptHelper encryptHelper;
 
     @PostConstruct
     public void init() {
@@ -37,7 +35,7 @@ public class StartupBean {
                 admin.setFirstName("Admin");
                 admin.setLastName("User");
                 admin.setUsername("admin");
-                admin.setPassword(encryptHelper.encryptPassword(defaultPassword));
+                admin.setPassword(EncryptHelper.encryptPassword(defaultPassword));
                 admin.setEmail("admin@example.com");
                 admin.setRole("ADMIN");
                 admin.setActive(true);

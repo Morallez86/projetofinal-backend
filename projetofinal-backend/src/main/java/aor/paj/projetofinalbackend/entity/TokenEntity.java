@@ -7,6 +7,9 @@ import java.util.*;
 
 @Entity
 @Table(name="token")
+@NamedQueries({
+        @NamedQuery(name = "Token.findTokenByValue", query = "SELECT t FROM TokenEntity t WHERE t.tokenValue = :tokenValue"),
+})
 public class TokenEntity implements Serializable{
 
     private static final long serialVersionUID = 1L;
