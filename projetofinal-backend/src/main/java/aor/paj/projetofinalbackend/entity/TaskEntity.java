@@ -5,6 +5,8 @@ import aor.paj.projetofinalbackend.utils.TaskPriority;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "task")
@@ -52,6 +54,17 @@ public class TaskEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
+
+    @ManyToMany
+    @JoinTable(
+            name = "task_dependencies",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "dependency_id")
+    )
+    private List<TaskEntity> dependencies = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "dependencies")
+    private List<TaskEntity> dependentTasks = new ArrayList<>();
 
     public TaskEntity() {
     }
@@ -146,5 +159,21 @@ public class TaskEntity implements Serializable {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public List<TaskEntity> getDependencies() {
+        return dependencies;
+    }
+
+    public void setDependencies(List<TaskEntity> dependencies) {
+        this.dependencies = dependencies;
+    }
+
+    public List<TaskEntity> getDependentTasks() {
+        return dependentTasks;
+    }
+
+    public void setDependentTasks(List<TaskEntity> dependentTasks) {
+        this.dependentTasks = dependentTasks;
     }
 }
