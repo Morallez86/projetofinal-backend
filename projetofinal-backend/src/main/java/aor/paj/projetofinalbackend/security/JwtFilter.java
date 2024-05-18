@@ -3,7 +3,10 @@ package aor.paj.projetofinalbackend.security;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.ext.Provider;
+
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Provider
@@ -11,12 +14,20 @@ public class JwtFilter implements ContainerRequestFilter {
 
     private static final Logger LOGGER = Logger.getLogger(JwtFilter.class.getName());
 
+    // Set of paths to be excluded from JWT validation
+    private static final Set<String> EXCLUDED_PATHS = new HashSet<>();
+
+    static {
+        EXCLUDED_PATHS.add("/users/login");
+        EXCLUDED_PATHS.add("/users/register");
+    }
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String path = requestContext.getUriInfo().getPath();
 
-        // Allow unauthenticated access to the login endpoint
-        if (path.equals("/users/login")) {
+        // Allow unauthenticated access to the login and registration endpoints
+        if (EXCLUDED_PATHS.contains(path)) {
             return;
         }
 

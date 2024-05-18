@@ -4,6 +4,7 @@ import aor.paj.projetofinalbackend.bean.TokenBean;
 import aor.paj.projetofinalbackend.bean.UserBean;
 import aor.paj.projetofinalbackend.dto.TokenResponse;
 import aor.paj.projetofinalbackend.dto.UserCredentials;
+import aor.paj.projetofinalbackend.dto.UserDto;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import jakarta.inject.Inject;
@@ -40,5 +41,18 @@ public class UserService {
 
         String tokenValue = userBean.createAndSaveToken(user);
         return Response.ok(new TokenResponse(tokenValue)).build();
+    }
+
+    @POST
+    @Path("/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registerUser(UserDto userDto) {
+        try {
+            userBean.registerUser(userDto);
+            return Response.status(Response.Status.CREATED).entity("User registered successfully").build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("User registration failed: " + e.getMessage()).build();
+        }
     }
 }
