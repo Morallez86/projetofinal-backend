@@ -9,6 +9,7 @@ import java.util.*;
 @Table(name="user")
 @NamedQueries({
         @NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email"),
+        @NamedQuery(name = "User.findUserByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username"),
         @NamedQuery(name = "User.countTotalUsers", query = "SELECT COUNT(u) FROM UserEntity u")
 })
 public class UserEntity implements Serializable {
