@@ -57,7 +57,7 @@ public class UserEntity implements Serializable {
     private LocalDateTime passwordRetrieveTime;
 
     @Column(name="biography")
-    private Boolean biography;
+    private String biography;
 
     @Column(name="visibility", nullable = false, unique = false, updatable = true)
     private Boolean visibility;
@@ -225,11 +225,11 @@ public class UserEntity implements Serializable {
         this.passwordRetrieveTime = passwordRetrieveTime;
     }
 
-    public Boolean getBiography() {
+    public String getBiography() {
         return biography;
     }
 
-    public void setBiography(Boolean biography) {
+    public void setBiography(String biography) {
         this.biography = biography;
     }
 
