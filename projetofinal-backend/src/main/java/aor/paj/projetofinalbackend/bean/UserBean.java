@@ -2,6 +2,7 @@ package aor.paj.projetofinalbackend.bean;
 
 import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dao.UserDao;
+import aor.paj.projetofinalbackend.dao.WorkplaceDao;
 import aor.paj.projetofinalbackend.dto.UserDto;
 import aor.paj.projetofinalbackend.entity.TokenEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
@@ -20,6 +21,9 @@ public class UserBean {
 
     @EJB
     UserDao userDao;
+
+    @EJB
+    WorkplaceDao workplaceDao;
 
     @EJB
     TokenDao tokenDao;
@@ -59,6 +63,7 @@ public class UserBean {
         user.setActive(false);
         user.setPending(true);
         user.setRole('C');
+        user.setWorkplace(workplaceDao.findWorkplaceByName(userDto.getWorkplace()));
         userDao.persist(user);
     }
 }

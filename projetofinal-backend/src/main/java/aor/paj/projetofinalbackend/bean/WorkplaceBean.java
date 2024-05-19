@@ -32,7 +32,7 @@ public class WorkplaceBean {
     }
 
     public List<WorkplaceDto> getAllWorkplaces() {
-        List<WorkplaceEntity> workplaces = workplaceDao.findAll();
+        List<WorkplaceEntity> workplaces = workplaceDao.findAllWorkplaces();
         List<WorkplaceDto> workplaceDtos = new ArrayList<>();
         for (WorkplaceEntity workplace : workplaces) {
             workplaceDtos.add(WorkplaceMapper.toDto(workplace));

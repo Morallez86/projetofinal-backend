@@ -49,7 +49,6 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(UserDto userDto) {
         try {
-            System.out.println("oi");
             userBean.registerUser(userDto);
             return Response.status(Response.Status.CREATED).entity("User registered successfully").build();
         } catch (Exception e) {

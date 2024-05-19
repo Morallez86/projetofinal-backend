@@ -22,16 +22,16 @@ public class UserDto {
 
     private String password;
 
-    private WorkplaceEntity workplace;
+    private String  workplace;
 
     public UserDto() {
     }
 
-    public WorkplaceEntity getWorkplace() {
+    public String  getWorkplace() {
         return workplace;
     }
 
-    public void setWorkplace(WorkplaceEntity workplace) {
+    public void setWorkplace(String workplace) {
         this.workplace = workplace;
     }
 
