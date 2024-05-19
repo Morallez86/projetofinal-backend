@@ -1,5 +1,7 @@
 package aor.paj.projetofinalbackend.dto;
 
+import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
+
 import java.time.LocalDateTime;
 
 public class UserDto {
@@ -9,7 +11,7 @@ public class UserDto {
     private String lastName;
     private String username;
     private String email;
-    private String role;
+    private char role;
     private Boolean active;
     private Boolean pending;
     private String emailToken;
@@ -20,7 +22,17 @@ public class UserDto {
 
     private String password;
 
+    private WorkplaceEntity workplace;
+
     public UserDto() {
+    }
+
+    public WorkplaceEntity getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(WorkplaceEntity workplace) {
+        this.workplace = workplace;
     }
 
     public Long getId() {
@@ -63,11 +75,11 @@ public class UserDto {
         this.email = email;
     }
 
-    public String getRole() {
+    public char getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(char role) {
         this.role = role;
     }
 
