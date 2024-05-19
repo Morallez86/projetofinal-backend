@@ -1,5 +1,7 @@
 package aor.paj.projetofinalbackend.bean;
 
+import aor.paj.projetofinalbackend.dao.WorkplaceDao;
+import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
@@ -18,6 +20,9 @@ public class StartupBean {
 
     @Inject
     private UserDao userdao;
+
+    @Inject
+    private WorkplaceDao workplaceDao;
 
 
     @PostConstruct
@@ -46,6 +51,25 @@ public class StartupBean {
 
                 userdao.persist(admin);
                 logger.info("Default admin user created.");
+
+                WorkplaceEntity lisbon = new WorkplaceEntity();
+                lisbon.setName("Lisbon");
+                workplaceDao.persist(lisbon);
+                WorkplaceEntity porto = new WorkplaceEntity();
+                porto.setName("Porto");
+                workplaceDao.persist(porto);
+                WorkplaceEntity coimbra = new WorkplaceEntity();
+                coimbra.setName("Coimbra");
+                workplaceDao.persist(coimbra);
+                WorkplaceEntity tomar = new WorkplaceEntity();
+                tomar.setName("Tomar");
+                workplaceDao.persist(tomar);
+                WorkplaceEntity viseu = new WorkplaceEntity();
+                viseu.setName("Viseu");
+                workplaceDao.persist(viseu);
+                WorkplaceEntity vilaReal = new WorkplaceEntity();
+                vilaReal.setName("Vila Real");
+                workplaceDao.persist(vilaReal);
             }
         } catch (Exception e) {
             logger.error("Failed to create default admin user: " + e.getMessage());
