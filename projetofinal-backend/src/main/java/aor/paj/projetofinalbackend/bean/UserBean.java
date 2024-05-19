@@ -56,6 +56,9 @@ public class UserBean {
         UserEntity user = UserMapper.toEntity(userDto);
         user.setPassword(EncryptHelper.encryptPassword(userDto.getPassword()));
         user.setRegistTime(LocalDateTime.now());
+        user.setActive(false);
+        user.setPending(true);
+        user.setRole('C');
         userDao.persist(user);
     }
 }

@@ -39,7 +39,7 @@ public class UserEntity implements Serializable {
     private String photoURL;*/
 
     @Column(name="role", nullable = false)
-    private String role;
+    private char role;
 
     @Column(name="active", nullable = false, unique = false, updatable = true)
     private Boolean active;
@@ -62,7 +62,7 @@ public class UserEntity implements Serializable {
     @Column(name="visibility", nullable = false, unique = false, updatable = true)
     private Boolean visibility;
 
-    @Column(name="active_project", nullable = false, unique = false, updatable = true)
+    @Column(name="active_project", nullable = true, unique = false, updatable = true)
     private Boolean activeProject;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -177,11 +177,11 @@ public class UserEntity implements Serializable {
         this.email = email;
     }
 
-    public String getRole() {
+    public char getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(char role) {
         this.role = role;
     }
 

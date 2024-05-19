@@ -13,6 +13,7 @@ public class ApplicationConfig extends Application{
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
         resources.add(UserService.class);
+        resources.add(WorkplaceService.class);
         resources.add(JwtFilter.class);
         return resources;
     }

@@ -7,6 +7,10 @@ import java.util.*;
 
 @Entity
 @Table(name = "workplace")
+@NamedQueries({
+        @NamedQuery(name = "Workplace.findWorkplaceByName", query = "SELECT w FROM WorkplaceEntity w WHERE w.name = :name"),
+        @NamedQuery(name = "Workplace.findAllWorkplaces", query = "SELECT w FROM WorkplaceEntity w")
+})
 public class WorkplaceEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

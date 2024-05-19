@@ -37,7 +37,7 @@ public class StartupBean {
                 admin.setUsername("admin");
                 admin.setPassword(EncryptHelper.encryptPassword(defaultPassword));
                 admin.setEmail("admin@example.com");
-                admin.setRole("ADMIN");
+                admin.setRole('A');
                 admin.setActive(true);
                 admin.setPending(false);
                 admin.setRegistTime(LocalDateTime.now());
