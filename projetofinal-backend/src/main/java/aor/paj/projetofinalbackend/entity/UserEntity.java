@@ -9,6 +9,7 @@ import java.util.*;
 @Table(name="user")
 @NamedQueries({
         @NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email"),
+        @NamedQuery(name = "User.findUserById", query = "SELECT u FROM UserEntity u WHERE u.id = :userId"),
         @NamedQuery(name = "User.findUserByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username"),
         @NamedQuery(name = "User.countTotalUsers", query = "SELECT COUNT(u) FROM UserEntity u")
 })
@@ -35,9 +36,6 @@ public class UserEntity implements Serializable {
     @Column(name="email", nullable = false, unique = true, updatable = true)
     private String email;
 
-    /*@Column(name="photoURL", nullable = false, unique = false, updatable = true)
-    private String photoURL;*/
-
     @Column(name="role", nullable = false)
     private char role;
 
@@ -57,7 +55,7 @@ public class UserEntity implements Serializable {
     private LocalDateTime passwordRetrieveTime;
 
     @Column(name="biography")
-    private Boolean biography;
+    private String biography;
 
     @Column(name="visibility", nullable = false, unique = false, updatable = true)
     private Boolean visibility;
@@ -110,6 +108,12 @@ public class UserEntity implements Serializable {
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<NotificationEntity> sentNotifications = new HashSet<>();
+
+    @Column(name="profile_image_type")
+    private String profileImageType;
+
+    @Column(name="profile_image_path")
+    private String profileImagePath;
 
     public UserEntity() {
     }
@@ -225,11 +229,11 @@ public class UserEntity implements Serializable {
         this.passwordRetrieveTime = passwordRetrieveTime;
     }
 
-    public Boolean getBiography() {
+    public String getBiography() {
         return biography;
     }
 
-    public void setBiography(Boolean biography) {
+    public void setBiography(String biography) {
         this.biography = biography;
     }
 
@@ -343,5 +347,21 @@ public class UserEntity implements Serializable {
 
     public void setSentNotifications(Set<NotificationEntity> sentNotifications) {
         this.sentNotifications = sentNotifications;
+    }
+
+    public String getProfileImageType() {
+        return profileImageType;
+    }
+
+    public void setProfileImageType(String profileImageType) {
+        this.profileImageType = profileImageType;
+    }
+
+    public String getProfileImagePath() {
+        return profileImagePath;
+    }
+
+    public void setProfileImagePath(String profileImagePath) {
+        this.profileImagePath = profileImagePath;
     }
 }

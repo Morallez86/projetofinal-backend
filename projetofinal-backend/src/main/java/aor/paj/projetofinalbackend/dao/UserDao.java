@@ -33,6 +33,16 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
+    public UserEntity findUserById(Long userId) {
+        try {
+            return em.createNamedQuery("User.findUserById", UserEntity.class)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 
     public long countTotalUsers() {
         try {

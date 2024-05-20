@@ -15,7 +15,7 @@ public class UserDto {
     private Boolean active;
     private Boolean pending;
     private String emailToken;
-    private Boolean biography;
+    private String biography;
     private Boolean visibility;
     private Boolean activeProject;
     private LocalDateTime registTime;
@@ -107,11 +107,11 @@ public class UserDto {
         this.emailToken = emailToken;
     }
 
-    public Boolean getBiography() {
+    public String getBiography() {
         return biography;
     }
 
-    public void setBiography(Boolean biography) {
+    public void setBiography(String biography) {
         this.biography = biography;
     }
 

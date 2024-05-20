@@ -20,7 +20,9 @@ public class JwtFilter implements ContainerRequestFilter {
     static {
         EXCLUDED_PATHS.add("/users/login");
         EXCLUDED_PATHS.add("/users/register");
+        EXCLUDED_PATHS.add("/users/image");
         EXCLUDED_PATHS.add("/workplaces");
+        EXCLUDED_PATHS.add("/users/emailRecoveryPassword");
     }
 
     @Override
