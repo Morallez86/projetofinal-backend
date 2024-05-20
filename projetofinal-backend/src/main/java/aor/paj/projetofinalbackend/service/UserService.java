@@ -6,6 +6,7 @@ import aor.paj.projetofinalbackend.dto.TokenResponse;
 import aor.paj.projetofinalbackend.dto.UserCredentials;
 import aor.paj.projetofinalbackend.dto.UserDto;
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -23,6 +24,9 @@ public class UserService {
 
     @Inject
     TokenBean tokenBean;
+
+    @Inject
+    EmailSender emailSender;
 
     @POST
     @Path("/login")
@@ -53,6 +57,20 @@ public class UserService {
             return Response.status(Response.Status.CREATED).entity("User registered successfully").build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("User registration failed: " + e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("/emailRecoveryPassword")
+    @Consumes (MediaType.APPLICATION_JSON)
+    public Response emailRecoveryPassword (String email) {
+        UserEntity user = userBean.findUserByEmail(email);
+        if (user != null) {
+            emailSender.sendRecoveryPassword("testeAor@hotmail.com",user.getEmailToken());
+            return Response.status(200).entity("Email sended").build();
+        }
+        else {
+            return Response.status(400).entity("User not found").build();
         }
     }
 }

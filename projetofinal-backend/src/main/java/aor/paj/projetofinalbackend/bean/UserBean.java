@@ -28,6 +28,14 @@ public class UserBean {
     @EJB
     TokenDao tokenDao;
 
+    public String generateToken() {
+        String token = "";
+        for (int i = 0; i < 10; i++) {
+            token += (char) (Math.random() * 26 + 'a');
+        }
+        return token;
+    }
+
     public UserEntity findUserByEmail(String email) {
         return userDao.findUserByEmail(email);
     }
@@ -58,12 +66,14 @@ public class UserBean {
             throw new IllegalArgumentException("Username is already in use");
         }
         UserEntity user = UserMapper.toEntity(userDto);
+        String emailToken = generateToken();
         user.setPassword(EncryptHelper.encryptPassword(userDto.getPassword()));
         user.setRegistTime(LocalDateTime.now());
         user.setActive(false);
         user.setPending(true);
         user.setRole('C');
         user.setWorkplace(workplaceDao.findWorkplaceByName(userDto.getWorkplace()));
+        user.setEmailToken(emailToken);
         userDao.persist(user);
     }
 }
