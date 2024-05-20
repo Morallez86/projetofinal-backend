@@ -2,10 +2,15 @@ package aor.paj.projetofinalbackend.dao;
 
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
 
 @Stateless
 public class UserDao extends AbstractDao<UserEntity> {
+
+    @PersistenceContext
+    private EntityManager em;
 
     private static final long serialVersionUID = 1L;
 

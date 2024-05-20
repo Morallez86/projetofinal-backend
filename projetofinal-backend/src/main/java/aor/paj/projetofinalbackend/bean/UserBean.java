@@ -37,6 +37,8 @@ public class UserBean {
     }
 
     public UserEntity findUserByEmail(String email) {
+        System.out.println("Email -> " + email);
+        System.out.println(userDao.findUserByEmail(email));
         return userDao.findUserByEmail(email);
     }
 

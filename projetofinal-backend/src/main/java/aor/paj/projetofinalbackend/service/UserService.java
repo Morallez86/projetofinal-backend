@@ -68,6 +68,8 @@ public class UserService {
     @Path("/emailRecoveryPassword")
     @Consumes (MediaType.APPLICATION_JSON)
     public Response emailRecoveryPassword (String email) {
+        email = email.replace("\"", "");
+        System.out.println(email);
         UserEntity user = userBean.findUserByEmail(email);
         if (user != null) {
             emailSender.sendRecoveryPassword("testeAor@hotmail.com",user.getEmailToken());
