@@ -17,6 +17,7 @@ public class WorkplaceService {
     WorkplaceBean workplaceBean;
 
     @POST
+    @Path("/createWorkplace")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createWorkplace(WorkplaceDto workplaceDto) {
@@ -35,9 +36,14 @@ public class WorkplaceService {
     }
 
     @GET
+    @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllWorkplaces() {
         List<WorkplaceDto> workplaces = workplaceBean.getAllWorkplaces();
+        if (workplaces != null) {
         return Response.ok().entity(workplaces).build();
+    } else {
+            return Response.status(404).entity("Workplaces not found").build();
+        }
     }
 }
