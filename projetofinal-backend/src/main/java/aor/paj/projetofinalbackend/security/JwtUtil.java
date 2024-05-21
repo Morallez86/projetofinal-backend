@@ -12,7 +12,7 @@ public class JwtUtil {
 
     private static final String SECRET_KEY = "your_secret_key_your_secret_key_your_secret_key";  // Replace with your secret key
     private static final Key KEY = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-    public static final long EXPIRATION_TIME = 86400000;
+    public static final long EXPIRATION_TIME = 3600000;
 
     public static String generateToken(String email, Character role) {
         return Jwts.builder()
