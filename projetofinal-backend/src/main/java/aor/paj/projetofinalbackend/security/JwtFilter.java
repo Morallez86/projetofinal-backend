@@ -23,6 +23,8 @@ public class JwtFilter implements ContainerRequestFilter {
         EXCLUDED_PATHS.add("/users/image");
         EXCLUDED_PATHS.add("/workplaces/all");
         EXCLUDED_PATHS.add("/users/emailRecoveryPassword");
+        EXCLUDED_PATHS.add("/users/forgotPassword");
+        EXCLUDED_PATHS.add("/users/confirmRegistration");
     }
 
     @Override

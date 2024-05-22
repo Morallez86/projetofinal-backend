@@ -10,9 +10,12 @@ import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.ProfileMapper;
 import aor.paj.projetofinalbackend.mapper.UserMapper;
 import aor.paj.projetofinalbackend.security.JwtUtil;
+import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,6 +32,9 @@ public class UserBean {
 
     @EJB
     TokenDao tokenDao;
+
+    @Inject
+    EmailSender emailSender;
 
     public String generateToken() {
         String token = "";
@@ -115,5 +121,50 @@ public class UserBean {
         user.setWorkplace(workplaceDao.findWorkplaceByName(userDto.getWorkplace()));
         user.setEmailToken(emailToken);
         userDao.persist(user);
+
+        emailSender.sendConfirmationEmail(user.getEmail(), user.getEmailToken());
+    }
+
+    public void forgotPassword (UserEntity user, String password){
+        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        user.setEmailToken(null);
+        user.setPasswordRetrieveTime(null);
+        userDao.merge(user);
+    }
+
+    public void updateUserProfile(Long userId, ProfileDto profileDto) {
+        UserEntity userEntity = userDao.find(userId);
+
+        userEntity.setFirstName(profileDto.getFirstName());
+        userEntity.setLastName(profileDto.getLastName());
+        userEntity.setUsername(profileDto.getUsername());
+        userEntity.setEmail(profileDto.getEmail());
+        userEntity.setBiography(profileDto.getBiography());
+        userEntity.setVisibility(profileDto.getVisibility());
+        userDao.merge(userEntity);
+    }
+
+    public String emailTokenCreationForLink (UserEntity user) {
+        try {
+            String token = generateToken();
+            user.setEmailToken(token);
+            user.setPasswordRetrieveTime(LocalDateTime.now());
+            userDao.merge(user);
+            return token;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create email token for user", e);
+        }
+    }
+
+    public UserEntity getUserByEmailToken(String emailValidationToken) {
+        return userDao.findByEmailValidationToken(emailValidationToken);
+    }
+
+    public void confirmRegistration (UserEntity user){
+        user.setPending(false);
+        user.setActive(true);
+        user.setEmailToken(null);
+        user.setRegistTime(LocalDateTime.now());
+        userDao.merge(user);
     }
 }

@@ -9,6 +9,7 @@ import aor.paj.projetofinalbackend.dto.TokenResponse;
 import aor.paj.projetofinalbackend.dto.UserCredentials;
 import aor.paj.projetofinalbackend.dto.UserDto;
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.pojo.ConfirmationRequest;
 import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import jakarta.inject.Inject;
@@ -74,20 +75,63 @@ public class UserService {
         }
     }
 
+    //Ask for a new Password. Requires email and sends an email to an existing user.
     @POST
     @Path("/emailRecoveryPassword")
-    @Consumes (MediaType.APPLICATION_JSON)
-    public Response emailRecoveryPassword (String email) {
-        email = email.replace("\"", "");
-        System.out.println(email);
-        UserEntity user = userBean.findUserByEmail(email);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response emailRecoveryPassword(String email) {
+        try {
+            email = email.replace("\"", "").trim();
+            UserEntity user = userBean.findUserByEmail(email);
+            if (user != null) {
+                String token = userBean.emailTokenCreationForLink(user);
+                emailSender.sendRecoveryPassword(email, token);
+                return Response.status(200).entity("Email sent").build();
+            } else {
+                return Response.status(400).entity("User not found").build();
+            }
+        } catch (Exception e) {
+            return Response.status(500).entity("Internal server error").build();
+        }
+    }
+
+    // Confirmation via link to register a new password. Receives the token from the URL and the new password
+    @PUT
+    @Path("/forgotPassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response forgotPassword(ConfirmationRequest request) {
+        String emailValidationToken = request.getToken();
+        String password = request.getPassword();
+        UserEntity user = userBean.getUserByEmailToken(emailValidationToken);
         if (user != null) {
-            emailSender.sendRecoveryPassword("testeAor@hotmail.com",user.getEmailToken());
-            return Response.status(200).entity("Email sended").build();
+            try {
+                userBean.forgotPassword(user, password);
+                return Response.status(200).entity("New Password updated").build();
+            } catch (Exception e) {
+                return Response.status(500).entity("Failed to update Password").build();
+            }
+        } else {
+            return Response.status(404).entity("User not found").build();
         }
-        else {
-            return Response.status(400).entity("User not found").build();
+    }
+
+    @GET
+    @Path("/confirmRegistration")
+    public Response confirmRegistration(@HeaderParam("emailToken") String emailToken){
+        UserEntity user = userBean.getUserByEmailToken(emailToken);
+        if (user != null) {
+            try {
+                userBean.confirmRegistration(user);
+                return Response.status(200).entity("Registration confirmed").build();
+            } catch (Exception e) {
+                return Response.status(500).entity("Failed to confirm registration").build();
+            }
+        } else {
+            return Response.status(404).entity("User not found").build();
         }
+
+
     }
 
     @POST
@@ -146,5 +190,29 @@ public class UserService {
         }
 
         return Response.ok(profileDto).build();
+    }
+
+    @PUT
+    @Path("/profile/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateUserProfile(@Context HttpHeaders headers, @PathParam("userId") Long userId, ProfileDto profileDto) {
+        String authorizationHeader = headers.getHeaderString("Authorization");
+
+        // Extract the token
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+
+        // Validate the token
+        Response validationResponse = authBean.validateUserToken(token);
+        if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+            return validationResponse;
+        }
+
+        try {
+            userBean.updateUserProfile(userId, profileDto);
+            return Response.ok().entity("Profile updated successfully").build();
+        } catch (RuntimeException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
     }
 }
