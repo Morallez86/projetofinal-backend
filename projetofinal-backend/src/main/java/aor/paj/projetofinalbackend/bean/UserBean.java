@@ -122,7 +122,7 @@ public class UserBean {
         user.setEmailToken(emailToken);
         userDao.persist(user);
 
-        emailSender.sendConfirmationEmail(user.getEmail(), user.getEmailToken());
+        emailSender.sendConfirmationEmail("testeAor@hotmail.com", user.getEmailToken());
     }
 
     public void forgotPassword (UserEntity user, String password){

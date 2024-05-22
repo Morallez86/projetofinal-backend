@@ -119,7 +119,9 @@ public class UserService {
     @GET
     @Path("/confirmRegistration")
     public Response confirmRegistration(@HeaderParam("emailToken") String emailToken){
+        System.out.println(emailToken);
         UserEntity user = userBean.getUserByEmailToken(emailToken);
+        System.out.println(user);
         if (user != null) {
             try {
                 userBean.confirmRegistration(user);

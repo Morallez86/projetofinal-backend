@@ -37,7 +37,7 @@ public class EmailSender {
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipientEmail));
             message.setSubject("Account Confirmation");
             String emailBody = "Please click the link below to confirm your account:\n\n"
-                    + "http://localhost:3000/confirmationToken/" + token;
+                    + "http://localhost:3000/RegistrationStatusPage/" + token;
             message.setText(emailBody);
 
             // Send email
