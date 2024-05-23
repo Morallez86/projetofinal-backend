@@ -2,7 +2,13 @@ package aor.paj.projetofinalbackend.mapper;
 
 import aor.paj.projetofinalbackend.dto.ProfileDto;
 import aor.paj.projetofinalbackend.dto.UserDto;
+import aor.paj.projetofinalbackend.entity.InterestEntity;
+import aor.paj.projetofinalbackend.entity.SkillEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import org.hibernate.Hibernate;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProfileMapper {
 
@@ -18,6 +24,11 @@ public class ProfileMapper {
         dto.setEmail(user.getEmail());
         dto.setBiography(user.getBiography());
         dto.setVisibility(user.getVisibility());
+        List<String> interestss = user.getInterests().stream().map(InterestEntity::getName).collect(Collectors.toList());
+        dto.setInterests(interestss);
+        List<String> skilss = user.getSkills().stream().map(SkillEntity::getName).collect(Collectors.toList());
+        dto.setSkills(skilss);
+        dto.setWorkplace(user.getWorkplace());
         return dto;
     }
 
