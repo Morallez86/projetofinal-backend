@@ -1,12 +1,7 @@
 package aor.paj.projetofinalbackend.dto;
 
-import aor.paj.projetofinalbackend.entity.InterestEntity;
-import aor.paj.projetofinalbackend.entity.SkillEntity;
 import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
-
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 public class ProfileDto {
 

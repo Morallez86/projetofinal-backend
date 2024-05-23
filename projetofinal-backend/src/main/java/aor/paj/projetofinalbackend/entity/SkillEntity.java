@@ -7,6 +7,9 @@ import java.util.*;
 
 @Entity
 @Table(name="skill")
+@NamedQueries({
+        @NamedQuery(name = "Skill.findAllSkills", query = "SELECT s FROM SkillEntity s"),
+})
 public class SkillEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -23,7 +26,7 @@ public class SkillEntity implements Serializable {
     private SkillType type;
 
     @ManyToOne
-    @JoinColumn(name = "creator_id", nullable = false)
+    @JoinColumn(name = "creator_id")
     private UserEntity creator;
 
     @ManyToMany(mappedBy = "skills")

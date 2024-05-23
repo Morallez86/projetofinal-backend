@@ -9,9 +9,6 @@ import jakarta.persistence.PersistenceContext;
 @Stateless
 public class UserDao extends AbstractDao<UserEntity> {
 
-    @PersistenceContext
-    private EntityManager em;
-
     private static final long serialVersionUID = 1L;
 
     public UserDao() {

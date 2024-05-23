@@ -1,9 +1,11 @@
 package aor.paj.projetofinalbackend.dao;
 
+import aor.paj.projetofinalbackend.entity.SkillEntity;
 import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
 
+import java.util.Collections;
 import java.util.List;
 
 @Stateless
@@ -26,7 +28,12 @@ public class WorkplaceDao extends AbstractDao<WorkplaceEntity> {
     }
 
     public List<WorkplaceEntity> findAllWorkplaces() {
-        return em.createNamedQuery("Workplace.findAllWorkplaces", WorkplaceEntity.class)
-                .getResultList();
+        try{
+            return em.createNamedQuery("Workplace.findAllWorkplaces", WorkplaceEntity.class)
+                    .getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
 }
