@@ -15,6 +15,8 @@ import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDateTime;
@@ -60,16 +62,20 @@ public class UserBean {
         return tokenEntity.getUser();
     }
 
+    @Transactional
     public ProfileDto getProfileDtoById(Long userId) {
         UserEntity userEntity = findUserById(userId);
+
         if (userEntity == null) {
             return null;
         }
+        Hibernate.initialize(userEntity.getInterests());
+        Hibernate.initialize(userEntity.getSkills());
         return ProfileMapper.toDto(userEntity);
     }
 
     public String createAndSaveToken(UserEntity user) {
-        String tokenValue = JwtUtil.generateToken(user.getEmail(), user.getRole());
+        String tokenValue = JwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
         LocalDateTime expirationTime = LocalDateTime.ofInstant(
                 new Date(System.currentTimeMillis() + JwtUtil.EXPIRATION_TIME).toInstant(),
                 ZoneId.systemDefault()

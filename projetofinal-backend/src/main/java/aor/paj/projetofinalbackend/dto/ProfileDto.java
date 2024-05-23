@@ -1,6 +1,12 @@
 package aor.paj.projetofinalbackend.dto;
 
+import aor.paj.projetofinalbackend.entity.InterestEntity;
+import aor.paj.projetofinalbackend.entity.SkillEntity;
+import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
+
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 public class ProfileDto {
 
@@ -11,11 +17,17 @@ public class ProfileDto {
     private String email;
     private String biography;
     private Boolean visibility;
+    private WorkplaceEntity workplace;
+    private List <String> interests;
+
+    private List <String> skills;
+
+
 
     public ProfileDto() {
     }
 
-    public ProfileDto(Long id, String username, String firstName, String lastName, String email, String biography, Boolean visibility, Boolean activeProject, String profileImageType, String profileImagePath) {
+    public ProfileDto(Long id, String username, String firstName, String lastName, String email, String biography, Boolean visibility, WorkplaceEntity workplace, List<String> interests, List<String> skills) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -23,6 +35,9 @@ public class ProfileDto {
         this.email = email;
         this.biography = biography;
         this.visibility = visibility;
+        this.workplace = workplace;
+        this.interests = interests;
+        this.skills = skills;
     }
 
     // Getters and Setters
@@ -82,4 +97,27 @@ public class ProfileDto {
         this.visibility = visibility;
     }
 
+    public WorkplaceEntity getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(WorkplaceEntity workplace) {
+        this.workplace = workplace;
+    }
+
+    public List<String> getInterests() {
+        return interests;
+    }
+
+    public List<String> getSkills() {
+        return skills;
+    }
+
+    public void setInterests(List<String> interests) {
+        this.interests = interests;
+    }
+
+    public void setSkills(List<String> skills) {
+        this.skills = skills;
+    }
 }
