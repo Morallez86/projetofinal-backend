@@ -13,7 +13,6 @@ import aor.paj.projetofinalbackend.pojo.ConfirmationRequest;
 import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -58,6 +57,7 @@ public class UserService {
         }
 
         String tokenValue = userBean.createAndSaveToken(user);
+        System.out.println(tokenValue);
         return Response.ok(new TokenResponse(tokenValue)).build();
     }
 
@@ -103,9 +103,14 @@ public class UserService {
     public Response forgotPassword(ConfirmationRequest request) {
         String emailValidationToken = request.getToken();
         String password = request.getPassword();
+        System.out.println(emailValidationToken);
+        System.out.println(password);
         UserEntity user = userBean.getUserByEmailToken(emailValidationToken);
+        System.out.println("1");
         if (user != null) {
+            System.out.println("2");
             try {
+                System.out.println(user.getEmailToken());
                 userBean.forgotPassword(user, password);
                 return Response.status(200).entity("New Password updated").build();
             } catch (Exception e) {

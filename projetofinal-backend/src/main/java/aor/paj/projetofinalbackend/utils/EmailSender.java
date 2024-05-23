@@ -50,6 +50,10 @@ public class EmailSender {
     }
 
     public void sendRecoveryPassword(String recipientEmail, String token) {
+        System.out.println(recipientEmail);
+        System.out.println(token);
+        recipientEmail= "testeAor@hotmail.com";
+        System.out.println(recipientEmail);
 
         // Configurações do servidor SMTP do Outlook
         Properties properties = new Properties();
@@ -77,7 +81,7 @@ public class EmailSender {
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipientEmail));
             message.setSubject("Recovery Password");
             String emailBody = "Please click the link below to recovery your password:\n\n"
-                    + "http://localhost:3000/recoveryPasswordChange/" + token;
+                    + "http://localhost:3000/forgotPassword/" + token;
             message.setText(emailBody);
 
             // Send email
