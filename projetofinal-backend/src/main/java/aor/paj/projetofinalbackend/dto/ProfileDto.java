@@ -12,6 +12,8 @@ public class ProfileDto {
     private String biography;
     private Boolean visibility;
 
+    private
+
     public ProfileDto() {
     }
 
