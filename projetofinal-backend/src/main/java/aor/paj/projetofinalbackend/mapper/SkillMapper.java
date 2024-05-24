@@ -2,6 +2,7 @@ package aor.paj.projetofinalbackend.mapper;
 
 import aor.paj.projetofinalbackend.dto.SkillDto;
 import aor.paj.projetofinalbackend.entity.SkillEntity;
+import aor.paj.projetofinalbackend.utils.SkillType;
 
 public class SkillMapper {
 
@@ -11,8 +12,8 @@ public class SkillMapper {
         }
         SkillDto dto = new SkillDto();
         dto.setId(skill.getId());
-        dto.setType(skill.getType());
         dto.setName(skill.getName());
+        dto.setType(skill.getType().getValue()); // Convert SkillType to its int value
         return dto;
     }
 
@@ -22,13 +23,7 @@ public class SkillMapper {
         }
         SkillEntity skill = new SkillEntity();
         skill.setName(dto.getName());
-        skill.setType(dto.getType());
+        skill.setType(SkillType.fromValue(dto.getType())); // Convert int value back to SkillType
         return skill;
     }
 }
-
-
-
-
-
-

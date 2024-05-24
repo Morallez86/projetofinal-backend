@@ -1,22 +1,16 @@
 package aor.paj.projetofinalbackend.dto;
 
-import aor.paj.projetofinalbackend.utils.SkillType;
-
 public class SkillDto {
-
-    private Long Id;
+    private Long id;
     private String name;
-    private SkillType type;
-
-    public SkillDto() {
-    }
+    private int type;
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
@@ -27,11 +21,11 @@ public class SkillDto {
         this.name = name;
     }
 
-    public SkillType getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(SkillType type) {
+    public void setType(int type) {
         this.type = type;
     }
 }

@@ -12,4 +12,13 @@ public enum SkillType {
     public int getValue() {
         return value;
     }
+
+    public static SkillType fromValue(int value) {
+        for (SkillType type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Invalid SkillType value: " + value);
+    }
 }
