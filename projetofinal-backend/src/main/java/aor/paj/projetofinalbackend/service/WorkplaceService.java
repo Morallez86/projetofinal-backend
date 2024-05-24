@@ -36,7 +36,6 @@ public class WorkplaceService {
     }
 
     @GET
-    @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllWorkplaces() {
         List<WorkplaceDto> workplaces = workplaceBean.getAllWorkplaces();

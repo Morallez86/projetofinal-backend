@@ -9,6 +9,7 @@ import java.util.*;
 @Table(name="skill")
 @NamedQueries({
         @NamedQuery(name = "Skill.findAllSkills", query = "SELECT s FROM SkillEntity s"),
+        @NamedQuery(name = "Skill.findByName", query = "SELECT s FROM SkillEntity s WHERE s.name = :name")
 })
 public class SkillEntity implements Serializable {
 

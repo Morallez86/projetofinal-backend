@@ -24,12 +24,13 @@ public class SkillService {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addSkill(SkillDto skillDto, @HeaderParam("Authorization") String authorizationHeader) {
+    public Response addSkills(List<SkillDto> skillDtos, @HeaderParam("Authorization") String authorizationHeader) {
         try {
-
+            // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
 
-            skillBean.addSkill(skillDto, token);
+            // Add the skills
+            skillBean.addSkills(skillDtos, token);
 
             return Response.status(Response.Status.CREATED).build();
         } catch (Exception e) {

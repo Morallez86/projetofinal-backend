@@ -10,6 +10,8 @@ import aor.paj.projetofinalbackend.security.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,7 +41,8 @@ public class SkillBean {
         }
     }
 
-    public void addSkill(SkillDto skillDto, String token) {
+    @Transactional
+    public void addSkills(List<SkillDto> skillDtos, String token) {
         // Extract creator ID from the JWT token
         Claims claims = JwtUtil.validateToken(token);
         Long creatorId = claims.get("id", Long.class);
@@ -50,13 +53,21 @@ public class SkillBean {
             throw new IllegalArgumentException("Invalid creator ID");
         }
 
-        // Convert SkillDto to SkillEntity using SkillMapper
-        SkillEntity skillEntity = SkillMapper.toEntity(skillDto);
+        // Initialize the skills collection to avoid LazyInitializationException
+        Hibernate.initialize(creator.getSkills());
 
-        // Set the creator of the skill
-        skillEntity.setCreator(creator);
-
-        // Save the skillEntity to the database
-        skillDao.merge(skillEntity);
+        // Convert each SkillDto to SkillEntity, set the creator, and save
+        for (SkillDto skillDto : skillDtos) {
+            SkillEntity existingSkill = skillDao.findByName(skillDto.getName());
+            if (existingSkill == null) {
+                SkillEntity skillEntity = SkillMapper.toEntity(skillDto);
+                skillEntity.setCreator(creator);
+                skillDao.merge(skillEntity);
+                creator.getSkills().add(skillEntity);
+            } else {
+                creator.getSkills().add(existingSkill);
+            }
+        }
+        userDao.merge(creator);
     }
 }
