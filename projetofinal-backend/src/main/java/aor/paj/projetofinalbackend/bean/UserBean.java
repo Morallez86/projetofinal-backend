@@ -5,6 +5,7 @@ import aor.paj.projetofinalbackend.dao.UserDao;
 import aor.paj.projetofinalbackend.dao.WorkplaceDao;
 import aor.paj.projetofinalbackend.dto.ProfileDto;
 import aor.paj.projetofinalbackend.dto.UserDto;
+import aor.paj.projetofinalbackend.dto.UserPasswordUpdateDto;
 import aor.paj.projetofinalbackend.entity.TokenEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.ProfileMapper;
@@ -136,6 +137,29 @@ public class UserBean {
         user.setEmailToken(null);
         user.setPasswordRetrieveTime(null);
         userDao.merge(user);
+    }
+
+    public boolean updatePassword(UserPasswordUpdateDto userPasswordUpdateDto, String token) {
+        // Find the user associated with the token
+        UserEntity userEntity = tokenDao.findUserByTokenValue(token);
+
+        if (userEntity != null) {
+            // Check if the provided old password matches the current password
+            if (BCrypt.checkpw(userPasswordUpdateDto.getOldPassword(), userEntity.getPassword())) {
+                // Encrypt the new password
+                String encryptedPassword = BCrypt.hashpw(userPasswordUpdateDto.getNewPassword(), BCrypt.gensalt());
+                // Set the new encrypted password on the user entity
+                userEntity.setPassword(encryptedPassword);
+                // Merge the updated user entity
+                userDao.merge(userEntity);
+                return true;
+            } else {
+                // If the old password provided does not match the user's current password
+                return false;
+            }
+        }
+        // If the user associated with the token is not found
+        return false;
     }
 
     public void updateUserProfile(Long userId, ProfileDto profileDto) {

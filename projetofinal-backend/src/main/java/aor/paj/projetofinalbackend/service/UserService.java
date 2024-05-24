@@ -4,15 +4,15 @@ import aor.paj.projetofinalbackend.bean.AuthBean;
 import aor.paj.projetofinalbackend.bean.ImageBean;
 import aor.paj.projetofinalbackend.bean.TokenBean;
 import aor.paj.projetofinalbackend.bean.UserBean;
-import aor.paj.projetofinalbackend.dto.ProfileDto;
-import aor.paj.projetofinalbackend.dto.TokenResponse;
-import aor.paj.projetofinalbackend.dto.UserCredentials;
-import aor.paj.projetofinalbackend.dto.UserDto;
+import aor.paj.projetofinalbackend.dto.*;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.pojo.ConfirmationRequest;
+import aor.paj.projetofinalbackend.pojo.ResponseMessage;
 import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
+import aor.paj.projetofinalbackend.utils.JsonUtils;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -220,6 +220,42 @@ public class UserService {
             return Response.ok().entity("Profile updated successfully").build();
         } catch (RuntimeException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+
+    @PUT
+    @Path("/updatePassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updatePassword(UserPasswordUpdateDto u, @HeaderParam("Authorization") String authorizationHeader) {
+        try {
+            // Extract the token from the Authorization header
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+
+            // Check if the old password and new password are the same
+            if (u.getOldPassword().equals(u.getNewPassword())) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(JsonUtils.convertObjectToJson(new ResponseMessage("New password must be different from the old password")))
+                        .build();
+            }
+
+            // Attempt to update the password
+            boolean updateSuccessful = userBean.updatePassword(u, token);
+
+            if (updateSuccessful) {
+                return Response.status(Response.Status.OK)
+                        .entity(JsonUtils.convertObjectToJson(new ResponseMessage("Password is updated")))
+                        .build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(JsonUtils.convertObjectToJson(new ResponseMessage("Old password is incorrect")))
+                        .build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(e.getMessage())
+                    .build();
         }
     }
 }
