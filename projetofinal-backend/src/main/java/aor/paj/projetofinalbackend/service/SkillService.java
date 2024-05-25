@@ -19,7 +19,9 @@ public class SkillService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSkills(@HeaderParam("Authorization") String authorizationHeader) {
         List<SkillDto> skills = skillBean.getAllSkills();
-        return Response.ok(skills).build();
+        if (skills != null) {
+            return Response.ok(skills).build();
+        } else return Response.status(Response.Status.NOT_FOUND).entity("Skills not found").build();
     }
 
     @POST
