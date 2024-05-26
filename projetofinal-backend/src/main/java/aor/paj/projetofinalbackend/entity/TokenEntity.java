@@ -26,6 +26,9 @@ public class TokenEntity implements Serializable{
     @Column(name = "expiration_time", nullable = false)
     private LocalDateTime expirationTime;
 
+    @Column(name = "active_token", nullable = false)
+    private boolean activeToken;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
@@ -59,5 +62,13 @@ public class TokenEntity implements Serializable{
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public boolean isActiveToken() {
+        return activeToken;
+    }
+
+    public void setActiveToken(boolean activeToken) {
+        this.activeToken = activeToken;
     }
 }

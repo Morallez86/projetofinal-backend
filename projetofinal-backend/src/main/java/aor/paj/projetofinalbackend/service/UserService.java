@@ -12,7 +12,6 @@ import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import aor.paj.projetofinalbackend.utils.JsonUtils;
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -59,6 +58,25 @@ public class UserService {
         String tokenValue = userBean.createAndSaveToken(user);
         System.out.println(tokenValue);
         return Response.ok(new TokenResponse(tokenValue)).build();
+    }
+
+    @POST
+    @Path("/logout")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response logout(@HeaderParam("Authorization") String authHeader) {
+
+        String token = authHeader.substring("Bearer".length()).trim();
+        System.out.println(token);
+
+        if (tokenBean.deactivateToken(token)) {
+            return Response.status(Response.Status.OK)
+                    .entity(new ResponseMessage("User successfully logged out"))
+                    .build();
+        } else {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ResponseMessage("Failed to log out user"))
+                    .build();
+        }
     }
 
     @POST

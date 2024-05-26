@@ -1,7 +1,10 @@
 package aor.paj.projetofinalbackend.security;
 
+import aor.paj.projetofinalbackend.bean.TokenBean;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 
 import java.io.IOException;
@@ -11,6 +14,9 @@ import java.util.logging.Logger;
 
 @Provider
 public class JwtFilter implements ContainerRequestFilter {
+
+    @Inject
+    private TokenBean tokenBean;
 
     private static final Logger LOGGER = Logger.getLogger(JwtFilter.class.getName());
 
@@ -51,13 +57,31 @@ public class JwtFilter implements ContainerRequestFilter {
         String token = authorizationHeader.substring("Bearer".length()).trim();
         try {
             JwtUtil.validateToken(token);
+            System.out.println(token);
+
+            if (!tokenBean.isTokenActive(token)) {
+                LOGGER.warning("Token is inactive");
+                requestContext.abortWith(
+                        Response.status(Response.Status.UNAUTHORIZED)
+                                .entity("Invalid token")
+                                .build());
+                return;
+            }
+            System.out.println("3");
             LOGGER.info("Token validated successfully");
         } catch (Exception e) {
+            // Deactivate token if expired
+            System.out.println("nope");
+            if (e.getMessage().equals("Token has expired")) {
+                tokenBean.deactivateToken(token);
+            }
+
             LOGGER.warning("Invalid token: " + e.getMessage());
             requestContext.abortWith(
-                    jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.UNAUTHORIZED)
+                    Response.status(Response.Status.UNAUTHORIZED)
                             .entity("Invalid token")
                             .build());
         }
+        System.out.println("4");
     }
 }

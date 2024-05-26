@@ -85,6 +85,7 @@ public class UserBean {
         TokenEntity tokenEntity = new TokenEntity();
         tokenEntity.setTokenValue(tokenValue);
         tokenEntity.setExpirationTime(expirationTime);
+        tokenEntity.setActiveToken(true);
         tokenEntity.setUser(user);
 
         tokenDao.persist(tokenEntity);
