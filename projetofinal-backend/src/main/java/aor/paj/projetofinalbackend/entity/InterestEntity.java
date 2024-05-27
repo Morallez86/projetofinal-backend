@@ -1,26 +1,19 @@
 package aor.paj.projetofinalbackend.entity;
 
 import jakarta.persistence.*;
-import java.io.Serializable;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name="interest")
-public class InterestEntity implements Serializable {
+@NamedQueries({
+        @NamedQuery(name = "Interest.findAllInterests", query = "SELECT i FROM InterestEntity i"),
+        @NamedQuery(name = "Interest.findByName", query = "SELECT i FROM InterestEntity i WHERE i.name = :name")
+})
+public class InterestEntity extends TagEntity {
 
     private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name", nullable = false, unique = true, updatable = false)
-    private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "creator_id", nullable = false, updatable = false)
-    private UserEntity creator;
 
     @ManyToMany(mappedBy = "interests")
     private Set<UserEntity> users = new HashSet<>();
@@ -28,28 +21,7 @@ public class InterestEntity implements Serializable {
     @ManyToMany(mappedBy = "interests")
     private Set<ProjectEntity> projects = new HashSet<>();
 
-    public InterestEntity() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public UserEntity getCreator() {
-        return creator;
-    }
-
-    public void setCreator(UserEntity creator) {
-        this.creator = creator;
-    }
+    // Getters and setters for users and projects
 
     public Set<UserEntity> getUsers() {
         return users;

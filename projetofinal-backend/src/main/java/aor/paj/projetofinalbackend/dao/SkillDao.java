@@ -3,32 +3,22 @@ package aor.paj.projetofinalbackend.dao;
 import aor.paj.projetofinalbackend.entity.SkillEntity;
 import jakarta.ejb.Stateless;
 
-import java.util.Collections;
 import java.util.List;
 
 @Stateless
-public class SkillDao extends AbstractDao<SkillEntity> {
+public class SkillDao extends TagDao<SkillEntity> {
+
     private static final long serialVersionUID = 1L;
 
-    public SkillDao() {super(SkillEntity.class);}
+    public SkillDao() {
+        super(SkillEntity.class);
+    }
 
     public List<SkillEntity> findAllSkills() {
-        try {
-            return em.createNamedQuery("Skill.findAllSkills", SkillEntity.class)
-                    .getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
+        return super.findAllAttributes("Skill.findAllSkills");
     }
 
     public SkillEntity findByName(String name) {
-        try {
-            return em.createNamedQuery("Skill.findByName", SkillEntity.class)
-                    .setParameter("name", name)
-                    .getSingleResult();
-        } catch (Exception e) {
-            return null;
-        }
+        return super.findByName("Skill.findByName", name);
     }
 }

@@ -1,11 +1,12 @@
 package aor.paj.projetofinalbackend.bean;
 
-import aor.paj.projetofinalbackend.dao.SkillDao;
+import aor.paj.projetofinalbackend.dao.InterestDao;
 import aor.paj.projetofinalbackend.dao.UserDao;
-import aor.paj.projetofinalbackend.dto.SkillDto;
-import aor.paj.projetofinalbackend.entity.SkillEntity;
+import aor.paj.projetofinalbackend.dto.InterestDto;
+import aor.paj.projetofinalbackend.entity.InterestEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
-import aor.paj.projetofinalbackend.mapper.SkillMapper;
+import aor.paj.projetofinalbackend.mapper.InterestMapper;
+
 import aor.paj.projetofinalbackend.security.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.ejb.EJB;
@@ -16,13 +17,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class SkillBean implements TagBean<SkillDto> {
+public class InterestBean implements TagBean<InterestDto> {
 
     @EJB
     private UserDao userDao;
 
     @EJB
-    private SkillDao skillDao;
+    private InterestDao interestDao;
 
     @Override
     public Long getUserIdFromToken(String token) {
@@ -31,11 +32,11 @@ public class SkillBean implements TagBean<SkillDto> {
     }
 
     @Override
-    public List<SkillDto> getAllAttributes() {
+    public List<InterestDto> getAllAttributes() {
         try {
-            List<SkillEntity> entities = skillDao.findAll();
+            List<InterestEntity> entities = interestDao.findAll();
             return entities.stream()
-                    .map(SkillMapper::toDto)
+                    .map(InterestMapper::toDto)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             return null;
@@ -44,22 +45,22 @@ public class SkillBean implements TagBean<SkillDto> {
 
     @Override
     @Transactional
-    public void addAttributes(List<SkillDto> dtos, String token) {
+    public void addAttributes(List<InterestDto> dtos, String token) {
         Long creatorId = getUserIdFromToken(token);
         UserEntity creator = userDao.findUserById(creatorId);
         if (creator == null) {
             throw new IllegalArgumentException("Invalid creator ID");
         }
 
-        for (SkillDto dto : dtos) {
-            SkillEntity existingEntity = skillDao.findByName(dto.getName());
+        for (InterestDto dto : dtos) {
+            InterestEntity existingEntity = interestDao.findByName(dto.getName());
             if (existingEntity == null) {
-                SkillEntity entity = SkillMapper.toEntity(dto);
+                InterestEntity entity = InterestMapper.toEntity(dto);
                 entity.setCreator(creator);
-                skillDao.merge(entity);
-                creator.getSkills().add(entity);
+                interestDao.merge(entity);
+                creator.getInterests().add(entity);
             } else {
-                creator.getSkills().add(existingEntity);
+                creator.getInterests().add(existingEntity);
             }
         }
         userDao.merge(creator);

@@ -2,8 +2,9 @@ package aor.paj.projetofinalbackend.entity;
 
 import aor.paj.projetofinalbackend.utils.SkillType;
 import jakarta.persistence.*;
-import java.io.Serializable;
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="skill")
@@ -11,24 +12,13 @@ import java.util.*;
         @NamedQuery(name = "Skill.findAllSkills", query = "SELECT s FROM SkillEntity s"),
         @NamedQuery(name = "Skill.findByName", query = "SELECT s FROM SkillEntity s WHERE s.name = :name")
 })
-public class SkillEntity implements Serializable {
+public class SkillEntity extends TagEntity {
 
     private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name", nullable = false)
-    private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private SkillType type;
-
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
-    private UserEntity creator;
 
     @ManyToMany(mappedBy = "skills")
     private Set<UserEntity> users = new HashSet<>();
@@ -36,20 +26,7 @@ public class SkillEntity implements Serializable {
     @ManyToMany(mappedBy = "skills")
     private Set<ProjectEntity> projects = new HashSet<>();
 
-    public SkillEntity() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    // Getters and setters for type, users, and projects
 
     public SkillType getType() {
         return type;
@@ -57,14 +34,6 @@ public class SkillEntity implements Serializable {
 
     public void setType(SkillType type) {
         this.type = type;
-    }
-
-    public UserEntity getCreator() {
-        return creator;
-    }
-
-    public void setCreator(UserEntity creator) {
-        this.creator = creator;
     }
 
     public Set<UserEntity> getUsers() {

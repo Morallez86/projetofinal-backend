@@ -18,7 +18,7 @@ public class SkillService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSkills(@HeaderParam("Authorization") String authorizationHeader) {
-        List<SkillDto> skills = skillBean.getAllSkills();
+        List<SkillDto> skills = skillBean.getAllAttributes();
         if (skills != null) {
             return Response.ok(skills).build();
         } else return Response.status(Response.Status.NOT_FOUND).entity("Skills not found").build();
@@ -32,7 +32,7 @@ public class SkillService {
             String token = authorizationHeader.substring("Bearer".length()).trim();
 
             // Add the skills
-            skillBean.addSkills(skillDtos, token);
+            skillBean.addAttributes(skillDtos, token);
 
             return Response.status(Response.Status.CREATED).build();
         } catch (Exception e) {
