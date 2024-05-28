@@ -8,6 +8,16 @@ public class SkillDto {
     private Long id;
     private String name;
     private int type;
+
+    public SkillDto() {
+    }
+
+    public SkillDto(Long id, String name, int type) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+    }
+
     @XmlElement
     public Long getId() {
         return id;

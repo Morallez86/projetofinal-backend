@@ -7,5 +7,5 @@ public interface TagBean<D> {
     List<D> getAllAttributes();
     void addAttributes(List<D> dtos, String token);
 
-    void removeAttributes(List<D> dtos, String token);
+    void removeAttributes(List<Long> ids, String token);
 }

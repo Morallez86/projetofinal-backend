@@ -16,27 +16,13 @@ public class ProfileDto {
     private String email;
     private String biography;
     private Boolean visibility;
-    private WorkplaceEntity workplace;
-    private List <String> interests;
-
-    private List <String> skills;
+    private String workplace;
+    private List <InterestDto> interests;
+    private List <SkillDto> skills;
 
 
 
     public ProfileDto() {
-    }
-
-    public ProfileDto(Long id, String username, String firstName, String lastName, String email, String biography, Boolean visibility, WorkplaceEntity workplace, List<String> interests, List<String> skills) {
-        this.id = id;
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.biography = biography;
-        this.visibility = visibility;
-        this.workplace = workplace;
-        this.interests = interests;
-        this.skills = skills;
     }
 
     // Getters and Setters
@@ -97,27 +83,28 @@ public class ProfileDto {
         this.visibility = visibility;
     }
     @XmlElement
-    public WorkplaceEntity getWorkplace() {
+    public String getWorkplace() {
         return workplace;
     }
 
-    public void setWorkplace(WorkplaceEntity workplace) {
+    public void setWorkplace(String workplace) {
         this.workplace = workplace;
     }
+
     @XmlElement
-    public List<String> getInterests() {
+    public List<InterestDto> getInterests() {
         return interests;
     }
+
+    public void setInterests(List<InterestDto> interests) {
+        this.interests = interests;
+    }
     @XmlElement
-    public List<String> getSkills() {
+    public List<SkillDto> getSkills() {
         return skills;
     }
 
-    public void setInterests(List<String> interests) {
-        this.interests = interests;
-    }
-
-    public void setSkills(List<String> skills) {
+    public void setSkills(List<SkillDto> skills) {
         this.skills = skills;
     }
 }

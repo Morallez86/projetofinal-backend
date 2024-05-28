@@ -1,6 +1,7 @@
 package aor.paj.projetofinalbackend.dao;
 
 import aor.paj.projetofinalbackend.entity.InterestEntity;
+import aor.paj.projetofinalbackend.entity.SkillEntity;
 import jakarta.ejb.Stateless;
 import java.util.List;
 
@@ -19,5 +20,9 @@ public class InterestDao extends TagDao<InterestEntity> {
 
     public InterestEntity findByName(String name) {
         return super.findByName("Interest.findByName", name);
+    }
+
+    public InterestEntity findById(Long id) {
+        return super.findById("Interest.findInterestById", id);
     }
 }

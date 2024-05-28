@@ -68,15 +68,15 @@ public class InterestBean implements TagBean<InterestDto> {
 
     @Override
     @Transactional
-    public void removeAttributes(List<InterestDto> dtos, String token) {
+    public void removeAttributes(List<Long> interestIds, String token) {
         Long userId = getUserIdFromToken(token);
         UserEntity user = userDao.findUserById(userId);
         if (user == null) {
             throw new IllegalArgumentException("Invalid user ID");
         }
 
-        for (InterestDto dto : dtos) {
-            InterestEntity interestEntity = interestDao.findByName(dto.getName());
+        for (Long interestId : interestIds) {
+            InterestEntity interestEntity = interestDao.findById(interestId);
             if (interestEntity != null) {
                 user.getInterests().remove(interestEntity);
             }

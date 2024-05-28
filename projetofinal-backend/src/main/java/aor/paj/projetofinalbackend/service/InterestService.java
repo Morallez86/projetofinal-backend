@@ -47,13 +47,13 @@ public class InterestService {
 
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response removeSkills(List<InterestDto> interestDtos, @HeaderParam("Authorization") String authorizationHeader) {
+    public Response removeSkills(List<Long> interestIds, @HeaderParam("Authorization") String authorizationHeader) {
         try {
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
 
             // Remove the skills
-            interestBean.removeAttributes(interestDtos, token);
+            interestBean.removeAttributes(interestIds, token);
 
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (Exception e) {

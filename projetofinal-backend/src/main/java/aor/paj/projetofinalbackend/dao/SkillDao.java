@@ -21,4 +21,8 @@ public class SkillDao extends TagDao<SkillEntity> {
     public SkillEntity findByName(String name) {
         return super.findByName("Skill.findByName", name);
     }
+
+    public SkillEntity findById(Long id) {
+        return super.findById("Skill.findSkillById", id);
+    }
 }

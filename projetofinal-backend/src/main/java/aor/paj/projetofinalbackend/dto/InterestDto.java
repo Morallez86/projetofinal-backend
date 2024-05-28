@@ -7,6 +7,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class InterestDto {
     private Long id;
     private String name;
+
+    public InterestDto() {
+    }
+
+    public InterestDto(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @XmlElement
     public Long getId() {
         return id;

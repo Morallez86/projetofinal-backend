@@ -20,10 +20,7 @@ public class TokenBean {
     }
     public boolean isTokenActive(String token) {
         try {
-            System.out.println("111111111111111");
             TokenEntity tokenEntity = findTokenByValue(token);
-            System.out.println("2222222222222");
-            System.out.println(tokenEntity.isActiveToken());
             return tokenEntity.isActiveToken();
         } catch (NoResultException e) {
             return false;

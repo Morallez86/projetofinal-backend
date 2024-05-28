@@ -56,7 +56,6 @@ public class UserService {
         }
 
         String tokenValue = userBean.createAndSaveToken(user);
-        System.out.println(tokenValue);
         return Response.ok(new TokenResponse(tokenValue)).build();
     }
 
@@ -66,7 +65,6 @@ public class UserService {
     public Response logout(@HeaderParam("Authorization") String authHeader) {
 
         String token = authHeader.substring("Bearer".length()).trim();
-        System.out.println(token);
 
         if (tokenBean.deactivateToken(token)) {
             return Response.status(Response.Status.OK)
@@ -121,14 +119,9 @@ public class UserService {
     public Response forgotPassword(ConfirmationRequest request) {
         String emailValidationToken = request.getToken();
         String password = request.getPassword();
-        System.out.println(emailValidationToken);
-        System.out.println(password);
         UserEntity user = userBean.getUserByEmailToken(emailValidationToken);
-        System.out.println("1");
         if (user != null) {
-            System.out.println("2");
             try {
-                System.out.println(user.getEmailToken());
                 userBean.forgotPassword(user, password);
                 return Response.status(200).entity("New Password updated").build();
             } catch (Exception e) {
@@ -142,9 +135,7 @@ public class UserService {
     @GET
     @Path("/confirmRegistration")
     public Response confirmRegistration(@HeaderParam("emailToken") String emailToken){
-        System.out.println(emailToken);
         UserEntity user = userBean.getUserByEmailToken(emailToken);
-        System.out.println(user);
         if (user != null) {
             try {
                 userBean.confirmRegistration(user);

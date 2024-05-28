@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name="skill")
 @NamedQueries({
         @NamedQuery(name = "Skill.findAllSkills", query = "SELECT s FROM SkillEntity s"),
+        @NamedQuery(name = "Skill.findSkillById", query = "SELECT s FROM SkillEntity s WHERE s.id = :id"),
         @NamedQuery(name = "Skill.findByName", query = "SELECT s FROM SkillEntity s WHERE s.name = :name")
 })
 public class SkillEntity extends TagEntity {

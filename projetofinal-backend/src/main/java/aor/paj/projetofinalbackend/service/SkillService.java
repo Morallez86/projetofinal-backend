@@ -43,13 +43,14 @@ public class SkillService {
 
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response removeSkills(List<SkillDto> skillDtos, @HeaderParam("Authorization") String authorizationHeader) {
+    public Response removeSkills(List<Long> skillIds, @HeaderParam("Authorization") String authorizationHeader) {
         try {
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            System.out.println(skillIds);
 
             // Remove the skills
-            skillBean.removeAttributes(skillDtos, token);
+            skillBean.removeAttributes(skillIds, token);
 
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (Exception e) {

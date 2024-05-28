@@ -42,7 +42,6 @@ public class EmailSender {
 
             // Send email
             Transport.send(message);
-            System.out.println("Email send to " + recipientEmail);
         } catch (MessagingException e) {
             e.printStackTrace();
             System.err.println("Error sending email to " + recipientEmail);

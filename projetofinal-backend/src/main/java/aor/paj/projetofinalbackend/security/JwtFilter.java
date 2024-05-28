@@ -27,7 +27,7 @@ public class JwtFilter implements ContainerRequestFilter {
         EXCLUDED_PATHS.add("/users/login");
         EXCLUDED_PATHS.add("/users/register");
         EXCLUDED_PATHS.add("/users/image");
-        EXCLUDED_PATHS.add("/workplaces/all");
+        EXCLUDED_PATHS.add("/workplaces");
         EXCLUDED_PATHS.add("/users/emailRecoveryPassword");
         EXCLUDED_PATHS.add("/users/forgotPassword");
         EXCLUDED_PATHS.add("/users/confirmRegistration");
@@ -57,7 +57,6 @@ public class JwtFilter implements ContainerRequestFilter {
         String token = authorizationHeader.substring("Bearer".length()).trim();
         try {
             JwtUtil.validateToken(token);
-            System.out.println(token);
 
             if (!tokenBean.isTokenActive(token)) {
                 LOGGER.warning("Token is inactive");
@@ -67,11 +66,9 @@ public class JwtFilter implements ContainerRequestFilter {
                                 .build());
                 return;
             }
-            System.out.println("3");
             LOGGER.info("Token validated successfully");
         } catch (Exception e) {
             // Deactivate token if expired
-            System.out.println("nope");
             if (e.getMessage().equals("Token has expired")) {
                 tokenBean.deactivateToken(token);
             }
@@ -82,6 +79,5 @@ public class JwtFilter implements ContainerRequestFilter {
                             .entity("Invalid token")
                             .build());
         }
-        System.out.println("4");
     }
 }

@@ -33,5 +33,15 @@ public abstract class TagDao<T extends TagEntity> extends AbstractDao<T> {
             return null;
         }
     }
+
+    public T findById(String namedQuery, long id) {
+        try {
+            return em.createNamedQuery(namedQuery, clazz)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
 

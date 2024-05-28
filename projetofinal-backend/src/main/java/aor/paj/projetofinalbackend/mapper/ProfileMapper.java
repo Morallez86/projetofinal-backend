@@ -1,11 +1,11 @@
 package aor.paj.projetofinalbackend.mapper;
 
 import aor.paj.projetofinalbackend.dto.ProfileDto;
-import aor.paj.projetofinalbackend.dto.UserDto;
+import aor.paj.projetofinalbackend.dto.InterestDto;
+import aor.paj.projetofinalbackend.dto.SkillDto;
 import aor.paj.projetofinalbackend.entity.InterestEntity;
 import aor.paj.projetofinalbackend.entity.SkillEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
-import org.hibernate.Hibernate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +16,7 @@ public class ProfileMapper {
         if (user == null) {
             return null;
         }
+
         ProfileDto dto = new ProfileDto();
         dto.setId(user.getId());
         dto.setFirstName(user.getFirstName());
@@ -24,11 +25,21 @@ public class ProfileMapper {
         dto.setEmail(user.getEmail());
         dto.setBiography(user.getBiography());
         dto.setVisibility(user.getVisibility());
-        List<String> interestss = user.getInterests().stream().map(InterestEntity::getName).collect(Collectors.toList());
-        dto.setInterests(interestss);
-        List<String> skilss = user.getSkills().stream().map(SkillEntity::getName).collect(Collectors.toList());
-        dto.setSkills(skilss);
-        dto.setWorkplace(user.getWorkplace());
+
+        List<InterestDto> interests = user.getInterests().stream()
+                .map(ProfileMapper::interestToDto)
+                .collect(Collectors.toList());
+        dto.setInterests(interests);
+
+        List<SkillDto> skills = user.getSkills().stream()
+                .map(ProfileMapper::skillToDto)
+                .collect(Collectors.toList());
+        dto.setSkills(skills);
+
+        if (user.getWorkplace() != null) {
+            dto.setWorkplace(user.getWorkplace().getName());
+        }
+
         return dto;
     }
 
@@ -36,6 +47,7 @@ public class ProfileMapper {
         if (dto == null) {
             return null;
         }
+
         UserEntity user = new UserEntity();
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
@@ -43,6 +55,23 @@ public class ProfileMapper {
         user.setEmail(dto.getEmail());
         user.setBiography(dto.getBiography());
         user.setVisibility(dto.getVisibility());
+
         return user;
+    }
+
+    private static InterestDto interestToDto(InterestEntity interest) {
+        if (interest == null) {
+            return null;
+        }
+
+        return new InterestDto(interest.getId(), interest.getName());
+    }
+
+    private static SkillDto skillToDto(SkillEntity skill) {
+        if (skill == null) {
+            return null;
+        }
+
+        return new SkillDto(skill.getId(), skill.getName(), skill.getType().getValue());
     }
 }
