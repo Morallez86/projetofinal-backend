@@ -64,4 +64,22 @@ public class SkillBean implements TagBean<SkillDto> {
         }
         userDao.merge(creator);
     }
+
+    @Override
+    @Transactional
+    public void removeAttributes(List<SkillDto> dtos, String token) {
+        Long userId = getUserIdFromToken(token);
+        UserEntity user = userDao.findUserById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid user ID");
+        }
+
+        for (SkillDto dto : dtos) {
+            SkillEntity skillEntity = skillDao.findByName(dto.getName());
+            if (skillEntity != null) {
+                user.getSkills().remove(skillEntity);
+            }
+        }
+        userDao.merge(user);
+    }
 }

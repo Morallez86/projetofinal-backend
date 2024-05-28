@@ -40,4 +40,21 @@ public class SkillService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response removeSkills(List<SkillDto> skillDtos, @HeaderParam("Authorization") String authorizationHeader) {
+        try {
+            // Extract the token from the header
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+
+            // Remove the skills
+            skillBean.removeAttributes(skillDtos, token);
+
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
 }
