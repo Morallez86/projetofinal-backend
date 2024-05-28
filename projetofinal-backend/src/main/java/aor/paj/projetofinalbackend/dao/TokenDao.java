@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Stateless
@@ -36,5 +37,11 @@ public class TokenDao extends AbstractDao<TokenEntity> {
         } catch (NoResultException e) {
             return null; // Token not found
         }
+    }
+
+    public List<TokenEntity> findExpiredTokens(LocalDateTime currentDateTime) {
+        return em.createNamedQuery("Token.findExpiredTokens", TokenEntity.class)
+                .setParameter("currentDateTime", currentDateTime)
+                .getResultList();
     }
 }

@@ -6,6 +6,9 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.NoResultException;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @ApplicationScoped
 public class TokenBean {
 
@@ -38,4 +41,13 @@ public class TokenBean {
         }
     }
 
+    public void removeExpiredTokens() {
+        List<TokenEntity> expiredTokens = tokenDao.findExpiredTokens(LocalDateTime.now());
+        if (!expiredTokens.isEmpty()) {
+            for (TokenEntity token : expiredTokens) {
+                token.setActiveToken(false);
+                tokenDao.merge(token);
+            }
+        }
+    }
 }

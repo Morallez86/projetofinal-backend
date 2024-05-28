@@ -10,7 +10,7 @@ import java.util.*;
 @NamedQueries({
         @NamedQuery(name = "Token.findTokenByValue", query = "SELECT t FROM TokenEntity t WHERE t.tokenValue = :tokenValue"),
         @NamedQuery(name = "Token.findUserByTokenValue", query = "SELECT t.user FROM TokenEntity t WHERE t.tokenValue = :tokenValue"),
-
+        @NamedQuery(name = "Token.findExpiredTokens", query = "SELECT t FROM TokenEntity t WHERE t.expirationTime < :currentDateTime"),
 })
 public class TokenEntity implements Serializable{
 
