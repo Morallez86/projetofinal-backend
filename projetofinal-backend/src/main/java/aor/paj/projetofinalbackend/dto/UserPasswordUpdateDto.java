@@ -1,5 +1,9 @@
 package aor.paj.projetofinalbackend.dto;
 
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class UserPasswordUpdateDto {
     private String oldPassword;
     private String newPassword;
@@ -11,7 +15,7 @@ public class UserPasswordUpdateDto {
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
     }
-
+    @XmlElement
     public String getOldPassword() {
         return oldPassword;
     }
@@ -19,7 +23,7 @@ public class UserPasswordUpdateDto {
     public void setOldPassword(String oldPassword) {
         this.oldPassword = oldPassword;
     }
-
+    @XmlElement
     public String getNewPassword() {
         return newPassword;
     }

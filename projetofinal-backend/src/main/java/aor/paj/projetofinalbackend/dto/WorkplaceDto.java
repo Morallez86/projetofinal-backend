@@ -1,8 +1,11 @@
 package aor.paj.projetofinalbackend.dto;
 
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.util.HashSet;
 import java.util.Set;
-
+@XmlRootElement
 public class WorkplaceDto {
 
     private Long id;
@@ -18,6 +21,7 @@ public class WorkplaceDto {
         this.name = name;
     }
 
+    @XmlElement
     public Long getId() {
         return id;
     }
@@ -26,6 +30,7 @@ public class WorkplaceDto {
         this.id = id;
     }
 
+    @XmlElement
     public String getName() {
         return name;
     }

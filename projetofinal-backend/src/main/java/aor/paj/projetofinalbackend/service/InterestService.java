@@ -3,6 +3,7 @@ package aor.paj.projetofinalbackend.service;
 
 import aor.paj.projetofinalbackend.bean.InterestBean;
 import aor.paj.projetofinalbackend.dto.InterestDto;
+import aor.paj.projetofinalbackend.dto.SkillDto;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -38,6 +39,23 @@ public class InterestService {
             interestBean.addAttributes(interestDtos, token);
 
             return Response.status(Response.Status.CREATED).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response removeSkills(List<InterestDto> interestDtos, @HeaderParam("Authorization") String authorizationHeader) {
+        try {
+            // Extract the token from the header
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+
+            // Remove the skills
+            interestBean.removeAttributes(interestDtos, token);
+
+            return Response.status(Response.Status.NO_CONTENT).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

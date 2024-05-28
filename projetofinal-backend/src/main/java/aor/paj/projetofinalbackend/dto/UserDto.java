@@ -1,9 +1,11 @@
 package aor.paj.projetofinalbackend.dto;
 
 import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.time.LocalDateTime;
-
+@XmlRootElement
 public class UserDto {
 
     private Long id;
@@ -26,7 +28,7 @@ public class UserDto {
 
     public UserDto() {
     }
-
+    @XmlElement
     public String  getWorkplace() {
         return workplace;
     }
@@ -34,7 +36,7 @@ public class UserDto {
     public void setWorkplace(String workplace) {
         this.workplace = workplace;
     }
-
+    @XmlElement
     public Long getId() {
         return id;
     }
@@ -42,7 +44,7 @@ public class UserDto {
     public void setId(Long id) {
         this.id = id;
     }
-
+    @XmlElement
     public String getFirstName() {
         return firstName;
     }
@@ -50,7 +52,7 @@ public class UserDto {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
+    @XmlElement
     public String getLastName() {
         return lastName;
     }
@@ -58,7 +60,7 @@ public class UserDto {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
+    @XmlElement
     public String getUsername() {
         return username;
     }
@@ -66,7 +68,7 @@ public class UserDto {
     public void setUsername(String username) {
         this.username = username;
     }
-
+    @XmlElement
     public String getEmail() {
         return email;
     }
@@ -74,7 +76,7 @@ public class UserDto {
     public void setEmail(String email) {
         this.email = email;
     }
-
+    @XmlElement
     public char getRole() {
         return role;
     }
@@ -82,7 +84,7 @@ public class UserDto {
     public void setRole(char role) {
         this.role = role;
     }
-
+    @XmlElement
     public Boolean getActive() {
         return active;
     }
@@ -90,7 +92,7 @@ public class UserDto {
     public void setActive(Boolean active) {
         this.active = active;
     }
-
+    @XmlElement
     public Boolean getPending() {
         return pending;
     }
@@ -98,7 +100,7 @@ public class UserDto {
     public void setPending(Boolean pending) {
         this.pending = pending;
     }
-
+    @XmlElement
     public String getEmailToken() {
         return emailToken;
     }
@@ -106,7 +108,7 @@ public class UserDto {
     public void setEmailToken(String emailToken) {
         this.emailToken = emailToken;
     }
-
+    @XmlElement
     public String getBiography() {
         return biography;
     }
@@ -114,7 +116,7 @@ public class UserDto {
     public void setBiography(String biography) {
         this.biography = biography;
     }
-
+    @XmlElement
     public Boolean getVisibility() {
         return visibility;
     }
@@ -122,7 +124,7 @@ public class UserDto {
     public void setVisibility(Boolean visibility) {
         this.visibility = visibility;
     }
-
+    @XmlElement
     public Boolean getActiveProject() {
         return activeProject;
     }
@@ -130,7 +132,7 @@ public class UserDto {
     public void setActiveProject(Boolean activeProject) {
         this.activeProject = activeProject;
     }
-
+    @XmlElement
     public LocalDateTime getRegistTime() {
         return registTime;
     }
@@ -138,7 +140,7 @@ public class UserDto {
     public void setRegistTime(LocalDateTime registTime) {
         this.registTime = registTime;
     }
-
+    @XmlElement
     public String getPassword() {
         return password;
     }

@@ -1,8 +1,12 @@
 package aor.paj.projetofinalbackend.dto;
 
 import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.util.List;
 
+@XmlRootElement
 public class ProfileDto {
 
     private Long id;
@@ -36,6 +40,7 @@ public class ProfileDto {
     }
 
     // Getters and Setters
+    @XmlElement
     public Long getId() {
         return id;
     }
@@ -43,7 +48,7 @@ public class ProfileDto {
     public void setId(Long id) {
         this.id = id;
     }
-
+    @XmlElement
     public String getUsername() {
         return username;
     }
@@ -51,7 +56,7 @@ public class ProfileDto {
     public void setUsername(String username) {
         this.username = username;
     }
-
+    @XmlElement
     public String getFirstName() {
         return firstName;
     }
@@ -59,7 +64,7 @@ public class ProfileDto {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
+    @XmlElement
     public String getLastName() {
         return lastName;
     }
@@ -67,7 +72,7 @@ public class ProfileDto {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
+    @XmlElement
     public String getEmail() {
         return email;
     }
@@ -75,7 +80,7 @@ public class ProfileDto {
     public void setEmail(String email) {
         this.email = email;
     }
-
+    @XmlElement
     public String getBiography() {
         return biography;
     }
@@ -83,7 +88,7 @@ public class ProfileDto {
     public void setBiography(String biography) {
         this.biography = biography;
     }
-
+    @XmlElement
     public Boolean getVisibility() {
         return visibility;
     }
@@ -91,7 +96,7 @@ public class ProfileDto {
     public void setVisibility(Boolean visibility) {
         this.visibility = visibility;
     }
-
+    @XmlElement
     public WorkplaceEntity getWorkplace() {
         return workplace;
     }
@@ -99,11 +104,11 @@ public class ProfileDto {
     public void setWorkplace(WorkplaceEntity workplace) {
         this.workplace = workplace;
     }
-
+    @XmlElement
     public List<String> getInterests() {
         return interests;
     }
-
+    @XmlElement
     public List<String> getSkills() {
         return skills;
     }
