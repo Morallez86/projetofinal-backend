@@ -18,7 +18,7 @@ public class ImageBean {
     @EJB
     UserDao userDao;
 
-    private static final String IMAGE_DIRECTORY = "C:/Users/Asus/Desktop/images";
+    private static final String IMAGE_DIRECTORY = System.getenv("IMAGE_DIRECTORY");
 
     public String saveImage(InputStream imageData, String originalFileName, String email) throws IOException{
         String fileExtension = getFileExtension(originalFileName);
