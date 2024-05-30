@@ -23,28 +23,28 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name", nullable = false, unique = true)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, unique = true)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password", nullable = false, unique = true)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name="email", nullable = false, unique = true, updatable = true)
+    @Column(name="email", nullable = false, unique = true)
     private String email;
 
     @Column(name="role", nullable = false)
     private char role;
 
-    @Column(name="active", nullable = false, unique = false, updatable = true)
+    @Column(name="active", nullable = false)
     private Boolean active;
 
-    @Column(name="pending", nullable = false, unique = false, updatable = true)
+    @Column(name="pending", nullable = false)
     private Boolean pending;
 
     @Column(name="email_token")

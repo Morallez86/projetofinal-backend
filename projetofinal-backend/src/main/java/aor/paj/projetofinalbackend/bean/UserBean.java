@@ -76,7 +76,7 @@ public class UserBean {
     }
 
     public String createAndSaveToken(UserEntity user) {
-        String tokenValue = JwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
+        String tokenValue = JwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId(), user.getUsername());
         LocalDateTime expirationTime = LocalDateTime.ofInstant(
                 new Date(System.currentTimeMillis() + JwtUtil.EXPIRATION_TIME).toInstant(),
                 ZoneId.systemDefault()
