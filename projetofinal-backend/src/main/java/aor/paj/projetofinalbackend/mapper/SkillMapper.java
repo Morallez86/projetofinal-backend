@@ -4,6 +4,9 @@ import aor.paj.projetofinalbackend.dto.SkillDto;
 import aor.paj.projetofinalbackend.entity.SkillEntity;
 import aor.paj.projetofinalbackend.utils.SkillType;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class SkillMapper {
 
     public static SkillDto toDto(SkillEntity skill) {
@@ -25,5 +28,14 @@ public class SkillMapper {
         skill.setName(dto.getName());
         skill.setType(SkillType.fromValue(dto.getType())); // Convert int value back to SkillType
         return skill;
+    }
+
+    public static Set <SkillDto> listToDto (Set<SkillEntity> entitiesList){
+        Set<SkillDto> listDto = new HashSet<>();
+        for (SkillEntity entity : entitiesList) {
+            SkillDto dtoConverted = SkillMapper.toDto(entity);
+            listDto.add(dtoConverted);
+        }
+        return listDto;
     }
 }

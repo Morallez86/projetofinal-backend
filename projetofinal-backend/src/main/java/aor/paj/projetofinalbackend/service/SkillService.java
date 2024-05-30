@@ -1,19 +1,30 @@
 package aor.paj.projetofinalbackend.service;
 
 import aor.paj.projetofinalbackend.bean.SkillBean;
+import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dto.SkillDto;
+import aor.paj.projetofinalbackend.entity.SkillEntity;
+import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.mapper.SkillMapper;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.hibernate.Hibernate;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Path("/skills")
 public class SkillService {
 
     @Inject
     SkillBean skillBean;
+
+    @Inject
+    TokenDao tokenDao;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -26,15 +37,33 @@ public class SkillService {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response addSkills(List<SkillDto> skillDtos, @HeaderParam("Authorization") String authorizationHeader) {
         try {
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
 
+
             // Add the skills
             skillBean.addAttributes(skillDtos, token);
 
-            return Response.status(Response.Status.CREATED).build();
+
+            UserEntity userEntity = tokenDao.findUserByTokenValue(token);
+            Hibernate.initialize(userEntity.getSkills());
+            Set< SkillEntity> listSkillEntity = userEntity.getSkills();
+            Set<SkillEntity> listNewSkills = new HashSet<>();
+            for (SkillEntity list : listSkillEntity) {
+                for (SkillDto dtoList : skillDtos) {
+                    if (list.getName().equals(dtoList.getName())) {
+                        listNewSkills.add(list);
+                    }
+                }
+            }
+
+            Set<SkillDto> listNewSkillsConvertedDto = SkillMapper.listToDto(listNewSkills);
+
+            return Response.status(Response.Status.CREATED).entity(listNewSkillsConvertedDto).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
