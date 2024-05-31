@@ -2,20 +2,32 @@ package aor.paj.projetofinalbackend.service;
 
 
 import aor.paj.projetofinalbackend.bean.InterestBean;
+import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dto.InterestDto;
 import aor.paj.projetofinalbackend.dto.SkillDto;
+import aor.paj.projetofinalbackend.entity.InterestEntity;
+import aor.paj.projetofinalbackend.entity.SkillEntity;
+import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.mapper.InterestMapper;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.hibernate.Hibernate;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Path("/interests")
 public class InterestService {
 
     @Inject
     InterestBean interestBean;
+
+    @Inject
+    TokenDao tokenDao;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -28,8 +40,15 @@ public class InterestService {
         }
     }
 
+    /* No front ele precisa de dar set das novas já com o id, então este método tem de enviar o dto com o id
+     * o duplo for verifica quais os interesses novas e adiciona a uma nova lista que, tendo apenas as novas, é enviada para o front
+     * o duplo for começa com a lista das novas para ser corrido o menor numero de vezes possiveis
+     * o duplo for tem um counter para ele não continuar a correr desnecessariamente depois de já ter encontrado o id de todas as novas
+     * */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response addInterests(List<InterestDto> interestDtos, @HeaderParam("Authorization") String authorizationHeader) {
         try {
             // Extract the token from the header
@@ -38,7 +57,28 @@ public class InterestService {
             // Add the interests
             interestBean.addAttributes(interestDtos, token);
 
-            return Response.status(Response.Status.CREATED).build();
+            UserEntity userEntity = tokenDao.findUserByTokenValue(token);
+            Hibernate.initialize(userEntity.getInterests());
+            Set<InterestEntity> listInterestEntity = userEntity.getInterests();
+            Set < InterestEntity> listNewInterests = new HashSet<>();
+
+            int counterOfTotal  = 0;
+
+            do {
+                for (InterestDto dtoList : interestDtos) {
+                for (InterestEntity list : listInterestEntity) {
+                        if (list.getName().equals(dtoList.getName())) {
+                            listNewInterests.add(list);
+                            counterOfTotal++;
+                        }
+                    }
+                }
+            } while (counterOfTotal < interestDtos.size());
+
+
+            Set <InterestDto> listNewInterestsConvertedDto = InterestMapper.listToDto(listNewInterests);
+
+            return Response.status(Response.Status.CREATED).entity(listNewInterestsConvertedDto).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

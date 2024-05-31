@@ -2,7 +2,12 @@ package aor.paj.projetofinalbackend.mapper;
 
 
 import aor.paj.projetofinalbackend.dto.InterestDto;
+import aor.paj.projetofinalbackend.dto.SkillDto;
 import aor.paj.projetofinalbackend.entity.InterestEntity;
+import aor.paj.projetofinalbackend.entity.SkillEntity;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class InterestMapper {
 
@@ -24,4 +29,14 @@ public class InterestMapper {
         interest.setName(dto.getName());
         return interest;
     }
+
+    public static Set<InterestDto> listToDto (Set<InterestEntity> entitiesList){
+        Set<InterestDto> listDto = new HashSet<>();
+        for (InterestEntity entity : entitiesList) {
+            InterestDto dtoConverted = InterestMapper.toDto(entity);
+            listDto.add(dtoConverted);
+        }
+        return listDto;
+    }
+
 }
