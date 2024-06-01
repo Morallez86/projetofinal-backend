@@ -35,6 +35,12 @@ public class SkillService {
         } else return Response.status(Response.Status.NOT_FOUND).entity("Skills not found").build();
     }
 
+
+    /* No front ele precisa de dar set das novas já com o id, então este método tem de enviar o dto com o id
+    * o duplo for verifica quais as skils novas e adiciona a uma nova lista que, tendo apenas as novas, é enviada para o front
+    * o duplo for começa com a lista das novas para ser corrido o menor numero de vezes possiveis
+    * o duplo for tem um counter para ele não continuar a correr desnecessariamente depois de já ter encontrado o id de todas as novas
+    * */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -53,13 +59,19 @@ public class SkillService {
             Hibernate.initialize(userEntity.getSkills());
             Set< SkillEntity> listSkillEntity = userEntity.getSkills();
             Set<SkillEntity> listNewSkills = new HashSet<>();
-            for (SkillEntity list : listSkillEntity) {
+
+            int counterOfTotal  = 0;
+            do {
                 for (SkillDto dtoList : skillDtos) {
-                    if (list.getName().equals(dtoList.getName())) {
-                        listNewSkills.add(list);
+                for (SkillEntity list : listSkillEntity) {
+                        if (list.getName().equals(dtoList.getName())) {
+                            listNewSkills.add(list);
+                            counterOfTotal++;
+                        }
                     }
                 }
-            }
+            } while (counterOfTotal<skillDtos.size());
+
 
             Set<SkillDto> listNewSkillsConvertedDto = SkillMapper.listToDto(listNewSkills);
 
