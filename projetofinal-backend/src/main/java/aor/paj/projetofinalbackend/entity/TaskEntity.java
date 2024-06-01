@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "task")
@@ -61,10 +63,10 @@ public class TaskEntity implements Serializable {
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "dependency_id")
     )
-    private List<TaskEntity> dependencies = new ArrayList<>();
+    private Set<TaskEntity> dependencies = new HashSet<>();
 
     @ManyToMany(mappedBy = "dependencies")
-    private List<TaskEntity> dependentTasks = new ArrayList<>();
+    private Set<TaskEntity> dependentTasks = new HashSet<>();
 
     public TaskEntity() {
     }
@@ -161,19 +163,23 @@ public class TaskEntity implements Serializable {
         this.user = user;
     }
 
-    public List<TaskEntity> getDependencies() {
+    public Set<TaskEntity> getDependencies() {
         return dependencies;
     }
 
-    public void setDependencies(List<TaskEntity> dependencies) {
-        this.dependencies = dependencies;
-    }
-
-    public List<TaskEntity> getDependentTasks() {
+    public Set<TaskEntity> getDependentTasks() {
         return dependentTasks;
     }
 
-    public void setDependentTasks(List<TaskEntity> dependentTasks) {
+    public void setDependencies(Set<TaskEntity> dependencies) {
+        this.dependencies = dependencies;
+    }
+
+    public void setDependentTasks(Set<TaskEntity> dependentTasks) {
         this.dependentTasks = dependentTasks;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

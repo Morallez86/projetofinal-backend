@@ -123,4 +123,8 @@ public class ComponentEntity implements Serializable {
     public void setProject(ProjectEntity project) {
         this.project = project;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

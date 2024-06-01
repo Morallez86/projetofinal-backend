@@ -23,7 +23,7 @@ public class ProjectDto {
 
     private int maxUsers;
 
-    private Long ownerId;
+    private UserDto owner;
 
     private boolean approved;
 
@@ -51,7 +51,7 @@ public class ProjectDto {
 
     private List<ProjectHistoryDto> historyrecords;
 
-    private List<ChatMessageDto> chatMessages;
+    private List<ChatMessageDto> chatMessage;
 
     public ProjectDto() {
     }
@@ -80,10 +80,12 @@ public class ProjectDto {
     public int getMaxUsers() {
         return maxUsers;
     }
+
     @XmlElement
-    public Long getOwnerId() {
-        return ownerId;
+    public UserDto getOwner() {
+        return owner;
     }
+
     @XmlElement
     public boolean isApproved() {
         return approved;
@@ -165,8 +167,8 @@ public class ProjectDto {
         this.maxUsers = maxUsers;
     }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    public void setOwner(UserDto owner) {
+        this.owner = owner;
     }
 
     public void setApproved(boolean approved) {

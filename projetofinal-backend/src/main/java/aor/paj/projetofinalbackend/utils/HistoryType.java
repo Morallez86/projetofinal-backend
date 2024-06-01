@@ -15,4 +15,6 @@ public enum HistoryType {
     public int getCode() {
         return code;
     }
+
+
 }

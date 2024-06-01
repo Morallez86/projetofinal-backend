@@ -16,6 +16,8 @@ public class ComponentDto {
 
     private String identifier;
 
+    private ProjectDto project;
+
 
     public ComponentDto() {
     }
@@ -53,6 +55,14 @@ public class ComponentDto {
         return identifier;
     }
 
+    @XmlElement
+    public ProjectDto getProject() {
+        return project;
+    }
+
+
+
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -83,5 +93,9 @@ public class ComponentDto {
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    public void setProject(ProjectDto project) {
+        this.project = project;
     }
 }

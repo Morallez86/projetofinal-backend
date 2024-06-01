@@ -3,6 +3,7 @@ package aor.paj.projetofinalbackend.dto;
 import jakarta.xml.bind.annotation.XmlElement;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class TaskDto {
 
@@ -24,9 +25,11 @@ public class TaskDto {
 
     private UserDto user;
 
-    private TaskDto dependencies;
+    private List<TaskDto> dependencies;
 
-    private TaskDto dependentTasks;
+    private List<TaskDto> dependentTasks;
+
+    private ProjectDto project;
 
     public TaskDto() {
     }
@@ -89,13 +92,18 @@ public class TaskDto {
     }
 
     @XmlElement
-    public TaskDto getDependencies() {
+    public List<TaskDto> getDependencies() {
         return dependencies;
     }
 
     @XmlElement
-    public TaskDto getDependentTasks() {
+    public List<TaskDto> getDependentTasks() {
         return dependentTasks;
+    }
+
+    @XmlElement
+    public ProjectDto getProject() {
+        return project;
     }
 
     public void setId(Long id) {
@@ -142,11 +150,15 @@ public class TaskDto {
         this.user = user;
     }
 
-    public void setDependencies(TaskDto dependencies) {
+    public void setDependencies(List<TaskDto> dependencies) {
         this.dependencies = dependencies;
     }
 
-    public void setDependentTasks(TaskDto dependentTasks) {
+    public void setDependentTasks(List<TaskDto> dependentTasks) {
         this.dependentTasks = dependentTasks;
+    }
+
+    public void setProject(ProjectDto project) {
+        this.project = project;
     }
 }

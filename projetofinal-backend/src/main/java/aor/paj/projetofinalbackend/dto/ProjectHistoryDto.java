@@ -14,6 +14,8 @@ public class ProjectHistoryDto {
 
     private UserDto user;
 
+    private ProjectDto project;
+
     public ProjectHistoryDto() {
     }
 
@@ -38,6 +40,11 @@ public class ProjectHistoryDto {
         return user;
     }
 
+    @XmlElement
+    public ProjectDto getProject() {
+        return project;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -56,5 +63,9 @@ public class ProjectHistoryDto {
 
     public void setUser(UserDto user) {
         this.user = user;
+    }
+
+    public void setProject(ProjectDto project) {
+        this.project = project;
     }
 }
