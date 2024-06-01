@@ -24,6 +24,7 @@ public class UserProjectEntity implements Serializable {
     @Column(name = "is_admin", nullable = false)
     private boolean isAdmin;
 
+
     public UserProjectEntity() {
     }
 
