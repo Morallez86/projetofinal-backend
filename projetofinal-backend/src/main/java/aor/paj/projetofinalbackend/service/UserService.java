@@ -213,6 +213,7 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUserProfile(@Context HttpHeaders headers, @PathParam("userId") Long userId, ProfileDto profileDto) {
+        System.out.println(profileDto.toString());
         String authorizationHeader = headers.getHeaderString("Authorization");
 
         // Extract the token

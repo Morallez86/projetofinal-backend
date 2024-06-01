@@ -107,4 +107,20 @@ public class ProfileDto {
     public void setSkills(List<SkillDto> skills) {
         this.skills = skills;
     }
+
+    @Override
+    public String toString() {
+        return "ProfileDto{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", biography='" + biography + '\'' +
+                ", visibility=" + visibility +
+                ", workplace='" + workplace + '\'' +
+                ", interests=" + interests +
+                ", skills=" + skills +
+                '}';
+    }
 }

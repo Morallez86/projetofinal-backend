@@ -8,6 +8,7 @@ import aor.paj.projetofinalbackend.dto.UserDto;
 import aor.paj.projetofinalbackend.dto.UserPasswordUpdateDto;
 import aor.paj.projetofinalbackend.entity.TokenEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
 import aor.paj.projetofinalbackend.mapper.ProfileMapper;
 import aor.paj.projetofinalbackend.mapper.UserMapper;
 import aor.paj.projetofinalbackend.security.JwtUtil;
@@ -165,13 +166,15 @@ public class UserBean {
 
     public void updateUserProfile(Long userId, ProfileDto profileDto) {
         UserEntity userEntity = userDao.find(userId);
+        String workplaceName = profileDto.getWorkplace();
+        WorkplaceEntity workplaceEntity = workplaceDao.findWorkplaceByName(workplaceName);
 
         userEntity.setFirstName(profileDto.getFirstName());
         userEntity.setLastName(profileDto.getLastName());
         userEntity.setUsername(profileDto.getUsername());
-        userEntity.setEmail(profileDto.getEmail());
         userEntity.setBiography(profileDto.getBiography());
         userEntity.setVisibility(profileDto.getVisibility());
+        userEntity.setWorkplace(workplaceEntity);
         userDao.merge(userEntity);
     }
 
