@@ -51,7 +51,7 @@ public class ProjectDto {
 
     private List<ProjectHistoryDto> historyrecords;
 
-    private List<ChatMessageDto> chatMessage;
+    private List<ChatMessageDto> chatMessages;
 
     public ProjectDto() {
     }
