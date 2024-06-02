@@ -17,6 +17,7 @@ public class ApplicationConfig extends Application{
         resources.add(JwtFilter.class);
         resources.add(SkillService.class);
         resources.add(InterestService.class);
+        resources.add(ProjectService.class);
         return resources;
     }
 }

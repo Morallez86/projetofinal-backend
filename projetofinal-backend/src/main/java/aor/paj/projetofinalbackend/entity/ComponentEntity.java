@@ -36,11 +36,11 @@ public class ComponentEntity implements Serializable {
     private String identifier;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workplace_id", nullable = false)
+    @JoinColumn(name = "workplace_id")
     private WorkplaceEntity workplace;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
     public ComponentEntity() {
@@ -122,5 +122,9 @@ public class ComponentEntity implements Serializable {
 
     public void setProject(ProjectEntity project) {
         this.project = project;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
