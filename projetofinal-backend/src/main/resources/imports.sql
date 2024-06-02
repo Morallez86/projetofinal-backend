@@ -17,8 +17,8 @@ INSERT INTO interest (creator_id, name) VALUES (1, 'Nature');
 
 INSERT INTO user_skill (user_id, skill_id) VALUES (1, 1);
 INSERT INTO user_skill (user_id, skill_id) VALUES (1, 3);
-INSERT INTO user_skill (user_id, skill_id) VALUES (1, 9);
-INSERT INTO user_skill (user_id, skill_id) VALUES (1, 10);
-INSERT INTO user_skill (user_id, skill_id) VALUES (1, 11);
-INSERT INTO user_skill (user_id, skill_id) VALUES (1, 12);
+INSERT INTO user_skill (user_id, skill_id) VALUES (1, 2);
+INSERT INTO user_skill (user_id, skill_id) VALUES (1, 4);
+INSERT INTO user_skill (user_id, skill_id) VALUES (1, 5);
+INSERT INTO user_skill (user_id, skill_id) VALUES (1, 6);
 

@@ -16,5 +16,14 @@ public enum ProjectStatus {
     public int getValue() {
         return value;
     }
+
+    public static ProjectStatus fromValue(int value) {
+        for (ProjectStatus status : ProjectStatus.values()) {
+            if (status.getValue() == value) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Invalid ProjectStatus value: " + value);
+    }
 }
 

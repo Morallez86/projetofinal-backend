@@ -41,7 +41,6 @@ public class UserMapper {
         user.setBiography(dto.getBiography());
         user.setVisibility(dto.getVisibility());
         user.setActiveProject(dto.getActiveProject());
-        user.setVisibility(false);
         return user;
     }
 }

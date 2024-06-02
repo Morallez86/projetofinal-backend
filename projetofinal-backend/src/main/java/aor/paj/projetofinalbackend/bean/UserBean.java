@@ -126,6 +126,7 @@ public class UserBean {
         user.setRegistTime(LocalDateTime.now());
         user.setActive(false);
         user.setPending(true);
+        user.setVisibility(false);
         user.setRole('C');
         user.setWorkplace(workplaceDao.findWorkplaceByName(userDto.getWorkplace()));
         user.setEmailToken(emailToken);

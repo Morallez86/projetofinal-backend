@@ -10,4 +10,13 @@ public enum TaskPriority {
     TaskPriority(int value) {this.value = value;}
 
     public int getValue() {return value;};
+
+    public static TaskPriority fromValue(int value) {
+        for (TaskPriority priority : values()) {
+            if (priority.value == value) {
+                return priority;
+            }
+        }
+        throw new IllegalArgumentException("Invalid TaskPriority value: " + value);
+    }
 }
