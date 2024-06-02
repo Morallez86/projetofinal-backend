@@ -11,21 +11,8 @@ import org.modelmapper.ModelMapper;
 
 public class TaskMapper {
 
-    private static ModelMapper modelMapper = new ModelMapper();
-
-    static {
-        modelMapper.typeMap(TaskDto.class, TaskEntity.class).addMappings(mapper -> {
-            mapper.skip(TaskEntity::setStatus);
-            mapper.skip(TaskEntity::setPriority);
-            mapper.skip(TaskEntity::setUser);
-            mapper.skip(TaskEntity::setDependencies);
-            mapper.skip(TaskEntity::setDependentTasks);
-            mapper.skip(TaskEntity::setProject);
-        });
-    }
-
     public static TaskEntity toEntity (TaskDto dto) {
-        TaskEntity entity = modelMapper.map(dto,TaskEntity.class);
+        TaskEntity entity = new TaskEntity();
         for (TaskStatus status : TaskStatus.values()) {
             if (status.getValue() == dto.getStatus()) {
                 entity.setStatus(status);
@@ -37,6 +24,13 @@ public class TaskMapper {
                 entity.setPriority(priority);
             }
         }
+        entity.setUser(UserMapper.toEntity(dto.getUser()));
+        entity.setId(dto.getId());
+        entity.setTitle(dto.getTitle());
+        entity.setPlannedStartingDate(dto.getPlannedStartingDate());
+        entity.setStartingDate(dto.getStartingDate());
+        entity.setPlannedEndingDate(dto.getPlannedEndingDate());
+        entity.setContributors(dto.getContributors());
         entity.setUser(UserMapper.toEntity(dto.getUser()));
         entity.setDependencies(ListConverter.convertListToSet(dto.getDependencies(), TaskMapper::toEntity));
         entity.setDependentTasks(ListConverter.convertListToSet(dto.getDependentTasks(), TaskMapper::toEntity));

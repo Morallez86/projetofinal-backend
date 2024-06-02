@@ -9,14 +9,17 @@ import org.modelmapper.ModelMapper;
 
 public class ResourceMapper {
 
-    private static ModelMapper modelMapper = new ModelMapper();
-
-    static {
-        modelMapper.typeMap(ResourceDto.class, ResourceEntity.class).addMappings(mapper -> mapper.skip(ResourceEntity::setProjects));
-    }
-
     public static ResourceEntity toEntity (ResourceDto dto){
-        ResourceEntity entity =  modelMapper.map(dto, ResourceEntity.class);
+        ResourceEntity entity = new ResourceEntity();
+        entity.setId(dto.getId());
+        entity.setBrand(dto.getBrand());
+        entity.setSupplier(dto.getSupplier());
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setContact(dto.getContact());
+        entity.setExpirationDate(dto.getExpirationDate());
+        entity.setIdentifier(dto.getIdentifier());
+
         return entity;
     }
 }

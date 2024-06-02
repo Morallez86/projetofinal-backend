@@ -1,5 +1,6 @@
 package aor.paj.projetofinalbackend.utils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -15,6 +16,10 @@ public class ListConverter {
     }
 
     public static <E, D> Set<D> convertListToSet(List<E> dtoList, Function<E, D> mapperFunction) {
+        if (dtoList == null) {
+            return Collections.emptySet();
+        }
+
         return dtoList.stream()
                 .filter(Objects::nonNull)
                 .map(mapperFunction)

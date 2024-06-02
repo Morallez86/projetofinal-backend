@@ -44,6 +44,7 @@ public class UserMapper {
         user.setActiveProject(dto.getActiveProject());
         user.setVisibility(false);
         user.setRegistTime(dto.getRegistTime());
+        user.setPassword(dto.getPassword());
         return user;
     }
 }
