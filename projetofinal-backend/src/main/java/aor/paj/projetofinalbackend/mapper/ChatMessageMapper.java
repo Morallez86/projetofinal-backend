@@ -11,7 +11,6 @@ public class ChatMessageMapper {
         entity.setTimestamp(dto.getTimestamp());
         entity.setContent(dto.getContent());
         entity.setSender(UserMapper.toEntity(dto.getSender()));
-        entity.setProject(ProjectMapper.toEntity(dto.getProject()));
         return entity;
     }
 }

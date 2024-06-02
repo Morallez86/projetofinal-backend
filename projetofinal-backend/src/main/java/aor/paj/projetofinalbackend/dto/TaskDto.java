@@ -29,8 +29,6 @@ public class TaskDto {
 
     private List<TaskDto> dependentTasks;
 
-    private ProjectDto project;
-
     public TaskDto() {
     }
 
@@ -101,11 +99,6 @@ public class TaskDto {
         return dependentTasks;
     }
 
-    @XmlElement
-    public ProjectDto getProject() {
-        return project;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -156,9 +149,5 @@ public class TaskDto {
 
     public void setDependentTasks(List<TaskDto> dependentTasks) {
         this.dependentTasks = dependentTasks;
-    }
-
-    public void setProject(ProjectDto project) {
-        this.project = project;
     }
 }

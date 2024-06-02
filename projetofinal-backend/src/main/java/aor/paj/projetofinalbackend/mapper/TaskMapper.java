@@ -40,7 +40,6 @@ public class TaskMapper {
         entity.setUser(UserMapper.toEntity(dto.getUser()));
         entity.setDependencies(ListConverter.convertListToSet(dto.getDependencies(), TaskMapper::toEntity));
         entity.setDependentTasks(ListConverter.convertListToSet(dto.getDependentTasks(), TaskMapper::toEntity));
-        entity.setProject(ProjectMapper.toEntity(dto.getProject()));
         return entity;
     }
 }

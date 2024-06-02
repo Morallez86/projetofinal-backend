@@ -13,8 +13,6 @@ public class ChatMessageDto {
 
     private UserDto sender;
 
-    private ProjectDto project;
-
     public ChatMessageDto() {
     }
 
@@ -35,11 +33,6 @@ public class ChatMessageDto {
     public UserDto getSender() {
         return sender;
     }
-    @XmlElement
-    public ProjectDto getProject() {
-        return project;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -54,9 +47,5 @@ public class ChatMessageDto {
 
     public void setSender(UserDto sender) {
         this.sender = sender;
-    }
-
-    public void setProject(ProjectDto project) {
-        this.project = project;
     }
 }

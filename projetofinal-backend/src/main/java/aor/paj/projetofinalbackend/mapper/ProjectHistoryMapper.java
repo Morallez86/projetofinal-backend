@@ -17,7 +17,6 @@ public class ProjectHistoryMapper {
             }
         }
         entity.setTimestamp(dto.getTimestamp());
-        entity.setProject(ProjectMapper.toEntity(dto.getProject()));
         entity.setUser(UserMapper.toEntity(dto.getUser()));
         return entity;
     }

@@ -11,8 +11,6 @@ public class UserProjectDto {
     private UserDto user;
     private boolean isAdmin;
 
-    private ProjectDto project;
-
     public UserProjectDto() {
     }
 
@@ -29,24 +27,18 @@ public class UserProjectDto {
     public Long getId() {
         return id;
     }
-    @XmlElement
-    public ProjectDto getProject() {
-        return project;
-    }
+
 
     public void setUser(UserDto user) {
         this.user = user;
     }
 
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setProject(ProjectDto project) {
-        this.project = project;
-    }
+
 }

@@ -17,8 +17,6 @@ public class ResourceDto {
 
     private String contact;
 
-    private List<ProjectDto> projects;
-
     public ResourceDto() {
     }
 
@@ -63,12 +61,6 @@ public class ResourceDto {
     public String getContact() {
         return contact;
     }
-
-    @XmlElement
-    public List<ProjectDto> getProjects() {
-        return projects;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -101,7 +93,4 @@ public class ResourceDto {
         this.contact = contact;
     }
 
-    public void setProjects(List<ProjectDto> projects) {
-        this.projects = projects;
-    }
 }

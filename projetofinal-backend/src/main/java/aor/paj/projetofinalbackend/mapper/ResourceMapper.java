@@ -17,7 +17,6 @@ public class ResourceMapper {
 
     public static ResourceEntity toEntity (ResourceDto dto){
         ResourceEntity entity =  modelMapper.map(dto, ResourceEntity.class);
-        entity.setProjects(ListConverter.convertListToSet(dto.getProjects(),ProjectMapper::toEntity));
         return entity;
     }
 }

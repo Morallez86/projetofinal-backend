@@ -25,7 +25,7 @@ public class ProjectBean {
     private ProjectDao projectDao;
 
 
-    public ProjectEntity addProject (ProjectDto projectDto, String token) {
+    public void addProject (ProjectDto projectDto, String token) {
         Long userId = serviceBean.getUserIdFromToken(token);
         UserEntity user =  userDao.findUserById(userId);
 
@@ -43,6 +43,5 @@ public class ProjectBean {
         }
 
         projectDao.persist(projectEntity);
-        return projectEntity;
     }
 }
