@@ -11,7 +11,9 @@ import aor.paj.projetofinalbackend.utils.ProjectStatus;
 import io.jsonwebtoken.Claims;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @ApplicationScoped
@@ -38,6 +40,7 @@ public class ProjectBean {
     private ProjectMapper projectMapper = new ProjectMapper();
 
 
+    @Transactional
     public void addProject(ProjectDto projectDto, String token) {
         // Extract user ID from the token
         Long userId = serviceBean.getUserIdFromToken(token);
@@ -57,9 +60,20 @@ public class ProjectBean {
         projectEntity.setOwner(user);
         System.out.println(projectDto.getStatus());
 
+
+        Set<InterestEntity> existingInterestEntity = new HashSet<>();
+
         for (InterestEntity interestEntity : projectEntity.getInterests()) {
             if (interestEntity.getCreator()==null) {
                 interestEntity.setCreator(user);
+            }
+        }
+
+        for (InterestEntity interestEntity2: projectEntity.getInterests()) {
+            if (interestEntity2.getId()!=null){
+                System.out.println("in");
+                projectEntity.getInterests().remove(interestEntity2);
+                existingInterestEntity.add(interestEntity2);
             }
         }
 
@@ -78,11 +92,28 @@ public class ProjectBean {
         }
 
         for (ResourceEntity resourceEntity : projectEntity.getResources()) {
+            System.out.println("entrou");
             Set<ProjectEntity> projectEntities = resourceEntity.getProjects();
-            projectEntities.add(project);
-            resourceEntity.setProjects(projectEntities);
-            resourceDao.merge(resourceEntity);
+            if (!projectEntities.contains(project)) {
+                System.out.println("entrou2");
+                projectEntities.add(project);
+                System.out.println("entrou3");
+                resourceEntity.setProjects(projectEntities);
+                System.out.println("entrou4");
+                resourceDao.merge(resourceEntity);
+                System.out.println("entrou5");
+            }
         }
+
+        Set<InterestEntity> completeInterestSet = project.getInterests();
+        completeInterestSet.addAll(existingInterestEntity);
+
+        project.setInterests(completeInterestSet);
+        projectDao.merge(project);
+        /*projectEntity.getInterests().addAll(existingInterestEntity);
+        projectEntity.setInterests(projectEntity.getInterests());
+        projectDao.merge(projectEntity);*/
+
         }
     }
 

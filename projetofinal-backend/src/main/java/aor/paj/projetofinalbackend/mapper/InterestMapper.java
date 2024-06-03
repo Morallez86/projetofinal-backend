@@ -27,6 +27,7 @@ public class InterestMapper {
         }
         InterestEntity interest = new InterestEntity();
         interest.setName(dto.getName());
+        interest.setId(dto.getId());
         return interest;
     }
 
