@@ -37,6 +37,9 @@ public class ProjectBean {
     @EJB
     private InterestDao interestDao;
 
+    @EJB
+    private UserProjectDao userProjectDao;
+
     private ProjectMapper projectMapper = new ProjectMapper();
 
 
@@ -110,10 +113,14 @@ public class ProjectBean {
 
         project.setInterests(completeInterestSet);
         projectDao.merge(project);
-        /*projectEntity.getInterests().addAll(existingInterestEntity);
-        projectEntity.setInterests(projectEntity.getInterests());
-        projectDao.merge(projectEntity);*/
 
+        for (UserProjectEntity userProjectEntity : project.getUserProjects()) {
+            if (userProjectEntity.isAdmin()) {
+                userProjectEntity.setUser(user);
+                userProjectEntity.setProject(project);
+                userProjectDao.merge(userProjectEntity);
+            }
+        }
         }
     }
 

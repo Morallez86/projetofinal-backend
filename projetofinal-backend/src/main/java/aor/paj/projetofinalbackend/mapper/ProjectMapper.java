@@ -56,12 +56,11 @@ public class ProjectMapper {
         entity.setResources(dto.getResources().stream().map(ResourceMapper::toEntity).collect(Collectors.toSet()));
         entity.setInterests(dto.getInterests().stream().map(InterestMapper::toEntity).collect(Collectors.toSet()));
         entity.setSkills(dto.getSkills().stream().map(SkillMapper::toEntity).collect(Collectors.toSet()));
-
+        entity.setUserProjects(dto.getUserProjectDtos().stream().map(UserProjectMapper::toEntity).collect(Collectors.toSet()));
 
 
        /* entity.setUserProjects(dto.getUserProjectDtos().stream().map(UserProjectMapper::toEntity).collect(Collectors.toSet()));
         entity.setTasks(dto.getTasks().stream().map(TaskMapper::toEntity).collect(Collectors.toSet()));
-        entity.setSkills(dto.getSkills().stream().map(SkillMapper::toEntity).collect(Collectors.toSet()));
         entity.setHistoryRecords(dto.getHistoryrecords().stream().map(ProjectHistoryMapper::toEntity).collect(Collectors.toSet()));
         entity.setChatMessages(dto.getChatMessage().stream().map(ChatMessageMapper::toEntity).collect(Collectors.toSet()));*/
         return entity;
