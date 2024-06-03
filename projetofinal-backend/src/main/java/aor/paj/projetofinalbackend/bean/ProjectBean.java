@@ -1,16 +1,10 @@
 package aor.paj.projetofinalbackend.bean;
 
-import aor.paj.projetofinalbackend.dao.ComponentDao;
-import aor.paj.projetofinalbackend.dao.ProjectDao;
-import aor.paj.projetofinalbackend.dao.ResourceDao;
-import aor.paj.projetofinalbackend.dao.UserDao;
+import aor.paj.projetofinalbackend.dao.*;
 import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.dto.ProjectDto;
 import aor.paj.projetofinalbackend.dto.ResourceDto;
-import aor.paj.projetofinalbackend.entity.ComponentEntity;
-import aor.paj.projetofinalbackend.entity.ProjectEntity;
-import aor.paj.projetofinalbackend.entity.ResourceEntity;
-import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
@@ -38,6 +32,9 @@ public class ProjectBean {
     @EJB
     private ResourceDao resourceDao;
 
+    @EJB
+    private InterestDao interestDao;
+
     private ProjectMapper projectMapper = new ProjectMapper();
 
 
@@ -60,6 +57,12 @@ public class ProjectBean {
         projectEntity.setOwner(user);
         System.out.println(projectDto.getStatus());
 
+        for (InterestEntity interestEntity : projectEntity.getInterests()) {
+            if (interestEntity.getCreator()==null) {
+                interestEntity.setCreator(user);
+            }
+        }
+
         // Persist the project entity
         projectDao.persist(projectEntity);
         ProjectEntity project = projectDao.findProjectById(projectEntity.getId());
@@ -74,5 +77,6 @@ public class ProjectBean {
             resourceEntity.setProjects(projectEntities);
             resourceDao.merge(resourceEntity);
         }
+        }
     }
-}
+
