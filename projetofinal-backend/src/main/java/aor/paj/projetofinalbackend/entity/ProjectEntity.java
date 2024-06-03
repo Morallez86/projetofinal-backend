@@ -8,6 +8,9 @@ import java.util.*;
 
 @Entity
 @Table(name="project")
+@NamedQueries({
+        @NamedQuery(name = "ProjectEntity.findProjectById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
+})
 public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,19 +63,19 @@ public class ProjectEntity implements Serializable {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ComponentEntity> components = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "projects")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "projects")
     private Set<ResourceEntity> resources = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TaskEntity> tasks = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "project_skill",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private Set<SkillEntity> skills = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "project_interest",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id"))

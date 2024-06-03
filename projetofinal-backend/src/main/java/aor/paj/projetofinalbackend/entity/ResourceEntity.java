@@ -113,4 +113,8 @@ public class ResourceEntity implements Serializable {
     public void setProjects(Set<ProjectEntity> projects) {
         this.projects = projects;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

@@ -1,5 +1,9 @@
 package aor.paj.projetofinalbackend.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.xml.bind.annotation.XmlElement;
 
 import java.time.LocalDateTime;
@@ -12,12 +16,15 @@ public class ResourceDto {
     private String name;
     private String supplier;
     private String description;
+
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime expirationDate;
     private String identifier;
 
     private String contact;
 
-    private List<ProjectDto> projects;
+    private List<Long> projectIds;
 
     public ResourceDto() {
     }
@@ -65,8 +72,8 @@ public class ResourceDto {
     }
 
     @XmlElement
-    public List<ProjectDto> getProjects() {
-        return projects;
+    public List<Long> getProjectIds() {
+        return projectIds;
     }
 
     public void setId(Long id) {
@@ -101,7 +108,7 @@ public class ResourceDto {
         this.contact = contact;
     }
 
-    public void setProjects(List<ProjectDto> projects) {
-        this.projects = projects;
+    public void setProjectIds(List<Long> projectIds) {
+        this.projectIds = projectIds;
     }
 }

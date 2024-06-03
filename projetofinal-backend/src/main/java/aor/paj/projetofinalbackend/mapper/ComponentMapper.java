@@ -15,7 +15,7 @@ public class ComponentMapper {
         dto.setContact(entity.getContact());
         dto.setObservation(entity.getObservation());
         dto.setIdentifier(entity.getIdentifier());
-        dto.setProject(ProjectMapper.toDto(entity.getProject()));
+        dto.setProjectId(entity.getProject().getId());
         return dto;
     }
 
@@ -29,7 +29,6 @@ public class ComponentMapper {
         entity.setContact(dto.getContact());
         entity.setObservation(dto.getObservation());
         entity.setIdentifier(dto.getIdentifier());
-        entity.setProject(ProjectMapper.toEntity(dto.getProject()));
         return entity;
     }
 }

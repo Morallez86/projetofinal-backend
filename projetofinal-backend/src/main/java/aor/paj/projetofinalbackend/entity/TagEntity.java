@@ -40,4 +40,8 @@ public abstract class TagEntity implements Serializable {
     public void setCreator(UserEntity creator) {
         this.creator = creator;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

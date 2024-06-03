@@ -6,6 +6,9 @@ import java.util.*;
 
 @Entity
 @Table(name = "component")
+@NamedQueries({
+        @NamedQuery(name = "Component.findComponentById", query = "SELECT c FROM ComponentEntity c WHERE c.id = :id")
+})
 public class ComponentEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
