@@ -63,6 +63,12 @@ public class ProjectBean {
             }
         }
 
+        for (SkillEntity skillEntity : projectEntity.getSkills()) {
+            if (skillEntity.getCreator()==null) {
+                skillEntity.setCreator(user);
+            }
+        }
+
         // Persist the project entity
         projectDao.persist(projectEntity);
         ProjectEntity project = projectDao.findProjectById(projectEntity.getId());
