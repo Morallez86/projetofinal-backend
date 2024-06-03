@@ -53,6 +53,8 @@ public class ProjectMapper {
         entity.setPlannedEndDate(dto.getPlannedEndDate());
         entity.setEndDate(dto.getEndDate());
         entity.setComponents(dto.getComponents().stream().map(ComponentMapper::toEntity).collect(Collectors.toSet()));
+        entity.setResources(dto.getResources().stream().map(ResourceMapper::toEntity).collect(Collectors.toSet()));
+
 
        /* entity.setUserProjects(dto.getUserProjectDtos().stream().map(UserProjectMapper::toEntity).collect(Collectors.toSet()));
         entity.setComponents(dto.getComponents().stream().map(ComponentMapper::toEntity).collect(Collectors.toSet()));

@@ -17,12 +17,12 @@ public class ResourceMapper {
         dto.setExpirationDate(entity.getExpirationDate());
         dto.setIdentifier(entity.getIdentifier());
         dto.setContact(entity.getContact());
-        dto.setProjects(entity.getProjects().stream().map(ProjectMapper::toDto).collect(Collectors.toList()));
         return dto;
     }
 
     public static ResourceEntity toEntity(ResourceDto dto) {
         ResourceEntity entity = new ResourceEntity();
+        entity.setId(dto.getId());
         entity.setBrand(dto.getBrand());
         entity.setName(dto.getName());
         entity.setSupplier(dto.getSupplier());
@@ -30,7 +30,6 @@ public class ResourceMapper {
         entity.setExpirationDate(dto.getExpirationDate());
         entity.setIdentifier(dto.getIdentifier());
         entity.setContact(dto.getContact());
-        entity.setProjects(dto.getProjects().stream().map(ProjectMapper::toEntity).collect(Collectors.toSet()));
         return entity;
     }
 }
