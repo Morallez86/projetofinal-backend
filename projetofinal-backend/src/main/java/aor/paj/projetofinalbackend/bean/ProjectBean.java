@@ -43,6 +43,7 @@ public class ProjectBean {
             throw new IllegalArgumentException("Invalid creator ID");
         }
         System.out.println("1");
+
         // Convert DTO to entity
         ProjectEntity projectEntity = projectMapper.toEntity(projectDto);
 
@@ -52,5 +53,10 @@ public class ProjectBean {
 
         // Persist the project entity
         projectDao.persist(projectEntity);
+        ProjectEntity project = projectDao.findProjectById(projectEntity.getId());
+        for (ComponentEntity componentEntity : projectEntity.getComponents()) {
+            componentEntity.setProject(project);
+            componentDao.merge(componentEntity);
+        }
     }
 }

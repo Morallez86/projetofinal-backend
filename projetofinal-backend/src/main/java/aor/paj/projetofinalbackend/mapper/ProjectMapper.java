@@ -27,14 +27,14 @@ public class ProjectMapper {
         dto.setStartingDate(entity.getStartingDate());
         dto.setPlannedEndDate(entity.getPlannedEndDate());
         dto.setEndDate(entity.getEndDate());
-        dto.setUserProjectDtos(entity.getUserProjects().stream().map(UserProjectMapper::toDto).collect(Collectors.toList()));
+       /* dto.setUserProjectDtos(entity.getUserProjects().stream().map(UserProjectMapper::toDto).collect(Collectors.toList()));
         dto.setComponents(entity.getComponents().stream().map(ComponentMapper::toDto).collect(Collectors.toList()));
         dto.setResources(entity.getResources().stream().map(ResourceMapper::toDto).collect(Collectors.toList()));
         dto.setTasks(entity.getTasks().stream().map(TaskMapper::toDto).collect(Collectors.toList()));
         dto.setInterests(entity.getInterests().stream().map(InterestMapper::toDto).collect(Collectors.toList()));
         dto.setSkills(entity.getSkills().stream().map(SkillMapper::toDto).collect(Collectors.toList()));
         dto.setHistoryrecords(entity.getHistoryRecords().stream().map(ProjectHistoryMapper::toDto).collect(Collectors.toList()));
-        dto.setChatMessage(entity.getChatMessages().stream().map(ChatMessageMapper::toDto).collect(Collectors.toList()));
+        dto.setChatMessage(entity.getChatMessages().stream().map(ChatMessageMapper::toDto).collect(Collectors.toList()));*/
         return dto;
     }
 
@@ -52,7 +52,7 @@ public class ProjectMapper {
         entity.setStartingDate(dto.getStartingDate());
         entity.setPlannedEndDate(dto.getPlannedEndDate());
         entity.setEndDate(dto.getEndDate());
-        entity.setComponents(dto.getComponents().stream().map(componentMapper::toEntity).collect(Collectors.toSet()));
+        entity.setComponents(dto.getComponents().stream().map(ComponentMapper::toEntity).collect(Collectors.toSet()));
 
        /* entity.setUserProjects(dto.getUserProjectDtos().stream().map(UserProjectMapper::toEntity).collect(Collectors.toSet()));
         entity.setComponents(dto.getComponents().stream().map(ComponentMapper::toEntity).collect(Collectors.toSet()));
