@@ -8,6 +8,9 @@ import java.util.*;
 
 @Entity
 @Table(name="project")
+@NamedQueries({
+        @NamedQuery(name = "ProjectEntity.findProjectById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
+})
 public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

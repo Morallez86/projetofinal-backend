@@ -1,8 +1,10 @@
 package aor.paj.projetofinalbackend.bean;
 
+import aor.paj.projetofinalbackend.dao.ComponentDao;
 import aor.paj.projetofinalbackend.dao.ProjectDao;
 import aor.paj.projetofinalbackend.dao.UserDao;
 import aor.paj.projetofinalbackend.dto.ProjectDto;
+import aor.paj.projetofinalbackend.entity.ComponentEntity;
 import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
@@ -24,6 +26,12 @@ public class ProjectBean {
     @EJB
     private ProjectDao projectDao;
 
+    @EJB
+    private ComponentDao componentDao;
+
+    private ProjectMapper projectMapper = new ProjectMapper();
+
+
 
     public void addProject(ProjectDto projectDto, String token) {
         // Extract user ID from the token
@@ -36,7 +44,7 @@ public class ProjectBean {
         }
         System.out.println("1");
         // Convert DTO to entity
-        ProjectEntity projectEntity = ProjectMapper.toEntity(projectDto);
+        ProjectEntity projectEntity = projectMapper.toEntity(projectDto);
 
         // Set the owner of the project
         projectEntity.setOwner(user);
