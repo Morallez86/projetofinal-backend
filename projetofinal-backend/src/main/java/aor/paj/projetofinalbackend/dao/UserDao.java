@@ -5,6 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import org.hibernate.Hibernate;
 
 @Stateless
 public class UserDao extends AbstractDao<UserEntity> {
@@ -64,4 +65,24 @@ public class UserDao extends AbstractDao<UserEntity> {
             return null;
         }
     }
+
+    public UserEntity findUserByIdWithProjects(Long userId) {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user != null) {
+            // Initialize the collection
+            Hibernate.initialize(user.getOwnedProjects());
+        }
+        return user;
+    }
+
+    public long getTotalProjectCount(Long userId) {
+        try {
+            return em.createNamedQuery("UserEntity.getTotalProjectCount", Long.class)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return 0; // Return 0 if no projects found for the user
+        }
+    }
+
 }

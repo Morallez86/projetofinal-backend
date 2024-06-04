@@ -43,7 +43,7 @@ public class ComponentEntity implements Serializable {
     private WorkplaceEntity workplace;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id", nullable = true)
     private ProjectEntity project;
 
     public ComponentEntity() {

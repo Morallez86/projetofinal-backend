@@ -1,14 +1,9 @@
 package aor.paj.projetofinalbackend.mapper;
 
-import aor.paj.projetofinalbackend.dto.ProjectDto;
-import aor.paj.projetofinalbackend.dto.SkillDto;
+import aor.paj.projetofinalbackend.dto.*;
 import aor.paj.projetofinalbackend.entity.*;
-import aor.paj.projetofinalbackend.utils.ListConverter;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ProjectMapper {
@@ -27,19 +22,18 @@ public class ProjectMapper {
         dto.setStartingDate(entity.getStartingDate());
         dto.setPlannedEndDate(entity.getPlannedEndDate());
         dto.setEndDate(entity.getEndDate());
-       /* dto.setUserProjectDtos(entity.getUserProjects().stream().map(UserProjectMapper::toDto).collect(Collectors.toList()));
+
+        dto.setUserProjectDtos(entity.getUserProjects().stream().map(UserProjectMapper::toDto).collect(Collectors.toList()));
         dto.setComponents(entity.getComponents().stream().map(ComponentMapper::toDto).collect(Collectors.toList()));
         dto.setResources(entity.getResources().stream().map(ResourceMapper::toDto).collect(Collectors.toList()));
         dto.setTasks(entity.getTasks().stream().map(TaskMapper::toDto).collect(Collectors.toList()));
         dto.setInterests(entity.getInterests().stream().map(InterestMapper::toDto).collect(Collectors.toList()));
         dto.setSkills(entity.getSkills().stream().map(SkillMapper::toDto).collect(Collectors.toList()));
         dto.setHistoryrecords(entity.getHistoryRecords().stream().map(ProjectHistoryMapper::toDto).collect(Collectors.toList()));
-        dto.setChatMessage(entity.getChatMessages().stream().map(ChatMessageMapper::toDto).collect(Collectors.toList()));*/
+        dto.setChatMessage(entity.getChatMessages().stream().map(ChatMessageMapper::toDto).collect(Collectors.toList()));
+
         return dto;
     }
-
-
-    /************ colocar a lógica de verificar se é null nas partes que podem vir vazias **************/
 
     public static ProjectEntity toEntity(ProjectDto dto) {
         ProjectEntity entity = new ProjectEntity();
@@ -55,21 +49,32 @@ public class ProjectMapper {
         entity.setStartingDate(dto.getStartingDate());
         entity.setPlannedEndDate(dto.getPlannedEndDate());
         entity.setEndDate(dto.getEndDate());
-        entity.setComponents(dto.getComponents().stream().map(ComponentMapper::toEntity).collect(Collectors.toSet()));
-        entity.setResources(dto.getResources().stream().map(ResourceMapper::toEntity).collect(Collectors.toSet()));
-        entity.setInterests(dto.getInterests().stream().map(InterestMapper::toEntity).collect(Collectors.toSet()));
-        entity.setSkills(dto.getSkills().stream().map(SkillMapper::toEntity).collect(Collectors.toSet()));
-        entity.setUserProjects(dto.getUserProjectDtos().stream().map(UserProjectMapper::toEntity).collect(Collectors.toSet()));
-        if (dto.getTasks()!=null) {
-        entity.setTasks(dto.getTasks().stream().map(TaskMapper::toEntity).collect(Collectors.toSet())); }
-        if (dto.getHistoryrecords()!=null) {
+
+        if (dto.getComponents() != null) {
+            entity.setComponents(dto.getComponents().stream().map(ComponentMapper::toEntity).collect(Collectors.toSet()));
+        }
+        if (dto.getResources() != null) {
+            entity.setResources(dto.getResources().stream().map(ResourceMapper::toEntity).collect(Collectors.toSet()));
+        }
+        if (dto.getInterests() != null) {
+            entity.setInterests(dto.getInterests().stream().map(InterestMapper::toEntity).collect(Collectors.toSet()));
+        }
+        if (dto.getSkills() != null) {
+            entity.setSkills(dto.getSkills().stream().map(SkillMapper::toEntity).collect(Collectors.toSet()));
+        }
+        if (dto.getUserProjectDtos() != null) {
+            entity.setUserProjects(dto.getUserProjectDtos().stream().map(UserProjectMapper::toEntity).collect(Collectors.toSet()));
+        }
+        if (dto.getTasks() != null) {
+            entity.setTasks(dto.getTasks().stream().map(TaskMapper::toEntity).collect(Collectors.toSet()));
+        }
+        if (dto.getHistoryrecords() != null) {
             entity.setHistoryRecords(dto.getHistoryrecords().stream().map(ProjectHistoryMapper::toEntity).collect(Collectors.toSet()));
         }
-        if (dto.getChatMessage()!=null) {
+        if (dto.getChatMessage() != null) {
             entity.setChatMessages(dto.getChatMessage().stream().map(ChatMessageMapper::toEntity).collect(Collectors.toSet()));
-
         }
+
         return entity;
     }
 }
-

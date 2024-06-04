@@ -22,3 +22,13 @@ INSERT INTO user_skill (user_id, skill_id) VALUES (1, 4);
 INSERT INTO user_skill (user_id, skill_id) VALUES (1, 5);
 INSERT INTO user_skill (user_id, skill_id) VALUES (1, 6);
 
+INSERT INTO resource (expiration_date, brand, contact, description, identifier, name, supplier)
+VALUES ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier35', 'name2', 'supplier2');
+
+INSERT INTO component(project_id, workplace_id, brand, contact, description, identifier, name, observation, supplier)
+VALUES (NULL, 1, 'brand3', '999-999', 'description2', 'identifier2', 'component2', 'observation2', 'supplier2');
+
+INSERT INTO project(approved, max_users, status, approved_date, creation_date, end_date, owner_id, planned_end_date, starting_date, description, motivation, title)
+VALUES (true, 5, 'IN_PROGRESS', '2024-06-02T10:00:00', '2024-06-02T10:30:00', '2024-06-10T17:00:00', 1, '2024-06-10T17:00:00', '2024-06-03T09:00:00', 'This is a test project created in Postman.', 'To test the functionality.', 'Test Project 40')
+
+INSERT INTO user_project (is_admin, project_id, user_id) VALUES (true, 1, 1);

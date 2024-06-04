@@ -74,6 +74,7 @@ public class ProjectBean {
         uniqueTask.setDescription("Last task");
         uniqueTask.setPlannedStartingDate(projectEntity.getPlannedEndDate());
         uniqueTask.setPlannedEndingDate(projectEntity.getPlannedEndDate());
+        uniqueTask.setUser(user);
         uniqueTask.setStatus(TaskStatus.TODO);
         uniqueTask.setPriority(TaskPriority.LOW);
         taskEntities.add(uniqueTask);
@@ -154,6 +155,7 @@ public class ProjectBean {
                 resourceEntity.setExpirationDate(resource.getExpirationDate());
             }
         }
+        System.out.println();
 
         // Persist the project entity
         System.out.println("before");

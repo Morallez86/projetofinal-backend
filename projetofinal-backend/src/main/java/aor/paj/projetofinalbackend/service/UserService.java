@@ -5,7 +5,9 @@ import aor.paj.projetofinalbackend.bean.ImageBean;
 import aor.paj.projetofinalbackend.bean.TokenBean;
 import aor.paj.projetofinalbackend.bean.UserBean;
 import aor.paj.projetofinalbackend.dto.*;
+import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.pojo.ConfirmationRequest;
 import aor.paj.projetofinalbackend.pojo.ResponseMessage;
 import aor.paj.projetofinalbackend.utils.EmailSender;
@@ -21,6 +23,10 @@ import jakarta.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Path("/users")
 public class UserService {
@@ -267,5 +273,34 @@ public class UserService {
                     .entity(e.getMessage())
                     .build();
         }
+    }
+
+    @GET
+    @Path("/{userId}/myProjects")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMyProjects(@HeaderParam("Authorization") String authorizationHeader,
+                                  @PathParam("userId") Long userId,
+                                  @QueryParam("limit") int limit) {
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+        Response validationResponse = authBean.validateUserToken(token);
+        if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+            return validationResponse;
+        }
+
+        Set<ProjectDto> projectDtos = userBean.getUserProjects(userId, limit);
+        if (projectDtos == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("No projects found for the user").build();
+        }
+
+        long totalProjects = userBean.getTotalProjectCount(userId);
+        int totalPages = (int) Math.ceil((double) totalProjects / limit);
+
+        // Include total number of pages in the response
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("projects", projectDtos);
+        responseMap.put("totalPages", totalPages);
+
+        return Response.ok(responseMap).build();
     }
 }

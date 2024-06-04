@@ -4,12 +4,15 @@ import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dao.UserDao;
 import aor.paj.projetofinalbackend.dao.WorkplaceDao;
 import aor.paj.projetofinalbackend.dto.ProfileDto;
+import aor.paj.projetofinalbackend.dto.ProjectDto;
 import aor.paj.projetofinalbackend.dto.UserDto;
 import aor.paj.projetofinalbackend.dto.UserPasswordUpdateDto;
+import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.TokenEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
 import aor.paj.projetofinalbackend.mapper.ProfileMapper;
+import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.mapper.UserMapper;
 import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.EmailSender;
@@ -24,6 +27,9 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class UserBean {
@@ -201,5 +207,32 @@ public class UserBean {
         user.setEmailToken(null);
         user.setRegistTime(LocalDateTime.now());
         userDao.merge(user);
+    }
+
+    @Transactional
+    public Set<ProjectDto> getUserProjects(Long userId, int limit) {
+        UserEntity user = userDao.findUserByIdWithProjects(userId);
+        if (user == null) {
+            return null;
+        }
+
+        Set<ProjectEntity> userProjects = user.getOwnedProjects();
+        if (userProjects == null || userProjects.isEmpty()) {
+            return null;
+        }
+
+        // Always return the first page of projects based on the given limit
+        List<ProjectEntity> projectsPerPage = userProjects.stream()
+                .limit(limit)
+                .collect(Collectors.toList());
+
+        return projectsPerPage.stream()
+                .map(ProjectMapper::toDto)
+                .collect(Collectors.toSet());
+    }
+
+
+    public Long getTotalProjectCount(Long userId) {
+        return userDao.getTotalProjectCount(userId);
     }
 }

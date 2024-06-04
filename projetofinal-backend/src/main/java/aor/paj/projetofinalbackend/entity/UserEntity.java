@@ -12,8 +12,8 @@ import java.util.*;
         @NamedQuery(name = "User.findUserById", query = "SELECT u FROM UserEntity u WHERE u.id = :userId"),
         @NamedQuery(name = "User.findUserByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username"),
         @NamedQuery(name = "User.countTotalUsers", query = "SELECT COUNT(u) FROM UserEntity u"),
-        @NamedQuery(name = "User.findUserByEmailValidationToken", query = "SELECT u FROM UserEntity u WHERE u.emailToken = :emailToken")
-
+        @NamedQuery(name = "User.findUserByEmailValidationToken", query = "SELECT u FROM UserEntity u WHERE u.emailToken = :emailToken"),
+        @NamedQuery(name = "UserEntity.getTotalProjectCount", query = "SELECT COUNT(p) FROM UserEntity u JOIN u.ownedProjects p WHERE u.id = :userId"),
 })
 public class UserEntity implements Serializable {
 
