@@ -21,10 +21,10 @@ public class TaskMapper {
         dto.setStatus(entity.getStatus().ordinal());
         dto.setPriority(entity.getPriority().getValue());
         dto.setContributors(entity.getContributors());
-        dto.setUser(UserMapper.toDto(entity.getUser()));
+       dto.setUserId(entity.getUser().getId());
         dto.setDependencies(entity.getDependencies().stream().map(TaskMapper::toDto).collect(Collectors.toList()));
         dto.setDependentTasks(entity.getDependentTasks().stream().map(TaskMapper::toDto).collect(Collectors.toList()));
-        dto.setProject(ProjectMapper.toDto(entity.getProject()));
+        dto.setProjectId(entity.getProject().getId());
         return dto;
     }
 
@@ -36,13 +36,11 @@ public class TaskMapper {
         entity.setStartingDate(dto.getStartingDate());
         entity.setPlannedEndingDate(dto.getPlannedEndingDate());
         entity.setEndingDate(dto.getEndingDate());
-        entity.setStatus(TaskStatus.values()[dto.getStatus()]);
+        entity.setStatus(TaskStatus.fromValue(dto.getStatus()));
         entity.setPriority(TaskPriority.fromValue(dto.getPriority()));
         entity.setContributors(dto.getContributors());
-        entity.setUser(UserMapper.toEntity(dto.getUser()));
         entity.setDependencies(dto.getDependencies().stream().map(TaskMapper::toEntity).collect(Collectors.toList()));
         entity.setDependentTasks(dto.getDependentTasks().stream().map(TaskMapper::toEntity).collect(Collectors.toList()));
-        entity.setProject(ProjectMapper.toEntity(dto.getProject()));
         return entity;
     }
 }

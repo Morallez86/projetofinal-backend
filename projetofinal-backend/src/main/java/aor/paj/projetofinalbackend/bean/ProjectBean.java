@@ -8,6 +8,8 @@ import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
+import aor.paj.projetofinalbackend.utils.TaskPriority;
+import aor.paj.projetofinalbackend.utils.TaskStatus;
 import io.jsonwebtoken.Claims;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -62,6 +64,18 @@ public class ProjectBean {
         // Set the owner of the project
         projectEntity.setOwner(user);
         System.out.println(projectDto.getStatus());
+
+        Set<TaskEntity> taskEntities = new HashSet<>();
+        TaskEntity uniqueTask = new TaskEntity();
+        uniqueTask.setTitle("Final Apresentation");
+        uniqueTask.setDescription("Last task");
+        uniqueTask.setPlannedStartingDate(projectEntity.getPlannedEndDate());
+        uniqueTask.setPlannedEndingDate(projectEntity.getPlannedEndDate());
+        uniqueTask.setStatus(TaskStatus.TODO);
+        uniqueTask.setPriority(TaskPriority.LOW);
+        taskEntities.add(uniqueTask);
+        projectEntity.setTasks(taskEntities);
+
 
 
         Set<InterestEntity> existingInterestEntity = new HashSet<>();
@@ -121,6 +135,14 @@ public class ProjectBean {
                 userProjectDao.merge(userProjectEntity);
             }
         }
+
+        Set<TaskEntity> taskEntitiesFinal = new HashSet<>();
+        for (TaskEntity task : project.getTasks()) {
+            task.setProject(project);
+            taskEntitiesFinal.add(task);
+        }
+        project.setTasks(taskEntitiesFinal);
+        projectDao.merge(project);
         }
     }
 
