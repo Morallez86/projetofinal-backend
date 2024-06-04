@@ -16,6 +16,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @ApplicationScoped
@@ -41,6 +42,9 @@ public class ProjectBean {
 
     @EJB
     private UserProjectDao userProjectDao;
+
+    @EJB
+    private SkillDao skillDao;
 
     private ProjectMapper projectMapper = new ProjectMapper();
 
@@ -81,22 +85,37 @@ public class ProjectBean {
         Set<InterestEntity> existingInterestEntity = new HashSet<>();
 
         for (InterestEntity interestEntity : projectEntity.getInterests()) {
+            /* findInterestbyId  */
             if (interestEntity.getCreator()==null) {
                 interestEntity.setCreator(user);
             }
         }
 
-        for (InterestEntity interestEntity2: projectEntity.getInterests()) {
-            if (interestEntity2.getId()!=null){
-                System.out.println("in");
-                projectEntity.getInterests().remove(interestEntity2);
+        Iterator<InterestEntity> interestIterator = projectEntity.getInterests().iterator();
+        while (interestIterator.hasNext()) {
+            InterestEntity interestEntity2 = interestIterator.next();
+            if (interestEntity2.getId() != null) {
+                interestIterator.remove();
                 existingInterestEntity.add(interestEntity2);
             }
         }
 
+        Set<SkillEntity> existingSkillEntity = new HashSet<>();
+
         for (SkillEntity skillEntity : projectEntity.getSkills()) {
             if (skillEntity.getCreator()==null) {
                 skillEntity.setCreator(user);
+            }
+        }
+
+        Iterator<SkillEntity> iterator = projectEntity.getSkills().iterator();
+        while (iterator.hasNext()) {
+            SkillEntity skillEntity2 = iterator.next();
+            if (skillEntity2.getId() != null) {
+                iterator.remove();
+                existingSkillEntity.add(skillEntity2);
+                SkillEntity skill = skillDao.findById(skillEntity2.getId());
+                skillEntity2.setType(skill.getType());
             }
         }
 
@@ -126,7 +145,13 @@ public class ProjectBean {
         completeInterestSet.addAll(existingInterestEntity);
 
         project.setInterests(completeInterestSet);
+
+        Set<SkillEntity> completeSkillSet = project.getSkills();
+        completeSkillSet.addAll(existingSkillEntity);
+        project.setSkills(completeSkillSet);
         projectDao.merge(project);
+
+
 
         for (UserProjectEntity userProjectEntity : project.getUserProjects()) {
             if (userProjectEntity.isAdmin()) {

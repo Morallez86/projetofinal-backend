@@ -38,6 +38,9 @@ public class ProjectMapper {
         return dto;
     }
 
+
+    /************ colocar a lógica de verificar se é null nas partes que podem vir vazias **************/
+
     public static ProjectEntity toEntity(ProjectDto dto) {
         ProjectEntity entity = new ProjectEntity();
         entity.setId(dto.getId());
