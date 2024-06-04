@@ -119,8 +119,26 @@ public class ProjectBean {
             }
         }
 
+        Set<ComponentEntity> existingComponentEntity = new HashSet<>();
+        Iterator<ComponentEntity> componentIterator = projectEntity.getComponents().iterator();
+        while (componentIterator.hasNext()) {
+            ComponentEntity componentEntity = componentIterator.next();
+            if (componentEntity.getId()!=null) {
+                componentIterator.remove();
+                existingComponentEntity.add(componentEntity);
+                ComponentEntity component = componentDao.findComponentById(componentEntity.getId());
+                componentEntity.setBrand(component.getBrand());
+                componentEntity.setName(component.getName());
+                componentEntity.setSupplier(component.getSupplier());
+                componentEntity.setContact(component.getContact());
+                componentEntity.setIdentifier(component.getIdentifier());
+            }
+        }
+
         // Persist the project entity
+        System.out.println("before");
         projectDao.persist(projectEntity);
+        System.out.println("after");
         ProjectEntity project = projectDao.findProjectById(projectEntity.getId());
         for (ComponentEntity componentEntity : projectEntity.getComponents()) {
             componentEntity.setProject(project);
@@ -143,12 +161,15 @@ public class ProjectBean {
 
         Set<InterestEntity> completeInterestSet = project.getInterests();
         completeInterestSet.addAll(existingInterestEntity);
-
         project.setInterests(completeInterestSet);
 
         Set<SkillEntity> completeSkillSet = project.getSkills();
         completeSkillSet.addAll(existingSkillEntity);
         project.setSkills(completeSkillSet);
+
+        Set<ComponentEntity> completeComponentSet = project.getComponents();
+        completeComponentSet.addAll(existingComponentEntity);
+        project.setComponents(completeComponentSet);
         projectDao.merge(project);
 
 
