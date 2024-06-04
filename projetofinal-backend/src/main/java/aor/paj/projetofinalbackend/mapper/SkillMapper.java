@@ -25,8 +25,9 @@ public class SkillMapper {
             return null;
         }
         SkillEntity skill = new SkillEntity();
+        skill.setId(dto.getId());
         skill.setName(dto.getName());
-        skill.setType(SkillType.fromValue(dto.getType())); // Convert int value back to SkillType
+        skill.setType(SkillType.fromValue(dto.getType()));  // Convert int value back to SkillType
         return skill;
     }
 

@@ -10,4 +10,13 @@ public enum TaskStatus {
     TaskStatus(int value) {this.value = value;}
 
     public int getValue() {return value;};
+
+    public static TaskStatus fromValue(int value) {
+        for (TaskStatus status : TaskStatus.values()) {
+            if (status.getValue() == value) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Invalid ProjectStatus value: " + value);
+    }
 }

@@ -8,12 +8,15 @@ import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
+import aor.paj.projetofinalbackend.utils.TaskPriority;
+import aor.paj.projetofinalbackend.utils.TaskStatus;
 import io.jsonwebtoken.Claims;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @ApplicationScoped
@@ -37,6 +40,12 @@ public class ProjectBean {
     @EJB
     private InterestDao interestDao;
 
+    @EJB
+    private UserProjectDao userProjectDao;
+
+    @EJB
+    private SkillDao skillDao;
+
     private ProjectMapper projectMapper = new ProjectMapper();
 
 
@@ -52,7 +61,6 @@ public class ProjectBean {
         }
         System.out.println("1");
 
-
         // Convert DTO to entity
         ProjectEntity projectEntity = projectMapper.toEntity(projectDto);
 
@@ -60,6 +68,16 @@ public class ProjectBean {
         projectEntity.setOwner(user);
         System.out.println(projectDto.getStatus());
 
+        Set<TaskEntity> taskEntities = new HashSet<>();
+        TaskEntity uniqueTask = new TaskEntity();
+        uniqueTask.setTitle("Final Apresentation");
+        uniqueTask.setDescription("Last task");
+        uniqueTask.setPlannedStartingDate(projectEntity.getPlannedEndDate());
+        uniqueTask.setPlannedEndingDate(projectEntity.getPlannedEndDate());
+        uniqueTask.setStatus(TaskStatus.TODO);
+        uniqueTask.setPriority(TaskPriority.LOW);
+        taskEntities.add(uniqueTask);
+        projectEntity.setTasks(taskEntities);
 
         Set<InterestEntity> existingInterestEntity = new HashSet<>();
 
@@ -69,13 +87,19 @@ public class ProjectBean {
             }
         }
 
-        for (InterestEntity interestEntity2: projectEntity.getInterests()) {
-            if (interestEntity2.getId()!=null){
-                System.out.println("in");
-                projectEntity.getInterests().remove(interestEntity2);
+        Iterator<InterestEntity> interestIterator = projectEntity.getInterests().iterator();
+        while (interestIterator.hasNext()) {
+            InterestEntity interestEntity2 = interestIterator.next();
+            if (interestEntity2.getId() != null) {
+                interestIterator.remove();
                 existingInterestEntity.add(interestEntity2);
+                InterestEntity interest = interestDao.findById(interestEntity2.getId());
+                interestEntity2.setName(interest.getName());
+                interestEntity2.setCreator(interest.getCreator());
             }
         }
+
+        Set<SkillEntity> existingSkillEntity = new HashSet<>();
 
         for (SkillEntity skillEntity : projectEntity.getSkills()) {
             if (skillEntity.getCreator()==null) {
@@ -83,8 +107,58 @@ public class ProjectBean {
             }
         }
 
+        Iterator<SkillEntity> iterator = projectEntity.getSkills().iterator();
+        while (iterator.hasNext()) {
+            SkillEntity skillEntity2 = iterator.next();
+            if (skillEntity2.getId() != null) {
+                iterator.remove();
+                existingSkillEntity.add(skillEntity2);
+                SkillEntity skill = skillDao.findById(skillEntity2.getId());
+                skillEntity2.setType(skill.getType());
+                skillEntity2.setCreator(skill.getCreator());
+            }
+        }
+
+        Set<ComponentEntity> existingComponentEntity = new HashSet<>();
+        Iterator<ComponentEntity> componentIterator = projectEntity.getComponents().iterator();
+        while (componentIterator.hasNext()) {
+            ComponentEntity componentEntity = componentIterator.next();
+            if (componentEntity.getId()!=null) {
+                componentIterator.remove();
+                existingComponentEntity.add(componentEntity);
+                ComponentEntity component = componentDao.findComponentById(componentEntity.getId());
+                componentEntity.setBrand(component.getBrand());
+                componentEntity.setName(component.getName());
+                componentEntity.setSupplier(component.getSupplier());
+                componentEntity.setContact(component.getContact());
+                componentEntity.setIdentifier(component.getIdentifier());
+                componentEntity.setDescription(component.getDescription());
+                componentEntity.setObservation(component.getObservation());
+            }
+        }
+
+        Set<ResourceEntity> existingResourceEntity= new HashSet<>();
+        Iterator<ResourceEntity> resourceIterator = projectEntity.getResources().iterator();
+        while (resourceIterator.hasNext()) {
+            ResourceEntity resourceEntity = resourceIterator.next();
+            if (resourceEntity.getId()!=null){
+                resourceIterator.remove();
+                existingResourceEntity.add(resourceEntity);
+                ResourceEntity resource = resourceDao.findById(resourceEntity.getId());
+                resourceEntity.setBrand(resource.getBrand());
+                resourceEntity.setName(resource.getSupplier());
+                resourceEntity.setDescription(resource.getDescription());
+                resourceEntity.setContact(resource.getContact());
+                resourceEntity.setIdentifier(resource.getIdentifier());
+                resourceEntity.setSupplier(resource.getSupplier());
+                resourceEntity.setExpirationDate(resource.getExpirationDate());
+            }
+        }
+
         // Persist the project entity
+        System.out.println("before");
         projectDao.persist(projectEntity);
+        System.out.println("after");
         ProjectEntity project = projectDao.findProjectById(projectEntity.getId());
         for (ComponentEntity componentEntity : projectEntity.getComponents()) {
             componentEntity.setProject(project);
@@ -107,13 +181,39 @@ public class ProjectBean {
 
         Set<InterestEntity> completeInterestSet = project.getInterests();
         completeInterestSet.addAll(existingInterestEntity);
-
         project.setInterests(completeInterestSet);
-        projectDao.merge(project);
-        /*projectEntity.getInterests().addAll(existingInterestEntity);
-        projectEntity.setInterests(projectEntity.getInterests());
-        projectDao.merge(projectEntity);*/
 
+        Set<SkillEntity> completeSkillSet = project.getSkills();
+        completeSkillSet.addAll(existingSkillEntity);
+        project.setSkills(completeSkillSet);
+
+        Set<ComponentEntity> completeComponentSet = project.getComponents();
+        completeComponentSet.addAll(existingComponentEntity);
+        project.setComponents(completeComponentSet);
+
+        Set<ResourceEntity> completeResourceSet = project.getResources();
+        completeResourceSet.addAll(existingResourceEntity);
+        project.setResources(completeResourceSet);
+
+        projectDao.merge(project);
+
+
+
+        for (UserProjectEntity userProjectEntity : project.getUserProjects()) {
+            if (userProjectEntity.isAdmin()) {
+                userProjectEntity.setUser(user);
+                userProjectEntity.setProject(project);
+                userProjectDao.merge(userProjectEntity);
+            }
+        }
+
+        Set<TaskEntity> taskEntitiesFinal = new HashSet<>();
+        for (TaskEntity task : project.getTasks()) {
+            task.setProject(project);
+            taskEntitiesFinal.add(task);
+        }
+        project.setTasks(taskEntitiesFinal);
+        projectDao.merge(project);
         }
     }
 

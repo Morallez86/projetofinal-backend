@@ -1,5 +1,9 @@
 package aor.paj.projetofinalbackend.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.xml.bind.annotation.XmlElement;
 
 import java.time.LocalDateTime;
@@ -11,10 +15,17 @@ public class TaskDto {
     private String title;
 
     private String description;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime plannedStartingDate;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime startingDate;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime plannedEndingDate;
-
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime endingDate;
 
     private int status;
@@ -23,13 +34,13 @@ public class TaskDto {
 
     private String contributors;
 
-    private UserDto user;
+    private Long userId;
 
     private List<TaskDto> dependencies;
 
     private List<TaskDto> dependentTasks;
 
-    private ProjectDto project;
+    private Long projectId;
 
     public TaskDto() {
     }
@@ -86,10 +97,7 @@ public class TaskDto {
         return contributors;
     }
 
-    @XmlElement
-    public UserDto getUser() {
-        return user;
-    }
+
 
     @XmlElement
     public List<TaskDto> getDependencies() {
@@ -102,8 +110,13 @@ public class TaskDto {
     }
 
     @XmlElement
-    public ProjectDto getProject() {
-        return project;
+    public Long getUserId() {
+        return userId;
+    }
+
+    @XmlElement
+    public Long getProjectId() {
+        return projectId;
     }
 
     public void setId(Long id) {
@@ -146,8 +159,12 @@ public class TaskDto {
         this.contributors = contributors;
     }
 
-    public void setUser(UserDto user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public void setDependencies(List<TaskDto> dependencies) {
@@ -158,7 +175,4 @@ public class TaskDto {
         this.dependentTasks = dependentTasks;
     }
 
-    public void setProject(ProjectDto project) {
-        this.project = project;
-    }
 }

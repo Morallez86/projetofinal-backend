@@ -38,6 +38,9 @@ public class ProjectMapper {
         return dto;
     }
 
+
+    /************ colocar a lógica de verificar se é null nas partes que podem vir vazias **************/
+
     public static ProjectEntity toEntity(ProjectDto dto) {
         ProjectEntity entity = new ProjectEntity();
         entity.setId(dto.getId());
@@ -56,14 +59,16 @@ public class ProjectMapper {
         entity.setResources(dto.getResources().stream().map(ResourceMapper::toEntity).collect(Collectors.toSet()));
         entity.setInterests(dto.getInterests().stream().map(InterestMapper::toEntity).collect(Collectors.toSet()));
         entity.setSkills(dto.getSkills().stream().map(SkillMapper::toEntity).collect(Collectors.toSet()));
+        entity.setUserProjects(dto.getUserProjectDtos().stream().map(UserProjectMapper::toEntity).collect(Collectors.toSet()));
+        if (dto.getTasks()!=null) {
+        entity.setTasks(dto.getTasks().stream().map(TaskMapper::toEntity).collect(Collectors.toSet())); }
+        if (dto.getHistoryrecords()!=null) {
+            entity.setHistoryRecords(dto.getHistoryrecords().stream().map(ProjectHistoryMapper::toEntity).collect(Collectors.toSet()));
+        }
+        if (dto.getChatMessage()!=null) {
+            entity.setChatMessages(dto.getChatMessage().stream().map(ChatMessageMapper::toEntity).collect(Collectors.toSet()));
 
-
-
-       /* entity.setUserProjects(dto.getUserProjectDtos().stream().map(UserProjectMapper::toEntity).collect(Collectors.toSet()));
-        entity.setTasks(dto.getTasks().stream().map(TaskMapper::toEntity).collect(Collectors.toSet()));
-        entity.setSkills(dto.getSkills().stream().map(SkillMapper::toEntity).collect(Collectors.toSet()));
-        entity.setHistoryRecords(dto.getHistoryrecords().stream().map(ProjectHistoryMapper::toEntity).collect(Collectors.toSet()));
-        entity.setChatMessages(dto.getChatMessage().stream().map(ChatMessageMapper::toEntity).collect(Collectors.toSet()));*/
+        }
         return entity;
     }
 }

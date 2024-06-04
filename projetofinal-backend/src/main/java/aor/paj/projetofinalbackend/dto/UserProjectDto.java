@@ -8,45 +8,52 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class UserProjectDto {
 
     private Long id;
-    private UserDto user;
+    private Long userId;
     private boolean isAdmin;
 
-    private ProjectDto project;
+    private Long projectId;
 
     public UserProjectDto() {
     }
 
     @XmlElement
-    public UserDto getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
     @XmlElement
+
     public boolean isAdmin() {
         return isAdmin;
     }
+
+
+
     @XmlElement
     public Long getId() {
         return id;
     }
+
     @XmlElement
-    public ProjectDto getProject() {
-        return project;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setUser(UserDto user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setProject(ProjectDto project) {
-        this.project = project;
-    }
+
 }
