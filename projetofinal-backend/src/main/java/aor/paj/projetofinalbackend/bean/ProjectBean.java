@@ -61,7 +61,6 @@ public class ProjectBean {
         }
         System.out.println("1");
 
-
         // Convert DTO to entity
         ProjectEntity projectEntity = projectMapper.toEntity(projectDto);
 
@@ -80,12 +79,9 @@ public class ProjectBean {
         taskEntities.add(uniqueTask);
         projectEntity.setTasks(taskEntities);
 
-
-
         Set<InterestEntity> existingInterestEntity = new HashSet<>();
 
         for (InterestEntity interestEntity : projectEntity.getInterests()) {
-            /* findInterestbyId  */
             if (interestEntity.getCreator()==null) {
                 interestEntity.setCreator(user);
             }
@@ -97,6 +93,9 @@ public class ProjectBean {
             if (interestEntity2.getId() != null) {
                 interestIterator.remove();
                 existingInterestEntity.add(interestEntity2);
+                InterestEntity interest = interestDao.findById(interestEntity2.getId());
+                interestEntity2.setName(interest.getName());
+                interestEntity2.setCreator(interest.getCreator());
             }
         }
 
@@ -116,6 +115,7 @@ public class ProjectBean {
                 existingSkillEntity.add(skillEntity2);
                 SkillEntity skill = skillDao.findById(skillEntity2.getId());
                 skillEntity2.setType(skill.getType());
+                skillEntity2.setCreator(skill.getCreator());
             }
         }
 
