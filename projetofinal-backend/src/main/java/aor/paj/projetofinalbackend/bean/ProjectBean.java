@@ -132,6 +132,26 @@ public class ProjectBean {
                 componentEntity.setSupplier(component.getSupplier());
                 componentEntity.setContact(component.getContact());
                 componentEntity.setIdentifier(component.getIdentifier());
+                componentEntity.setDescription(component.getDescription());
+                componentEntity.setObservation(component.getObservation());
+            }
+        }
+
+        Set<ResourceEntity> existingResourceEntity= new HashSet<>();
+        Iterator<ResourceEntity> resourceIterator = projectEntity.getResources().iterator();
+        while (resourceIterator.hasNext()) {
+            ResourceEntity resourceEntity = resourceIterator.next();
+            if (resourceEntity.getId()!=null){
+                resourceIterator.remove();
+                existingResourceEntity.add(resourceEntity);
+                ResourceEntity resource = resourceDao.findById(resourceEntity.getId());
+                resourceEntity.setBrand(resource.getBrand());
+                resourceEntity.setName(resource.getSupplier());
+                resourceEntity.setDescription(resource.getDescription());
+                resourceEntity.setContact(resource.getContact());
+                resourceEntity.setIdentifier(resource.getIdentifier());
+                resourceEntity.setSupplier(resource.getSupplier());
+                resourceEntity.setExpirationDate(resource.getExpirationDate());
             }
         }
 
@@ -170,6 +190,11 @@ public class ProjectBean {
         Set<ComponentEntity> completeComponentSet = project.getComponents();
         completeComponentSet.addAll(existingComponentEntity);
         project.setComponents(completeComponentSet);
+
+        Set<ResourceEntity> completeResourceSet = project.getResources();
+        completeResourceSet.addAll(existingResourceEntity);
+        project.setResources(completeResourceSet);
+
         projectDao.merge(project);
 
 

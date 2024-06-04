@@ -7,6 +7,10 @@ import java.util.*;
 
 @Entity
 @Table(name = "resource")
+@NamedQueries({
+        @NamedQuery(name = "ResourceEntity.findById",
+                query = "SELECT r FROM ResourceEntity r WHERE r.id = :id")
+})
 public class ResourceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
