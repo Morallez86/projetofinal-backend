@@ -17,7 +17,9 @@ import jakarta.transaction.Transactional;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ProjectBean {
@@ -217,5 +219,19 @@ public class ProjectBean {
         project.setTasks(taskEntitiesFinal);
         projectDao.merge(project);
         }
+
+    @Transactional
+    public Set<ProjectDto> getAllProjects(int page, int limit) {
+        List<ProjectEntity> projects = projectDao.findAllProjects(page, limit);
+
+        return projects.stream()
+                .map(ProjectMapper::toDto)
+                .collect(Collectors.toSet());
     }
+
+
+    public long getTotalProjectCount() {
+        return projectDao.getTotalProjectCount();
+    }
+}
 

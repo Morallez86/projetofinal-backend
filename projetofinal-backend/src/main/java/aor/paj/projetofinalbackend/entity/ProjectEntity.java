@@ -9,7 +9,10 @@ import java.util.*;
 @Entity
 @Table(name="project")
 @NamedQueries({
-        @NamedQuery(name = "ProjectEntity.findProjectById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
+        @NamedQuery(name = "ProjectEntity.findAll", query = "SELECT p FROM ProjectEntity p ORDER BY p.creationDate DESC"),
+        @NamedQuery(name = "ProjectEntity.findProjectById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id"),
+        @NamedQuery(name = "ProjectEntity.getTotalProjectCount", query = "SELECT COUNT(p) FROM ProjectEntity p")
+
 })
 public class ProjectEntity implements Serializable {
 

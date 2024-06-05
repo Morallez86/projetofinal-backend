@@ -13,7 +13,7 @@ public class ProjectMapper {
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());
         dto.setMotivation(entity.getMotivation());
-        dto.setStatus(entity.getStatus().ordinal());
+        dto.setStatus(entity.getStatus().getValue());
         dto.setMaxUsers(entity.getMaxUsers());
         dto.setOwner(entity.getOwner().getId());
         dto.setApproved(entity.getApproved());
