@@ -49,10 +49,12 @@ public class ProjectService {
                                    @QueryParam("page") @DefaultValue("1") int page,
                                    @QueryParam("limit") @DefaultValue("10") int limit) {
         try {
-            String token = authorizationHeader.substring("Bearer".length()).trim();
-            Response validationResponse = authBean.validateUserToken(token);
-            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-                return validationResponse;
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String token = authorizationHeader.substring("Bearer".length()).trim();
+                Response validationResponse = authBean.validateUserToken(token);
+                if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                    return validationResponse;
+                }
             }
 
             Set<ProjectDto> projectDtos = projectBean.getAllProjects(page, limit);
@@ -70,4 +72,29 @@ public class ProjectService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
+    @GET
+    @Path("/{projectId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectDetails(@HeaderParam("Authorization") String authorizationHeader,
+                                      @PathParam("projectId") Long projectId) {
+        try {
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            ProjectDto projectDto = projectBean.getProjectById(projectId);
+            if (projectDto == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Project not found").build();
+            }
+
+            return Response.ok(projectDto).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
 }

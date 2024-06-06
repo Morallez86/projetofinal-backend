@@ -8,7 +8,9 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -20,25 +22,36 @@ public class JwtFilter implements ContainerRequestFilter {
 
     private static final Logger LOGGER = Logger.getLogger(JwtFilter.class.getName());
 
-    // Set of paths to be excluded from JWT validation
-    private static final Set<String> EXCLUDED_PATHS = new HashSet<>();
+    // Map of paths to be excluded from JWT validation with their corresponding HTTP methods
+    private static final Map<String, Set<String>> EXCLUDED_PATHS_AND_METHODS = new HashMap<>();
 
     static {
-        EXCLUDED_PATHS.add("/users/login");
-        EXCLUDED_PATHS.add("/users/register");
-        EXCLUDED_PATHS.add("/users/image");
-        EXCLUDED_PATHS.add("/workplaces");
-        EXCLUDED_PATHS.add("/users/emailRecoveryPassword");
-        EXCLUDED_PATHS.add("/users/forgotPassword");
-        EXCLUDED_PATHS.add("/users/confirmRegistration");
+        // Unauthenticated access for GET method on /projects path
+        Set<String> getMethods = new HashSet<>();
+        getMethods.add("GET");
+        EXCLUDED_PATHS_AND_METHODS.put("/projects", getMethods);
+
+        // Other excluded paths (regardless of method)
+        Set<String> anyMethods = new HashSet<>();
+        anyMethods.add("GET");
+        anyMethods.add("POST");
+        EXCLUDED_PATHS_AND_METHODS.put("/users/login", anyMethods);
+        EXCLUDED_PATHS_AND_METHODS.put("/users/register", anyMethods);
+        EXCLUDED_PATHS_AND_METHODS.put("/users/image", anyMethods);
+        EXCLUDED_PATHS_AND_METHODS.put("/workplaces", anyMethods);
+        EXCLUDED_PATHS_AND_METHODS.put("/users/emailRecoveryPassword", anyMethods);
+        EXCLUDED_PATHS_AND_METHODS.put("/users/forgotPassword", anyMethods);
+        EXCLUDED_PATHS_AND_METHODS.put("/users/confirmRegistration", anyMethods);
     }
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String path = requestContext.getUriInfo().getPath();
+        String method = requestContext.getMethod();
 
-        // Allow unauthenticated access to the login and registration endpoints
-        if (EXCLUDED_PATHS.contains(path)) {
+        // Allow unauthenticated access to the specified paths and methods
+        Set<String> methods = EXCLUDED_PATHS_AND_METHODS.get(path);
+        if (methods != null && methods.contains(method)) {
             return;
         }
 
