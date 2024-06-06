@@ -42,4 +42,11 @@ public class ComponentBean {
         componentEntity.setProject(project);
         componentDao.merge(componentEntity);
     }
+
+    public void updateComponent(ComponentDto dto) {
+        ComponentEntity componentEntity = ComponentMapper.toEntity(dto);
+        ProjectEntity project = projectDao.findProjectById(dto.getProjectId());
+        componentEntity.setProject(project);
+        componentDao.merge(componentEntity);
+    }
 }

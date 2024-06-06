@@ -35,5 +35,24 @@ public class ComponentService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-}
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateComponent(@HeaderParam("Authorization") String authorizationHeader, ComponentDto componentDto) {
+        try {
+            componentBean.updateComponent(componentDto);
+            return Response.status(Response.Status.OK).entity("component updated").build();
+        } catch (ExceptionInInitializerError e) {
+            Throwable cause = e.getCause();
+            cause.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(cause.getMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    }
+
 
