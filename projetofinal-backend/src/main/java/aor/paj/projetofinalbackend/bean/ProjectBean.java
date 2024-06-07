@@ -169,20 +169,6 @@ public class ProjectBean {
             componentDao.merge(componentEntity);
         }
 
-        for (ResourceEntity resourceEntity : projectEntity.getResources()) {
-            System.out.println("entrou");
-            Set<ProjectEntity> projectEntities = resourceEntity.getProjects();
-            if (!projectEntities.contains(project)) {
-                System.out.println("entrou2");
-                projectEntities.add(project);
-                System.out.println("entrou3");
-                resourceEntity.setProjects(projectEntities);
-                System.out.println("entrou4");
-                resourceDao.merge(resourceEntity);
-                System.out.println("entrou5");
-            }
-        }
-
         Set<InterestEntity> completeInterestSet = project.getInterests();
         completeInterestSet.addAll(existingInterestEntity);
         project.setInterests(completeInterestSet);
@@ -200,6 +186,23 @@ public class ProjectBean {
         project.setResources(completeResourceSet);
 
         projectDao.merge(project);
+
+        for (ResourceEntity resourceEntity : project.getResources()) {
+            System.out.println("id do recurso do projeto " + resourceEntity.getId());
+            /*Set<ProjectEntity> projectEntitySet = resourceDao.findProjectsByResourceId(resourceEntity.getId());*/
+           /* System.out.println("projetos do recurso vindos da base de dados: " + projectEntitySet);*/
+            System.out.println("projetos do recurso normal " + resourceEntity.getProjects());
+            Set<ProjectEntity> projectEntities = resourceEntity.getProjects();
+            if (!projectEntities.contains(project)) {
+
+                projectEntities.add(project);
+
+                resourceEntity.setProjects(projectEntities);
+
+                resourceDao.merge(resourceEntity);
+
+            }
+        }
 
 
 

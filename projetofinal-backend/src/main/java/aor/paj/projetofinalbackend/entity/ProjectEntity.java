@@ -66,7 +66,7 @@ public class ProjectEntity implements Serializable {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ComponentEntity> components = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "projects")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST}, mappedBy = "projects")
     private Set<ResourceEntity> resources = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -263,5 +263,12 @@ public class ProjectEntity implements Serializable {
 
     public void setChatMessages(Set<ChatMessageEntity> chatMessages) {
         this.chatMessages = chatMessages;
+    }
+
+    @Override
+    public String toString() {
+        return "ProjectEntity{" +
+                "title='" + title + '\'' +
+                '}';
     }
 }

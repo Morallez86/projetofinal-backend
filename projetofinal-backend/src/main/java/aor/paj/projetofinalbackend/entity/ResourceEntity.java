@@ -9,7 +9,10 @@ import java.util.*;
 @Table(name = "resource")
 @NamedQueries({
         @NamedQuery(name = "ResourceEntity.findById",
-                query = "SELECT r FROM ResourceEntity r WHERE r.id = :id")
+                query = "SELECT r FROM ResourceEntity r WHERE r.id = :id"),
+        @NamedQuery(name = "ResourceEntity.findProjectsByResourceId",
+                query = "SELECT p FROM ResourceEntity r JOIN r.projects p WHERE r.id = :id")
+
 })
 public class ResourceEntity implements Serializable {
 

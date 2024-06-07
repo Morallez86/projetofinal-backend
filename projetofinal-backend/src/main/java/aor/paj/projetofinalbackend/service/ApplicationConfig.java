@@ -18,6 +18,8 @@ public class ApplicationConfig extends Application{
         resources.add(SkillService.class);
         resources.add(InterestService.class);
         resources.add(ProjectService.class);
+        resources.add(ComponentService.class);
+        resources.add(ResourceService.class);
         resources.add(TaskService.class);
         return resources;
     }
