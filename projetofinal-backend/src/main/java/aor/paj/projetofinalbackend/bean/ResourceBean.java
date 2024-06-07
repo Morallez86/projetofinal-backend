@@ -2,6 +2,8 @@ package aor.paj.projetofinalbackend.bean;
 
 import aor.paj.projetofinalbackend.dao.ResourceDao;
 import aor.paj.projetofinalbackend.dto.ResourceDto;
+import aor.paj.projetofinalbackend.entity.ComponentEntity;
+import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.ResourceEntity;
 import aor.paj.projetofinalbackend.mapper.ComponentMapper;
 import aor.paj.projetofinalbackend.mapper.ResourceMapper;
@@ -24,4 +26,12 @@ public class ResourceBean {
         List<ResourceEntity> resourceEntities = resourceDao.findAll();
         return resourceEntities.stream().map(ResourceMapper::toDto).collect(Collectors.toList());
     }
+
+    public void updateResource (ResourceDto dto) {
+        ResourceEntity resourcedData = resourceDao.findById(dto.getId());
+        ResourceEntity resourceEntity = ResourceMapper.toEntity(dto);
+        resourceEntity.setProjects(resourcedData.getProjects());
+        resourceDao.merge(resourceEntity);
+    }
+
 }
