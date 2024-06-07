@@ -77,6 +77,7 @@ VALUES (true, 5, 'IN_PROGRESS', '2024-06-02T10:00:00', '2024-06-02T10:30:00', '2
 
 INSERT INTO user_project (is_admin, project_id, user_id)
 VALUES (false, 1, 2),
+       (true, 1, 1),
        (false, 1, 3),
        (false, 2, 1),
        (true, 2, 2),
@@ -104,7 +105,9 @@ VALUES ('Task 1', 'Description for Task 1', '2024-06-10 09:00:00', NULL, '2024-0
        ('Task 4', 'Description for Task 4', '2024-06-16 09:00:00', NULL, '2024-06-30 17:00:00', NULL, 'DONE',
         'MEDIUM', 'Charlie Davis', 2, 4),
        ('Task 5', 'Description for Task 5', '2024-06-18 09:00:00', NULL, '2024-07-05 17:00:00', NULL, 'TODO', 'LOW',
-        'Dana Evans', 3, 5);
+        'Dana Evans', 3, 5),
+       ('Task 6', 'Description for Task 6', '2024-06-18 09:00:00', NULL, '2024-07-05 17:00:00', NULL, 'TODO', 'LOW',
+        'Dana Evans', 6, 1);
 
 INSERT INTO task_dependencies (task_id, dependency_id)
 VALUES (2, 1),

@@ -231,7 +231,6 @@ public class ProjectBean {
     @Transactional
     public ProjectDto getProjectById(Long projectId) {
         ProjectEntity project = projectDao.findProjectById(projectId);
-        System.out.println("nvios+nvds");
         if (project == null) {
             return null;
         }

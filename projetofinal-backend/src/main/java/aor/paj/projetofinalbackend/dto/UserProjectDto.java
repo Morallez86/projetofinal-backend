@@ -10,8 +10,9 @@ public class UserProjectDto {
     private Long id;
     private Long userId;
     private boolean isAdmin;
-
     private Long projectId;
+    private String username;
+
 
     public UserProjectDto() {
     }
@@ -55,5 +56,11 @@ public class UserProjectDto {
         this.id = id;
     }
 
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
