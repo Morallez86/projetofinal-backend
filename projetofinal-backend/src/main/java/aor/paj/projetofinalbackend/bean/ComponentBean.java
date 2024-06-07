@@ -9,9 +9,14 @@ import aor.paj.projetofinalbackend.entity.ComponentEntity;
 import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.ComponentMapper;
+import aor.paj.projetofinalbackend.mapper.SkillMapper;
+import aor.paj.projetofinalbackend.utils.ListConverter;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ComponentBean {
@@ -48,5 +53,10 @@ public class ComponentBean {
         ProjectEntity project = projectDao.findProjectById(dto.getProjectId());
         componentEntity.setProject(project);
         componentDao.merge(componentEntity);
+    }
+
+    public List<ComponentDto> allComponents () {
+        List<ComponentEntity> componentEntities = componentDao.findAll();
+        return componentEntities.stream().map(ComponentMapper::toDto).collect(Collectors.toList());
     }
 }
