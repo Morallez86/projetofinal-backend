@@ -1,25 +1,30 @@
-/*package aor.paj.projetofinalbackend.service;
+package aor.paj.projetofinalbackend.service;
 
+import aor.paj.projetofinalbackend.bean.ComponentBean;
+import aor.paj.projetofinalbackend.bean.ResourceBean;
 import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.dto.ResourceDto;
+import jakarta.annotation.Resource;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
+
 @Path("/resources")
 public class ResourceService {
 
-    @POST
+    @Inject
+    ResourceBean resourceBean;
+
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createComponent(@HeaderParam("Authorization") String authorizationHeader, ResourceDto resourceDto) {
+    public Response allResources(@HeaderParam("Authorization") String authorizationHeader) {
         try {
-            if (componentDto.getProjectId()== null) {
-                componentBean.addComponentDefault(componentDto);
-            } else {
-                componentBean.addComponentInProject(componentDto, componentDto.getProjectId());
-            }
-            return Response.status(Response.Status.CREATED).entity("component created").build();
+            List<ResourceDto> resourceDtos = resourceBean.allResources();
+            return Response.status(Response.Status.OK).entity(resourceDtos).build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
             cause.printStackTrace();
@@ -29,6 +34,4 @@ public class ResourceService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-
-
-}*/
+}
