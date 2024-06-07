@@ -23,9 +23,7 @@ import jakarta.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Path("/users")
@@ -190,6 +188,56 @@ public class UserService {
         return Response.ok(new ByteArrayInputStream(imageData)).type(imageType).build();
 
     }
+
+    @POST
+    @Path("/images")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response getUserPictures(@HeaderParam("Authorization") String authorizationHeader, List<Long> ids) {
+        System.out.println(ids);
+        if (ids == null || ids.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("No user IDs provided").build();
+        }
+
+        List<Map<String, Object>> imagesList = new ArrayList<>();
+
+        for (Long id : ids) {
+            UserEntity userEntity = userBean.findUserById(id);
+            if (userEntity == null) {
+                continue; // Skipping non-existent user
+            }
+
+            String imagePath = userEntity.getProfileImagePath();
+            if (imagePath == null) {
+                continue; // Skipping users without a profile image
+            }
+
+            byte[] imageData;
+            try {
+                imageData = imageBean.getImage(imagePath);
+            } catch (IOException e) {
+                continue; // Skipping users whose image couldn't be read
+            }
+
+            String imageType = userEntity.getProfileImageType();
+
+            // Create a map for the image data and metadata
+            Map<String, Object> imageMap = new HashMap<>();
+            imageMap.put("id", id);
+            imageMap.put("image", Base64.getEncoder().encodeToString(imageData));
+            imageMap.put("type", imageType);
+
+            imagesList.add(imageMap);
+        }
+        System.out.println(imagesList);
+
+        if (imagesList.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("No valid user images found").build();
+        }
+
+        return Response.ok(imagesList).build();
+    }
+
 
     @GET
     @Path("/profile/{userId}")

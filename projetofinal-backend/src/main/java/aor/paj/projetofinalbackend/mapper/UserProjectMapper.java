@@ -11,6 +11,7 @@ public class UserProjectMapper {
         dto.setUserId(entity.getUser().getId());
         dto.setIsAdmin(entity.isAdmin());
         dto.setProjectId(entity.getProject().getId());
+        dto.setUsername(entity.getUser().getUsername());
         return dto;
     }
 
