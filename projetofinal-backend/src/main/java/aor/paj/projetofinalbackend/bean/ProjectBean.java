@@ -15,6 +15,7 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -68,19 +69,9 @@ public class ProjectBean {
 
         // Set the owner of the project
         projectEntity.setOwner(user);
+        projectEntity.setCreationDate(LocalDateTime.now());
         System.out.println(projectDto.getStatus());
 
-        Set<TaskEntity> taskEntities = new HashSet<>();
-        TaskEntity uniqueTask = new TaskEntity();
-        uniqueTask.setTitle("Final Apresentation");
-        uniqueTask.setDescription("Last task");
-        uniqueTask.setPlannedStartingDate(projectEntity.getPlannedEndDate());
-        uniqueTask.setPlannedEndingDate(projectEntity.getPlannedEndDate());
-        uniqueTask.setUser(user);
-        uniqueTask.setStatus(TaskStatus.TODO);
-        uniqueTask.setPriority(TaskPriority.LOW);
-        taskEntities.add(uniqueTask);
-        projectEntity.setTasks(taskEntities);
 
         Set<InterestEntity> existingInterestEntity = new HashSet<>();
 
@@ -185,6 +176,19 @@ public class ProjectBean {
         completeResourceSet.addAll(existingResourceEntity);
         project.setResources(completeResourceSet);
 
+        Set<TaskEntity> taskEntities = new HashSet<>();
+        TaskEntity uniqueTask = new TaskEntity();
+        uniqueTask.setTitle("Final Apresentation");
+        uniqueTask.setDescription("Last task");
+        uniqueTask.setPlannedStartingDate(projectEntity.getPlannedEndDate());
+        uniqueTask.setPlannedEndingDate(projectEntity.getPlannedEndDate());
+        uniqueTask.setUser(user);
+        uniqueTask.setStatus(TaskStatus.TODO);
+        uniqueTask.setPriority(TaskPriority.LOW);
+        uniqueTask.setProject(project);
+        taskEntities.add(uniqueTask);
+        project.setTasks(taskEntities);
+
         projectDao.merge(project);
 
         for (ResourceEntity resourceEntity : project.getResources()) {
@@ -203,8 +207,6 @@ public class ProjectBean {
 
             }
         }
-
-
 
         for (UserProjectEntity userProjectEntity : project.getUserProjects()) {
             if (userProjectEntity.isAdmin()) {
