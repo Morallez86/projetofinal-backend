@@ -9,7 +9,11 @@ import java.util.*;
 @NamedQueries({
         @NamedQuery(name = "Component.findComponentById", query = "SELECT c FROM ComponentEntity c WHERE c.id = :id"),
         @NamedQuery(name = "Component.getTotalComponentsCount", query = "SELECT COUNT(c) FROM ComponentEntity c"),
-        @NamedQuery(name = "Component.findAllOrderedByName", query = "SELECT c FROM ComponentEntity c ORDER BY c.name ASC")
+        @NamedQuery(name = "Component.findAllOrderedByName", query = "SELECT c FROM ComponentEntity c ORDER BY c.name ASC"),
+        @NamedQuery(name = "Component.findByKeywordOrderedByName",
+                query = "SELECT c FROM ComponentEntity c WHERE c.name LIKE CONCAT('%', :keyword, '%') OR c.brand LIKE CONCAT('%', :keyword, '%') OR c.supplier LIKE CONCAT('%', :keyword, '%') OR c.identifier LIKE CONCAT('%', :keyword, '%') ORDER BY c.name ASC"
+        ),
+        @NamedQuery(name = "Component.countByKeyword", query = "SELECT COUNT(c) FROM ComponentEntity c WHERE c.name LIKE CONCAT('%', :keyword, '%') OR c.brand LIKE CONCAT('%', :keyword, '%') OR c.supplier LIKE CONCAT('%', :keyword, '%') OR c.identifier LIKE CONCAT('%', :keyword, '%')")
 
 })
 public class ComponentEntity implements Serializable {

@@ -61,8 +61,18 @@ public class ComponentService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllComponents(@HeaderParam("Authorization") String authorizationHeader, @QueryParam("page") @DefaultValue("1") int page,
-                                     @QueryParam("limit") @DefaultValue("10") int limit) {
+                                     @QueryParam("limit") @DefaultValue("10") int limit, @QueryParam("filter") @DefaultValue("") String keyWord) {
         try {
+            if (keyWord!=null) {
+                List<ComponentDto> componentDtoListWithSearch = componentBean.allComponentsSearch(page, limit, keyWord);
+                long totalComponentsSearch = componentBean.getTotalCountBySearch(keyWord);
+                int totalPagesSearch = (int) Math.ceil((double)  totalComponentsSearch/limit);
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("components", componentDtoListWithSearch);
+                responseMap.put("totalPages", totalPagesSearch);
+                return Response.status(Response.Status.OK).entity(responseMap).build();
+            }
+            else {
             List<ComponentDto> componentDtoList = componentBean.allComponents(page, limit);
             long totalComponents = componentBean.getTotalComponentsCount();
             int totalPages = (int) Math.ceil((double)  totalComponents/limit);
@@ -71,6 +81,7 @@ public class ComponentService {
             responseMap.put("components", componentDtoList);
             responseMap.put("totalPages", totalPages);
             return Response.status(Response.Status.OK).entity(responseMap).build();
+            }
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
             cause.printStackTrace();
