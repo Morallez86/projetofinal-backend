@@ -9,7 +9,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("/components")
 public class ComponentService {
@@ -58,10 +60,17 @@ public class ComponentService {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllComponents(@HeaderParam("Authorization") String authorizationHeader) {
+    public Response getAllComponents(@HeaderParam("Authorization") String authorizationHeader, @QueryParam("page") @DefaultValue("1") int page,
+                                     @QueryParam("limit") @DefaultValue("10") int limit) {
         try {
-            List<ComponentDto> componentDtoList = componentBean.allComponents();
-            return Response.status(Response.Status.OK).entity(componentDtoList).build();
+            List<ComponentDto> componentDtoList = componentBean.allComponents(page, limit);
+            long totalComponents = componentBean.getTotalComponentsCount();
+            int totalPages = (int) Math.ceil((double)  totalComponents/limit);
+
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("components", componentDtoList);
+            responseMap.put("totalPages", totalPages);
+            return Response.status(Response.Status.OK).entity(responseMap).build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
             cause.printStackTrace();

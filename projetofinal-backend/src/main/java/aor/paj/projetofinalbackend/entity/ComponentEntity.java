@@ -7,7 +7,10 @@ import java.util.*;
 @Entity
 @Table(name = "component")
 @NamedQueries({
-        @NamedQuery(name = "Component.findComponentById", query = "SELECT c FROM ComponentEntity c WHERE c.id = :id")
+        @NamedQuery(name = "Component.findComponentById", query = "SELECT c FROM ComponentEntity c WHERE c.id = :id"),
+        @NamedQuery(name = "Component.getTotalComponentsCount", query = "SELECT COUNT(c) FROM ComponentEntity c"),
+        @NamedQuery(name = "Component.findAllOrderedByName", query = "SELECT c FROM ComponentEntity c ORDER BY c.name ASC")
+
 })
 public class ComponentEntity implements Serializable {
 

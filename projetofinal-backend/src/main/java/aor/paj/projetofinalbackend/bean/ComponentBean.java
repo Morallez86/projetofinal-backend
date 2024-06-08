@@ -55,8 +55,12 @@ public class ComponentBean {
         componentDao.merge(componentEntity);
     }
 
-    public List<ComponentDto> allComponents () {
-        List<ComponentEntity> componentEntities = componentDao.findAll();
+    public List<ComponentDto> allComponents (int page, int limit) {
+        List<ComponentEntity> componentEntities = componentDao.findAllOrderedByName(page, limit);
         return componentEntities.stream().map(ComponentMapper::toDto).collect(Collectors.toList());
+    }
+
+    public long getTotalComponentsCount () {
+        return componentDao.getTotalComponentsCount();
     }
 }
