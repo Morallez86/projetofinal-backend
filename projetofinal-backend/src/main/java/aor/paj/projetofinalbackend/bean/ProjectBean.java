@@ -70,18 +70,6 @@ public class ProjectBean {
         projectEntity.setOwner(user);
         System.out.println(projectDto.getStatus());
 
-        Set<TaskEntity> taskEntities = new HashSet<>();
-        TaskEntity uniqueTask = new TaskEntity();
-        uniqueTask.setTitle("Final Apresentation");
-        uniqueTask.setDescription("Last task");
-        uniqueTask.setPlannedStartingDate(projectEntity.getPlannedEndDate());
-        uniqueTask.setPlannedEndingDate(projectEntity.getPlannedEndDate());
-        uniqueTask.setUser(user);
-        uniqueTask.setStatus(TaskStatus.TODO);
-        uniqueTask.setPriority(TaskPriority.LOW);
-        taskEntities.add(uniqueTask);
-        projectEntity.setTasks(taskEntities);
-
         Set<InterestEntity> existingInterestEntity = new HashSet<>();
 
         for (InterestEntity interestEntity : projectEntity.getInterests()) {
@@ -184,6 +172,19 @@ public class ProjectBean {
         Set<ResourceEntity> completeResourceSet = project.getResources();
         completeResourceSet.addAll(existingResourceEntity);
         project.setResources(completeResourceSet);
+
+        Set<TaskEntity> taskEntities = new HashSet<>();
+        TaskEntity uniqueTask = new TaskEntity();
+        uniqueTask.setTitle("Final Apresentation");
+        uniqueTask.setDescription("Last task");
+        uniqueTask.setPlannedStartingDate(projectEntity.getPlannedEndDate());
+        uniqueTask.setPlannedEndingDate(projectEntity.getPlannedEndDate());
+        uniqueTask.setUser(user);
+        uniqueTask.setStatus(TaskStatus.TODO);
+        uniqueTask.setPriority(TaskPriority.LOW);
+        uniqueTask.setProject(project);
+        taskEntities.add(uniqueTask);
+        project.setTasks(taskEntities);
 
         projectDao.merge(project);
 

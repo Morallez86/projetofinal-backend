@@ -47,7 +47,7 @@ INSERT INTO user_skill (user_id, skill_id)
 VALUES (1, 6);
 
 INSERT INTO resource (expiration_date, brand, contact, description, identifier, name, supplier)
-VALUES ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier35', 'name2', 'supplier2');
+VALUES ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier35', 'name2', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier376', 'name10', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier3767', 'name3', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier3764', 'name4', 'supplier2');
 
 
 INSERT INTO component(project_id, workplace_id, brand, contact, description, identifier, name, observation, supplier)
