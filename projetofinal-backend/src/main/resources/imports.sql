@@ -46,13 +46,6 @@ VALUES (1, 5);
 INSERT INTO user_skill (user_id, skill_id)
 VALUES (1, 6);
 
-INSERT INTO resource (expiration_date, brand, contact, description, identifier, name, supplier)
-VALUES ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier35', 'name2', 'supplier2');
-
-
-INSERT INTO component(project_id, workplace_id, brand, contact, description, identifier, name, observation, supplier)
-VALUES (NULL, 1, 'brand3', '999-999', 'description2', 'identifier2', 'component2', 'observation2', 'supplier2');
-
 INSERT INTO project(approved, max_users, status, approved_date, creation_date, end_date, owner_id, planned_end_date,
                     starting_date, description, motivation, title)
 VALUES (true, 5, 'IN_PROGRESS', '2024-06-02T10:00:00', '2024-06-02T10:30:00', '2024-06-10T17:00:00', 1,
@@ -72,8 +65,6 @@ VALUES (true, 5, 'IN_PROGRESS', '2024-06-02T10:00:00', '2024-06-02T10:30:00', '2
        (true, 5, 'CANCELLED', '2024-06-02T15:00:00', '2024-06-02T15:30:00', '2024-06-20T17:00:00', 1,
         '2024-06-20T17:00:00', '2024-06-08T09:00:00', 'Cancelled test project.', 'To halt progress.',
         'Project Epsilon');
-
-
 
 INSERT INTO user_project (is_admin, project_id, user_id)
 VALUES (false, 1, 2),
@@ -112,5 +103,35 @@ VALUES ('Task 1', 'Description for Task 1', '2024-06-10 09:00:00', NULL, '2024-0
 INSERT INTO task_dependencies (task_id, dependency_id)
 VALUES (2, 1),
        (4, 3);
+
+INSERT INTO component(project_id, workplace_id, brand, contact, description, identifier, name, observation, supplier)
+VALUES (2, 2, 'brand4', '888-888', 'description3', 'identifier3', 'component3', 'observation3', 'supplier3'),
+       (3, 3, 'brand5', '777-777', 'description4', 'identifier4', 'component4', 'observation4', 'supplier4'),
+       (4, 4, 'brand6', '666-666', 'description5', 'identifier5', 'component5', 'observation5', 'supplier5'),
+       (5, 5, 'brand7', '555-555', 'description6', 'identifier6', 'component6', 'observation6', 'supplier6'),
+       (6, 6, 'brand8', '444-444', 'description7', 'identifier7', 'component7', 'observation7', 'supplier7'),
+       (1, 1, 'brand9', '333-333', 'description8', 'identifier8', 'component8', 'observation8', 'supplier8'),
+       (2, 2, 'brand1', '222-222', 'description9', 'identifier9', 'component9', 'observation9', 'supplier1'),
+       (3, 3, 'brand2', '111-111', 'description10', 'identifier10', 'component10', 'observation10', 'supplier2'),
+       (4, 4, 'brand3', '000-000', 'description11', 'identifier11', 'component11', 'observation11', 'supplier3');
+
+INSERT INTO resource (expiration_date, brand, contact, description, identifier, name, supplier)
+VALUES ('2024-07-15 12:00:00', 'brand1', 'contact1', 'description1', 'identifier36', 'name3', 'supplier3'),
+       ('2024-08-20 08:30:00', 'brand2', 'contact3', 'description3', 'identifier37', 'name4', 'supplier1'),
+       ('2024-09-25 14:45:00', 'brand3', 'contact4', 'description4', 'identifier38', 'name5', 'supplier2'),
+       ('2024-10-30 19:00:00', 'brand4', 'contact5', 'description5', 'identifier39', 'name6', 'supplier3'),
+       ('2024-11-05 07:15:00', 'brand5', 'contact6', 'description6', 'identifier40', 'name7', 'supplier1'),
+       ('2024-12-10 10:00:00', 'brand6', 'contact7', 'description7', 'identifier41', 'name8', 'supplier4'),
+       ('2025-01-15 11:30:00', 'brand7', 'contact8', 'description8', 'identifier42', 'name9', 'supplier5'),
+       ('2025-02-20 09:45:00', 'brand8', 'contact9', 'description9', 'identifier43', 'name10', 'supplier6'),
+       ('2025-03-25 16:30:00', 'brand9', 'contact10', 'description10', 'identifier44', 'name11', 'supplier7');
+
+INSERT INTO project_resource (project_id, resource_id)
+VALUES (1,1),
+       (2,2),
+       (3,3),
+       (4,4),
+       (5,5);
+
 
 
