@@ -58,4 +58,6 @@ public class ProjectHistoryBean {
         project.setHistoryRecords(projectHistoryEntitySet);
         projectDao.merge(project);
     }
+
+
 }
