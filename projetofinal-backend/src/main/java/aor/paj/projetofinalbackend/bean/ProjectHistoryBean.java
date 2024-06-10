@@ -42,7 +42,13 @@ public class ProjectHistoryBean {
         TaskEntity task = taskDao.find(projectHistoryDto.getTaskId());
         projectHistoryEntity.setProject(project);
         projectHistoryEntity.setUser(userEntity);
+        if (project.getTasks().contains(task)) {
         projectHistoryEntity.setTask(task);
+        } else {
+            /* quando retornarmos o dto isto era retornar null*/
+            System.out.println("task doesn't belong to this project");
+            return;
+        }
         System.out.println("before");
         projectHistoryDao.persist(projectHistoryEntity);
         System.out.println("after");
