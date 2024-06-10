@@ -71,6 +71,12 @@ public class ComponentBean {
     public long getTotalCountBySearch (String keyWord) {
         return componentDao.countByKeyword(keyWord);
     }
+
+    public List<ComponentDto> getAllWithoutFilters () {
+        List<ComponentEntity> componentEntities = componentDao.findAll();
+        return componentEntities.stream().map(ComponentMapper::toDto).collect(Collectors.toList());
+    }
+
     }
 
 
