@@ -6,6 +6,8 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
+import java.util.List;
+
 @Stateless
 public class ComponentDao extends AbstractDao<ComponentEntity> {
 
@@ -25,5 +27,30 @@ public class ComponentDao extends AbstractDao<ComponentEntity> {
         }
     }
 
+    public long getTotalComponentsCount() {
+        TypedQuery<Long> query = em.createNamedQuery("Component.getTotalComponentsCount", Long.class);
+        return query.getSingleResult();
+    }
+
+    public List<ComponentEntity> findAllOrderedByName(int page, int limit) {
+        return em.createNamedQuery("Component.findAllOrderedByName", ComponentEntity.class)
+                .setFirstResult((page - 1) * limit)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public List<ComponentEntity> findByKeywordOrderedByName(int page, int limit,String keyword) {
+        return em.createNamedQuery("Component.findByKeywordOrderedByName", ComponentEntity.class)
+                .setParameter("keyword", keyword)
+                .setFirstResult((page - 1) * limit)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public long countByKeyword(String keyword) {
+        return em.createNamedQuery("Component.countByKeyword", Long.class)
+                .setParameter("keyword", keyword)
+                .getSingleResult();
+    }
 }
 

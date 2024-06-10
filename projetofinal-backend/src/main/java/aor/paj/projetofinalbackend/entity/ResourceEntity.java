@@ -11,7 +11,13 @@ import java.util.*;
         @NamedQuery(name = "ResourceEntity.findById",
                 query = "SELECT r FROM ResourceEntity r WHERE r.id = :id"),
         @NamedQuery(name = "ResourceEntity.findProjectsByResourceId",
-                query = "SELECT p FROM ResourceEntity r JOIN r.projects p WHERE r.id = :id")
+                query = "SELECT p FROM ResourceEntity r JOIN r.projects p WHERE r.id = :id"),
+        @NamedQuery(name = "Resource.findAllOrderedByName", query = "SELECT r FROM ResourceEntity r ORDER BY r.name ASC"),
+        @NamedQuery(name = "Resource.getTotalResourcesCount", query = "SELECT COUNT(r) FROM ResourceEntity r"),
+        @NamedQuery(name = "Resource.findByKeywordOrderedByName",
+                query = "SELECT r FROM ResourceEntity r WHERE r.name LIKE CONCAT('%', :keyword, '%') OR r.brand LIKE CONCAT('%', :keyword, '%') OR r.supplier LIKE CONCAT('%', :keyword, '%') OR r.identifier LIKE CONCAT('%', :keyword, '%') ORDER BY r.name ASC"
+        ),
+        @NamedQuery(name = "Resource.countByKeyword", query = "SELECT COUNT(r) FROM ResourceEntity r WHERE r.name LIKE CONCAT('%', :keyword, '%') OR r.brand LIKE CONCAT('%', :keyword, '%') OR r.supplier LIKE CONCAT('%', :keyword, '%') OR r.identifier LIKE CONCAT('%', :keyword, '%')")
 
 })
 public class ResourceEntity implements Serializable {
