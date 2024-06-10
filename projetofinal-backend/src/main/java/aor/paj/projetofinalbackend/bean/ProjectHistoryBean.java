@@ -2,10 +2,12 @@ package aor.paj.projetofinalbackend.bean;
 
 import aor.paj.projetofinalbackend.dao.ProjectDao;
 import aor.paj.projetofinalbackend.dao.ProjectHistoryDao;
+import aor.paj.projetofinalbackend.dao.TaskDao;
 import aor.paj.projetofinalbackend.dao.UserDao;
 import aor.paj.projetofinalbackend.dto.ProjectHistoryDto;
 import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.ProjectHistoryEntity;
+import aor.paj.projetofinalbackend.entity.TaskEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.ProjectHistoryMapper;
 import jakarta.ejb.EJB;
@@ -28,14 +30,19 @@ public class ProjectHistoryBean {
     @EJB
     UserDao userDao;
 
+    @EJB
+    TaskDao taskDao;
+
     public void addLog (ProjectHistoryDto projectHistoryDto, long projectId, String token) {
         ProjectHistoryEntity projectHistoryEntity = ProjectHistoryMapper.toEntity(projectHistoryDto);
         System.out.println("*** " + projectHistoryEntity.getType());
         Long idUser = serviceBean.getUserIdFromToken(token);
         UserEntity userEntity = userDao.findUserById(idUser);
         ProjectEntity project = projectDao.findProjectById(projectId);
+        TaskEntity task = taskDao.find(projectHistoryDto.getTaskId());
         projectHistoryEntity.setProject(project);
         projectHistoryEntity.setUser(userEntity);
+        projectHistoryEntity.setTask(task);
         System.out.println("before");
         projectHistoryDao.persist(projectHistoryEntity);
         System.out.println("after");

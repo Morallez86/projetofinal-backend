@@ -36,6 +36,11 @@ public class ProjectHistoryEntity implements Serializable {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id")
+    private TaskEntity task;
+
+
     public ProjectHistoryEntity() {
     }
 
@@ -94,4 +99,14 @@ public class ProjectHistoryEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public TaskEntity getTask() {
+        return task;
+    }
+
+    public void setTask(TaskEntity task) {
+        this.task = task;
+    }
+
+
 }
