@@ -90,4 +90,8 @@ public class ProjectHistoryEntity implements Serializable {
     public void setUser(UserEntity user) {
         this.user = user;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

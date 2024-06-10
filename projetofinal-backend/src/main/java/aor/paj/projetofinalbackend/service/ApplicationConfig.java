@@ -21,6 +21,7 @@ public class ApplicationConfig extends Application{
         resources.add(ComponentService.class);
         resources.add(ResourceService.class);
         resources.add(TaskService.class);
+        resources.add(ProjectHistoryService.class);
         return resources;
     }
 }

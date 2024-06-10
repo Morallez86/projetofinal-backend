@@ -14,18 +14,17 @@ public class ProjectHistoryMapper {
         dto.setNewDescription(entity.getNewDescription());
         dto.setType(entity.getType().ordinal());
         dto.setTimestamp(entity.getTimestamp());
-        dto.setUser(UserMapper.toDto(entity.getUser()));
-        dto.setProject(ProjectMapper.toDto(entity.getProject()));
+        dto.setUserId(entity.getUser().getId());
+        dto.setProjectId(entity.getProject().getId());
         return dto;
     }
 
     public static ProjectHistoryEntity toEntity(ProjectHistoryDto dto) {
         ProjectHistoryEntity entity = new ProjectHistoryEntity();
+        entity.setId(dto.getId());
         entity.setNewDescription(dto.getNewDescription());
-        entity.setType(HistoryType.values()[dto.getType()]);
+        entity.setType(HistoryType.fromValue(dto.getType()));
         entity.setTimestamp(dto.getTimestamp());
-        entity.setUser(UserMapper.toEntity(dto.getUser()));
-        entity.setProject(ProjectMapper.toEntity(dto.getProject()));
         return entity;
     }
 }
