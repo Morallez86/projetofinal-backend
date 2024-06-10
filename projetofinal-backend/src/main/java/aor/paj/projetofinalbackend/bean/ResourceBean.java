@@ -48,4 +48,10 @@ public class ResourceBean {
         return resourceDao.countByKeyword(keyWord);
     }
 
+    public List<ResourceDto> getAllWithoutFilters () {
+        List<ResourceEntity> resourceEntities = resourceDao.findAll();
+        return resourceEntities.stream().map(ResourceMapper::toDto).collect(Collectors.toList());
+
+    }
+
 }

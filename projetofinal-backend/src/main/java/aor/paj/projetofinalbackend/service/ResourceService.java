@@ -21,6 +21,7 @@ public class ResourceService {
     ResourceBean resourceBean;
 
     @GET
+    @Path(("/toTables"))
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response allResources(@HeaderParam("Authorization") String authorizationHeader, @QueryParam("page") @DefaultValue("1") int page,
@@ -62,6 +63,22 @@ public class ResourceService {
         try {
             resourceBean.updateResource(resourceDto);
             return Response.status(Response.Status.OK).entity("component updated").build();
+        } catch (ExceptionInInitializerError e) {
+            Throwable cause = e.getCause();
+            cause.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(cause.getMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response allResourcesWithoutFilters(@HeaderParam("Authorization") String authorizationHeader) {
+        try {
+            List <ResourceDto> resourceDtoList = resourceBean.getAllWithoutFilters();
+            return Response.status(Response.Status.OK).entity(resourceDtoList).build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
             cause.printStackTrace();

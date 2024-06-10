@@ -58,6 +58,7 @@ public class ComponentService {
     }
 
     @GET
+    @Path(("/toTables"))
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllComponents(@HeaderParam("Authorization") String authorizationHeader, @QueryParam("page") @DefaultValue("1") int page,
@@ -82,6 +83,22 @@ public class ComponentService {
             responseMap.put("totalPages", totalPages);
             return Response.status(Response.Status.OK).entity(responseMap).build();
             }
+        } catch (ExceptionInInitializerError e) {
+            Throwable cause = e.getCause();
+            cause.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(cause.getMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response allComponentsWithoutFilters(@HeaderParam("Authorization") String authorizationHeader) {
+        try {
+            List <ComponentDto> componentDtoList = componentBean.getAllWithoutFilters();
+            return Response.status(Response.Status.OK).entity(componentDtoList).build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
             cause.printStackTrace();
