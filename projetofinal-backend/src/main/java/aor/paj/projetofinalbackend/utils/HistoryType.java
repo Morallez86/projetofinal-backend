@@ -4,7 +4,9 @@ public enum HistoryType {
     TASKS(100),
     ADD(200),
     REMOVE(300),
-    PROJECTSTATE(400);
+    PROJECTSTATE(400),
+
+    NORMAL(500);
 
     private final int value;
 
