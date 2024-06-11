@@ -5,9 +5,12 @@ import aor.paj.projetofinalbackend.bean.UserBean;
 import aor.paj.projetofinalbackend.entity.TokenEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.security.JwtUtil;
+import aor.paj.projetofinalbackend.utils.Role;
 import io.jsonwebtoken.Claims;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
@@ -21,6 +24,9 @@ public class AuthBean {
 
     @Inject
     UserBean userBean;
+
+    @Context
+    private ContainerRequestContext requestContext;
 
     public Response validateUserToken(String tokenValue) {
         TokenEntity token = tokenBean.findTokenByValue(tokenValue);
@@ -48,5 +54,11 @@ public class AuthBean {
 
         return Response.ok().build();
     }
+
+    public boolean isUserInRole(Role requiredRole) {
+        String role = (String) requestContext.getProperty("role");
+        return requiredRole.name().equals(role);
+    }
+
 
 }

@@ -29,8 +29,8 @@ public class ProjectService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createProject(@HeaderParam("Authorization") String authorizationHeader, ProjectDto projectDto) {
         try {
+            System.out.println(projectDto.getUserProjectDtos().get(0).getId());
             String token = authorizationHeader.substring("Bearer".length()).trim();
-            System.out.println(projectDto.getStatus());
             projectBean.addProject(projectDto, token);
             return Response.status(Response.Status.CREATED).entity("project created").build();
         } catch (ExceptionInInitializerError e) {

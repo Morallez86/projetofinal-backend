@@ -2,6 +2,7 @@ package aor.paj.projetofinalbackend.mapper;
 
 import aor.paj.projetofinalbackend.dto.UserDto;
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.utils.Role;
 
 public class UserMapper {
 
@@ -15,7 +16,7 @@ public class UserMapper {
         dto.setLastName(user.getLastName());
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
-        dto.setRole(user.getRole());
+        dto.setRole(user.getRole().getValue());
         dto.setActive(user.getActive());
         dto.setPending(user.getPending());
         dto.setEmailToken(user.getEmailToken());
@@ -34,7 +35,7 @@ public class UserMapper {
         user.setLastName(dto.getLastName());
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
-        user.setRole(dto.getRole());
+        user.setRole(Role.fromValue(dto.getRole()));
         user.setActive(dto.getActive());
         user.setPending(dto.getPending());
         user.setEmailToken(dto.getEmailToken());

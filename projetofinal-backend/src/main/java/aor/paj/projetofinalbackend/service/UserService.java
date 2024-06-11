@@ -351,4 +351,26 @@ public class UserService {
 
         return Response.ok(responseMap).build();
     }
+
+    @GET
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchUsers(@QueryParam("query") String query, @HeaderParam("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+
+        // Validate the token
+        Response validationResponse = authBean.validateUserToken(token);
+        if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+            return validationResponse;
+        }
+
+        List<UserDto> users = userBean.searchUsersByQuery(query);
+
+        if (users == null || users.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Users not found").build();
+        }
+
+        return Response.ok(users).build();
+    }
+
 }

@@ -1,10 +1,10 @@
 INSERT INTO user (first_name, last_name, username, password, email, role, active, pending, visibility)
-VALUES ('John', 'Doe', 'johndoe', 'password123', 'johndoe@example.com', 'U', true, false, true),
-       ('Alice', 'Smith', 'alicesmith', 'password123', 'alicesmith@example.com', 'U', true, false, true),
-       ('Bob', 'Brown', 'bobbrown', 'password123', 'bobbrown@example.com', 'U', true, false, true),
-       ('Charlie', 'Davis', 'charliedavis', 'password123', 'charliedavis@example.com', 'U', true, false, true),
-       ('Dana', 'Evans', 'danaevans', 'password123', 'danaevans@example.com', 'U', true, false, true),
-       ('Evan', 'Garcia', 'evangarcia', 'password123', 'evangarcia@example.com', 'U', true, false, true);
+VALUES ('John', 'Doe', 'johndoe', 'password123', 'johndoe@example.com', 'ADMIN', true, false, true),
+       ('Alice', 'Smith', 'alicesmith', 'password123', 'alicesmith@example.com', 'USER', true, false, true),
+       ('Bob', 'Brown', 'bobbrown', 'password123', 'bobbrown@example.com', 'USER', true, false, true),
+       ('Charlie', 'Davis', 'charliedavis', 'password123', 'charliedavis@example.com', 'USER', true, false, true),
+       ('Dana', 'Evans', 'danaevans', 'password123', 'danaevans@example.com', 'USER', true, false, true),
+       ('Evan', 'Garcia', 'evangarcia', 'password123', 'evangarcia@example.com', 'USER', true, false, true);
 
 
 INSERT INTO skill (name, type, creator_id)

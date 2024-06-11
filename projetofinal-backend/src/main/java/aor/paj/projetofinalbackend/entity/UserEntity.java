@@ -1,5 +1,6 @@
 package aor.paj.projetofinalbackend.entity;
 
+import aor.paj.projetofinalbackend.utils.Role;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,7 +14,8 @@ import java.util.*;
         @NamedQuery(name = "User.findUserByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username"),
         @NamedQuery(name = "User.countTotalUsers", query = "SELECT COUNT(u) FROM UserEntity u"),
         @NamedQuery(name = "User.findUserByEmailValidationToken", query = "SELECT u FROM UserEntity u WHERE u.emailToken = :emailToken"),
-        @NamedQuery(name = "UserEntity.getTotalProjectCount", query = "SELECT COUNT(p) FROM UserEntity u JOIN u.ownedProjects p WHERE u.id = :userId"),
+        @NamedQuery(name = "User.getTotalProjectCount", query = "SELECT COUNT(p) FROM UserEntity u JOIN u.ownedProjects p WHERE u.id = :userId"),
+        @NamedQuery(name = "User.findUsersByQuery", query = "SELECT u FROM UserEntity u WHERE LOWER(u.username) LIKE :query OR LOWER(u.email) LIKE :query"),
 })
 public class UserEntity implements Serializable {
 
@@ -38,8 +40,9 @@ public class UserEntity implements Serializable {
     @Column(name="email", nullable = false, unique = true)
     private String email;
 
-    @Column(name="role", nullable = false)
-    private char role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     @Column(name="active", nullable = false)
     private Boolean active;
@@ -183,11 +186,11 @@ public class UserEntity implements Serializable {
         this.email = email;
     }
 
-    public char getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(char role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

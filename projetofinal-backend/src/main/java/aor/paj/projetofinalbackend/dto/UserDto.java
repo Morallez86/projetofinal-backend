@@ -13,7 +13,7 @@ public class UserDto {
     private String lastName;
     private String username;
     private String email;
-    private char role;
+    private int role;
     private Boolean active;
     private Boolean pending;
     private String emailToken;
@@ -77,11 +77,11 @@ public class UserDto {
         this.email = email;
     }
     @XmlElement
-    public char getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setRole(char role) {
+    public void setRole(int role) {
         this.role = role;
     }
     @XmlElement

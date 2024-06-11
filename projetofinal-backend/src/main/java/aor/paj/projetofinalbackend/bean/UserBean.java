@@ -17,6 +17,7 @@ import aor.paj.projetofinalbackend.mapper.UserMapper;
 import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
+import aor.paj.projetofinalbackend.utils.Role;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -26,6 +27,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -83,7 +85,7 @@ public class UserBean {
     }
 
     public String createAndSaveToken(UserEntity user) {
-        String tokenValue = JwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId(), user.getUsername());
+        String tokenValue = JwtUtil.generateToken(user.getEmail(), user.getRole().getValue(), user.getId(), user.getUsername());
         LocalDateTime expirationTime = LocalDateTime.ofInstant(
                 new Date(System.currentTimeMillis() + JwtUtil.EXPIRATION_TIME).toInstant(),
                 ZoneId.systemDefault()
@@ -133,7 +135,7 @@ public class UserBean {
         user.setActive(false);
         user.setPending(true);
         user.setVisibility(false);
-        user.setRole('C');
+        user.setRole(Role.USER);
         user.setWorkplace(workplaceDao.findWorkplaceByName(userDto.getWorkplace()));
         user.setEmailToken(emailToken);
         userDao.persist(user);
@@ -235,4 +237,13 @@ public class UserBean {
     public Long getTotalProjectCount(Long userId) {
         return userDao.getTotalProjectCount(userId);
     }
+
+    public List<UserDto> searchUsersByQuery(String query) {
+        List<UserEntity> userEntities = userDao.findUsersByQuery(query);
+        if (userEntities == null || userEntities.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return userEntities.stream().map(UserMapper::toDto).collect(Collectors.toList());
+    }
+
 }

@@ -1,6 +1,7 @@
 package aor.paj.projetofinalbackend.security;
 
 import aor.paj.projetofinalbackend.bean.TokenBean;
+import io.jsonwebtoken.Claims;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -22,16 +23,13 @@ public class JwtFilter implements ContainerRequestFilter {
 
     private static final Logger LOGGER = Logger.getLogger(JwtFilter.class.getName());
 
-    // Map of paths to be excluded from JWT validation with their corresponding HTTP methods
     private static final Map<String, Set<String>> EXCLUDED_PATHS_AND_METHODS = new HashMap<>();
 
     static {
-        // Unauthenticated access for GET method on /projects path
         Set<String> getMethods = new HashSet<>();
         getMethods.add("GET");
         EXCLUDED_PATHS_AND_METHODS.put("/projects", getMethods);
 
-        // Other excluded paths (regardless of method)
         Set<String> anyMethods = new HashSet<>();
         anyMethods.add("GET");
         anyMethods.add("POST");
@@ -49,19 +47,17 @@ public class JwtFilter implements ContainerRequestFilter {
         String path = requestContext.getUriInfo().getPath();
         String method = requestContext.getMethod();
 
-        // Allow unauthenticated access to the specified paths and methods
         Set<String> methods = EXCLUDED_PATHS_AND_METHODS.get(path);
         if (methods != null && methods.contains(method)) {
             return;
         }
 
-        // Check for Authorization header and validate JWT token
         String authorizationHeader = requestContext.getHeaderString("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             LOGGER.warning("Authorization header must be provided");
             requestContext.abortWith(
-                    jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.UNAUTHORIZED)
+                    Response.status(Response.Status.UNAUTHORIZED)
                             .entity("Authorization header must be provided")
                             .build());
             return;
@@ -69,7 +65,7 @@ public class JwtFilter implements ContainerRequestFilter {
 
         String token = authorizationHeader.substring("Bearer".length()).trim();
         try {
-            JwtUtil.validateToken(token);
+            Claims claims = JwtUtil.validateToken(token);
 
             if (!tokenBean.isTokenActive(token)) {
                 LOGGER.warning("Token is inactive");
@@ -79,9 +75,12 @@ public class JwtFilter implements ContainerRequestFilter {
                                 .build());
                 return;
             }
+
+            int role = claims.get("role", Integer.class);
+            requestContext.setProperty("role", role);
+
             LOGGER.info("Token validated successfully");
         } catch (Exception e) {
-            // Deactivate token if expired
             if (e.getMessage().equals("Token has expired")) {
                 tokenBean.deactivateToken(token);
             }
