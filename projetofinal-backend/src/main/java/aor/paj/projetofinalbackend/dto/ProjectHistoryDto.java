@@ -1,6 +1,8 @@
 package aor.paj.projetofinalbackend.dto;
 
 import aor.paj.projetofinalbackend.utils.CustomLocalDateTimeDeserializer;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
