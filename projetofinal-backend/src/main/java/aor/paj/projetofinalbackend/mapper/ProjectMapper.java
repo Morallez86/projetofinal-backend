@@ -41,7 +41,6 @@ public class ProjectMapper {
         entity.setTitle(dto.getTitle());
         entity.setDescription(dto.getDescription());
         entity.setMotivation(dto.getMotivation());
-        entity.setStatus(ProjectStatus.fromValue(dto.getStatus()));
         entity.setMaxUsers(dto.getMaxUsers());
         entity.setApproved(dto.isApproved());
         entity.setCreationDate(dto.getCreationDate());
@@ -61,9 +60,6 @@ public class ProjectMapper {
         }
         if (dto.getSkills() != null) {
             entity.setSkills(dto.getSkills().stream().map(SkillMapper::toEntity).collect(Collectors.toSet()));
-        }
-        if (dto.getUserProjectDtos() != null) {
-            entity.setUserProjects(dto.getUserProjectDtos().stream().map(UserProjectMapper::toEntity).collect(Collectors.toSet()));
         }
         if (dto.getTasks() != null) {
             entity.setTasks(dto.getTasks().stream().map(TaskMapper::toEntity).collect(Collectors.toSet()));

@@ -2,6 +2,7 @@ package aor.paj.projetofinalbackend.bean;
 
 import aor.paj.projetofinalbackend.dao.WorkplaceDao;
 import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
+import aor.paj.projetofinalbackend.utils.Role;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
@@ -42,7 +43,7 @@ public class StartupBean {
                 admin.setUsername("admin");
                 admin.setPassword(EncryptHelper.encryptPassword(defaultPassword));
                 admin.setEmail("admin@example.com");
-                admin.setRole('A');
+                admin.setRole(Role.ADMIN);
                 admin.setActive(true);
                 admin.setPending(false);
                 admin.setRegistTime(LocalDateTime.now());

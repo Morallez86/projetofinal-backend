@@ -7,6 +7,8 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
 
+import java.util.List;
+
 @Stateless
 public class UserDao extends AbstractDao<UserEntity> {
 
@@ -77,12 +79,19 @@ public class UserDao extends AbstractDao<UserEntity> {
 
     public long getTotalProjectCount(Long userId) {
         try {
-            return em.createNamedQuery("UserEntity.getTotalProjectCount", Long.class)
+            return em.createNamedQuery("User.getTotalProjectCount", Long.class)
                     .setParameter("userId", userId)
                     .getSingleResult();
         } catch (NoResultException e) {
             return 0; // Return 0 if no projects found for the user
         }
     }
+
+    public List<UserEntity> findUsersByQuery(String query) {
+        return em.createNamedQuery("User.findUsersByQuery", UserEntity.class)
+                .setParameter("query", "%" + query.toLowerCase() + "%")
+                .getResultList();
+    }
+
 
 }
