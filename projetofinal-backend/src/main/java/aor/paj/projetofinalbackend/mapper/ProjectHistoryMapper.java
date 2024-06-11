@@ -12,7 +12,7 @@ public class ProjectHistoryMapper {
         ProjectHistoryDto dto = new ProjectHistoryDto();
         dto.setId(entity.getId());
         dto.setNewDescription(entity.getNewDescription());
-        dto.setType(entity.getType().ordinal());
+        dto.setType(entity.getType().getValue());
         dto.setTimestamp(entity.getTimestamp());
         dto.setUserId(entity.getUser().getId());
         dto.setProjectId(entity.getProject().getId());
