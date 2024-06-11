@@ -10,9 +10,11 @@ import aor.paj.projetofinalbackend.entity.ProjectHistoryEntity;
 import aor.paj.projetofinalbackend.entity.TaskEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.ProjectHistoryMapper;
+import aor.paj.projetofinalbackend.utils.HistoryType;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Stateless
@@ -34,6 +36,7 @@ public class ProjectHistoryBean {
     TaskDao taskDao;
 
     public void addLog (ProjectHistoryDto projectHistoryDto, long projectId, String token) {
+        System.out.println("in");
         ProjectHistoryEntity projectHistoryEntity = ProjectHistoryMapper.toEntity(projectHistoryDto);
         System.out.println("*** " + projectHistoryEntity.getType());
         Long idUser = serviceBean.getUserIdFromToken(token);
@@ -42,6 +45,9 @@ public class ProjectHistoryBean {
         TaskEntity task = taskDao.find(projectHistoryDto.getTaskId());
         projectHistoryEntity.setProject(project);
         projectHistoryEntity.setUser(userEntity);
+        projectHistoryEntity.setType(HistoryType.NORMAL);
+        System.out.println("--- " + projectHistoryEntity.getType());
+        projectHistoryEntity.setTimestamp(LocalDateTime.now());
         if (project.getTasks().contains(task)) {
         projectHistoryEntity.setTask(task);
         } else {

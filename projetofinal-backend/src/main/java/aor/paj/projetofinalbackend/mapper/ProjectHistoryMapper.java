@@ -24,8 +24,12 @@ public class ProjectHistoryMapper {
         ProjectHistoryEntity entity = new ProjectHistoryEntity();
         entity.setId(dto.getId());
         entity.setNewDescription(dto.getNewDescription());
+        if (dto.getType()==100 || dto.getType()==200 || dto.getType()==300 || dto.getType()==400 || dto.getType()==500) {
         entity.setType(HistoryType.fromValue(dto.getType()));
+        }
+        if (dto.getTimestamp() != null) {
         entity.setTimestamp(dto.getTimestamp());
+        }
         return entity;
     }
 }
