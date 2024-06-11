@@ -28,6 +28,8 @@ public class ProjectHistoryDto {
 
     private String userName;
 
+    private String title;
+
     public ProjectHistoryDto() {
     }
 
@@ -67,6 +69,11 @@ public class ProjectHistoryDto {
         return userName;
     }
 
+    @XmlElement
+    public String getTitle() {
+        return title;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -97,5 +104,9 @@ public class ProjectHistoryDto {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

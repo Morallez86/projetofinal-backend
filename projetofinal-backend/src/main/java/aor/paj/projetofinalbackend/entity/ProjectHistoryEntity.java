@@ -21,6 +21,9 @@ public class ProjectHistoryEntity implements Serializable {
     @Column(name = "new_description")
     private String newDescription;
 
+    @Column(name = "title")
+    private String title;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private HistoryType type;
@@ -108,5 +111,11 @@ public class ProjectHistoryEntity implements Serializable {
         this.task = task;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }
