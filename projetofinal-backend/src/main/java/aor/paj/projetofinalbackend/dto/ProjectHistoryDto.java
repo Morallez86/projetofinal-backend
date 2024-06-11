@@ -1,5 +1,11 @@
 package aor.paj.projetofinalbackend.dto;
 
+import aor.paj.projetofinalbackend.utils.CustomLocalDateTimeDeserializer;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.xml.bind.annotation.XmlElement;
 
 import java.time.LocalDateTime;
@@ -10,11 +16,19 @@ public class ProjectHistoryDto {
 
     private int type;
 
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime timestamp;
 
-    private UserDto user;
+    private long userId;
 
-    private ProjectDto project;
+    private long projectId;
+
+    private long taskId;
+
+    private String userName;
+
+    private String title;
 
     public ProjectHistoryDto() {
     }
@@ -35,14 +49,29 @@ public class ProjectHistoryDto {
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
+
     @XmlElement
-    public UserDto getUser() {
-        return user;
+    public long getUserId() {
+        return userId;
+    }
+    @XmlElement
+    public long getProjectId() {
+        return projectId;
     }
 
     @XmlElement
-    public ProjectDto getProject() {
-        return project;
+    public long getTaskId() {
+        return taskId;
+    }
+
+    @XmlElement
+    public String getUserName() {
+        return userName;
+    }
+
+    @XmlElement
+    public String getTitle() {
+        return title;
     }
 
     public void setId(Long id) {
@@ -61,11 +90,23 @@ public class ProjectHistoryDto {
         this.timestamp = timestamp;
     }
 
-    public void setUser(UserDto user) {
-        this.user = user;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
-    public void setProject(ProjectDto project) {
-        this.project = project;
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
+    }
+
+    public void setTaskId(long taskId) {
+        this.taskId = taskId;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

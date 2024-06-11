@@ -140,5 +140,12 @@ VALUES (1,1),
        (4,4),
        (5,5);
 
+INSERT INTO project_history(project_id, task_id, timestamp, user_id, new_description, old_description, title, type)
+VALUES (1,null, '2025-01-15 11:30:00',1,null,null,'Skill added: Backend','ADD'),
+(1,null, '2025-01-16 11:30:00',1,null,null, 'Alistar123 was removed','REMOVE'),
+       (1,null, '2025-01-16 11:30:00',1,null,null,'New State: IN PROFRESS','PROJECTSTATE'),
+       (1,null, '2025-01-16 11:30:00',1,null,null,'Task "1st meeting": FINISHED','TASKS'),
+       (1,null, '2025-01-16 11:30:00',1,'I need help to finish this task',null, null,'NORMAL');
+
 
 

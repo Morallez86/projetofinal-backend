@@ -21,6 +21,9 @@ public class ProjectHistoryEntity implements Serializable {
     @Column(name = "new_description")
     private String newDescription;
 
+    @Column(name = "title")
+    private String title;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private HistoryType type;
@@ -35,6 +38,11 @@ public class ProjectHistoryEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id")
+    private TaskEntity task;
+
 
     public ProjectHistoryEntity() {
     }
@@ -89,5 +97,25 @@ public class ProjectHistoryEntity implements Serializable {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public TaskEntity getTask() {
+        return task;
+    }
+
+    public void setTask(TaskEntity task) {
+        this.task = task;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

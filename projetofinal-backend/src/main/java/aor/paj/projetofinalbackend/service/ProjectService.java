@@ -2,8 +2,11 @@ package aor.paj.projetofinalbackend.service;
 
 import aor.paj.projetofinalbackend.bean.AuthBean;
 import aor.paj.projetofinalbackend.bean.ProjectBean;
+import aor.paj.projetofinalbackend.bean.ProjectHistoryBean;
+import aor.paj.projetofinalbackend.dao.TaskDao;
 import aor.paj.projetofinalbackend.dto.ProfileDto;
 import aor.paj.projetofinalbackend.dto.ProjectDto;
+import aor.paj.projetofinalbackend.dto.TaskDto;
 import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -23,6 +26,9 @@ public class ProjectService {
 
     @Inject
     AuthBean authBean;
+
+    @Inject
+    ProjectHistoryBean projectHistoryBean;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -91,6 +97,20 @@ public class ProjectService {
             }
 
             return Response.ok(projectDto).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/tasks")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTasksByProjectId(@HeaderParam("Authorization") String authorizationHeader, @PathParam("id") Long projectId) {
+        try {
+            List<TaskDto> taskDtos = projectBean.getTasksByProjectId(projectId);
+            return Response.status(Response.Status.OK).entity(taskDtos).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

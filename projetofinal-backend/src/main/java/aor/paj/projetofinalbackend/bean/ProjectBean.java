@@ -4,9 +4,12 @@ import aor.paj.projetofinalbackend.dao.*;
 import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.dto.ProjectDto;
 import aor.paj.projetofinalbackend.dto.ResourceDto;
+import aor.paj.projetofinalbackend.dto.TaskDto;
 import aor.paj.projetofinalbackend.dto.UserProjectDto;
 import aor.paj.projetofinalbackend.entity.*;
+import aor.paj.projetofinalbackend.mapper.InterestMapper;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
+import aor.paj.projetofinalbackend.mapper.TaskMapper;
 import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
 import aor.paj.projetofinalbackend.utils.TaskPriority;
@@ -49,6 +52,9 @@ public class ProjectBean {
 
     @EJB
     private SkillDao skillDao;
+
+    @EJB
+    private TaskDao taskDao;
 
     private ProjectMapper projectMapper = new ProjectMapper();
 
@@ -256,6 +262,14 @@ public class ProjectBean {
 
     public long getTotalProjectCount() {
         return projectDao.getTotalProjectCount();
+    }
+
+    @Transactional
+    public List<TaskDto> getTasksByProjectId(Long projectId) {
+        List<TaskEntity> taskEntities = taskDao.findTasksByProjectId(projectId);
+        return taskEntities.stream()
+                .map(TaskMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
 

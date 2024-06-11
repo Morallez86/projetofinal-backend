@@ -69,6 +69,10 @@ public class TaskEntity implements Serializable {
     @ManyToMany(mappedBy = "dependencies")
     private List<TaskEntity> dependentTasks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "task")
+    private List<ProjectHistoryEntity> logs = new ArrayList<>();
+
+
     public TaskEntity() {
     }
 
@@ -178,5 +182,17 @@ public class TaskEntity implements Serializable {
 
     public void setDependentTasks(List<TaskEntity> dependentTasks) {
         this.dependentTasks = dependentTasks;
+    }
+
+    public List<ProjectHistoryEntity> getLogs() {
+        return logs;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setLogs(List<ProjectHistoryEntity> logs) {
+        this.logs = logs;
     }
 }

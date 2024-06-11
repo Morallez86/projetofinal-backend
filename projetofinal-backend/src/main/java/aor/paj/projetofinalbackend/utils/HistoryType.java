@@ -1,18 +1,29 @@
 package aor.paj.projetofinalbackend.utils;
 
 public enum HistoryType {
-    USER(100),
-    DATA(200),
-    TASKSTATE(300),
-    PROJECTSTATE(400);
+    TASKS(100),
+    ADD(200),
+    REMOVE(300),
+    PROJECTSTATE(400),
 
-    private final int code;
+    NORMAL(500);
 
-    HistoryType(int code) {
-        this.code = code;
+    private final int value;
+
+    HistoryType(int value) {
+        this.value = value;
     }
 
-    public int getCode() {
-        return code;
+    public int getValue() {
+        return value;
+    }
+
+    public static HistoryType fromValue(int value) {
+        for (HistoryType type : HistoryType.values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Invalid ProjectStatus value: " + value);
     }
 }

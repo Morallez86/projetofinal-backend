@@ -11,21 +11,41 @@ public class ProjectHistoryMapper {
     public static ProjectHistoryDto toDto(ProjectHistoryEntity entity) {
         ProjectHistoryDto dto = new ProjectHistoryDto();
         dto.setId(entity.getId());
-        dto.setNewDescription(entity.getNewDescription());
-        dto.setType(entity.getType().ordinal());
+        if (entity.getNewDescription()!=null) {
+            dto.setNewDescription(entity.getNewDescription());
+        }
+        dto.setType(entity.getType().getValue());
         dto.setTimestamp(entity.getTimestamp());
-        dto.setUser(UserMapper.toDto(entity.getUser()));
-        dto.setProject(ProjectMapper.toDto(entity.getProject()));
+        dto.setUserId(entity.getUser().getId());
+        dto.setProjectId(entity.getProject().getId());
+        if (entity.getTask()!=null) {
+        dto.setTaskId(entity.getTask().getId()); }
+        if (entity.getUser().getUsername() != null) {
+            dto.setUserName(entity.getUser().getUsername());
+        } else {
+            dto.setUserName(entity.getUser().getEmail());
+        }
+        if (entity.getTitle()!=null) {
+            dto.setTitle(entity.getTitle());
+        }
+
         return dto;
     }
 
     public static ProjectHistoryEntity toEntity(ProjectHistoryDto dto) {
         ProjectHistoryEntity entity = new ProjectHistoryEntity();
-        entity.setNewDescription(dto.getNewDescription());
-        entity.setType(HistoryType.values()[dto.getType()]);
+        entity.setId(dto.getId());
+        if (dto.getNewDescription()!=null) {
+        entity.setNewDescription(dto.getNewDescription());}
+        if (dto.getType()==100 || dto.getType()==200 || dto.getType()==300 || dto.getType()==400 || dto.getType()==500) {
+        entity.setType(HistoryType.fromValue(dto.getType()));
+        }
+        if (dto.getTimestamp() != null) {
         entity.setTimestamp(dto.getTimestamp());
-        entity.setUser(UserMapper.toEntity(dto.getUser()));
-        entity.setProject(ProjectMapper.toEntity(dto.getProject()));
+        }
+        if (dto.getTitle() !=null) {
+            entity.setTitle(dto.getTitle());
+        }
         return entity;
     }
 }
