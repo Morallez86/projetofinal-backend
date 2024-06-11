@@ -48,9 +48,10 @@ public class ProjectHistoryBean {
         projectHistoryEntity.setType(HistoryType.NORMAL);
         System.out.println("--- " + projectHistoryEntity.getType());
         projectHistoryEntity.setTimestamp(LocalDateTime.now());
-        if (project.getTasks().contains(task)) {
+        if (project.getTasks().contains(task) && task != null) {
         projectHistoryEntity.setTask(task);
-        } else {
+        }
+        else if (!project.getTasks().contains(task) && task != null){
             /* quando retornarmos o dto isto era retornar null*/
             System.out.println("task doesn't belong to this project");
             return;
