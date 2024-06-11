@@ -18,6 +18,11 @@ public class ProjectHistoryMapper {
         dto.setProjectId(entity.getProject().getId());
         if (entity.getTask()!=null) {
         dto.setTaskId(entity.getTask().getId()); }
+        if (entity.getUser().getUsername() != null) {
+            dto.setUserName(entity.getUser().getUsername());
+        } else {
+            dto.setUserName(entity.getUser().getEmail());
+        }
         return dto;
     }
 

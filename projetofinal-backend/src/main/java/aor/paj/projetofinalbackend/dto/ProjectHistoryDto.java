@@ -26,6 +26,8 @@ public class ProjectHistoryDto {
 
     private long taskId;
 
+    private String userName;
+
     public ProjectHistoryDto() {
     }
 
@@ -60,6 +62,11 @@ public class ProjectHistoryDto {
         return taskId;
     }
 
+    @XmlElement
+    public String getUserName() {
+        return userName;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -86,5 +93,9 @@ public class ProjectHistoryDto {
 
     public void setTaskId(long taskId) {
         this.taskId = taskId;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
