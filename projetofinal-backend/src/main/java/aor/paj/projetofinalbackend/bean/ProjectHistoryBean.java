@@ -9,13 +9,16 @@ import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.ProjectHistoryEntity;
 import aor.paj.projetofinalbackend.entity.TaskEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.mapper.ChatMessageMapper;
 import aor.paj.projetofinalbackend.mapper.ProjectHistoryMapper;
 import aor.paj.projetofinalbackend.utils.HistoryType;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Stateless
 public class ProjectHistoryBean {
@@ -35,7 +38,7 @@ public class ProjectHistoryBean {
     @EJB
     TaskDao taskDao;
 
-    public void addLog (ProjectHistoryDto projectHistoryDto, long projectId, String token) {
+    public List<ProjectHistoryDto> addLog (ProjectHistoryDto projectHistoryDto, long projectId, String token) {
         System.out.println("in");
         ProjectHistoryEntity projectHistoryEntity = ProjectHistoryMapper.toEntity(projectHistoryDto);
         System.out.println("*** " + projectHistoryEntity.getType());
@@ -54,7 +57,7 @@ public class ProjectHistoryBean {
         else if (!project.getTasks().contains(task) && task != null){
             /* quando retornarmos o dto isto era retornar null*/
             System.out.println("task doesn't belong to this project");
-            return;
+            return null;
         }
         System.out.println("before");
         projectHistoryDao.persist(projectHistoryEntity);
@@ -64,6 +67,8 @@ public class ProjectHistoryBean {
         projectHistoryEntitySet.add(projectHistoryEntity);
         project.setHistoryRecords(projectHistoryEntitySet);
         projectDao.merge(project);
+
+       return projectHistoryEntitySet.stream().map(ProjectHistoryMapper::toDto).collect(Collectors.toList());
     }
 
 

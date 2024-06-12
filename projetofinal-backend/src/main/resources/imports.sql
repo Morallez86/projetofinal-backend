@@ -141,11 +141,15 @@ VALUES (1,1),
        (5,5);
 
 INSERT INTO project_history(project_id, task_id, timestamp, user_id, new_description, old_description, title, type)
-VALUES (1,null, '2025-01-15 11:30:00',1,null,null,'Skill added: Backend','ADD'),
-(1,null, '2025-01-16 11:30:00',1,null,null, 'Alistar123 was removed','REMOVE'),
-       (1,null, '2025-01-16 11:30:00',1,null,null,'New State: IN PROFRESS','PROJECTSTATE'),
-       (1,null, '2025-01-16 11:30:00',1,null,null,'Task "1st meeting": FINISHED','TASKS'),
-       (1,null, '2025-01-16 11:30:00',1,'I need help to finish this task',null, null,'NORMAL');
+VALUES (1,null, '2024-01-15 11:30:00',1,null,null,'Skill added: Backend','ADD'),
+(1,null, '2024-01-16 11:32:00',1,null,null, 'Alistar123 was removed','REMOVE'),
+       (1,null, '2024-01-16 11:33:00',1,null,null,'New State: IN PROFRESS','PROJECTSTATE'),
+       (1,null, '2024-01-16 11:34:00',1,null,null,'Task "1st meeting": FINISHED','TASKS'),
+       (1,null, '2024-01-16 11:35:00',1,'I need help to finish this task',null, null,'NORMAL'),
+(1,2, '2024-06-12 11:32:00',2,null,null, 'Task 2 was created','ADD'),
+       (1,1, '2024-01-17 11:33:00',2,null,null, 'Task 1 was removed','REMOVE'),
+       (1,2, '2024-01-16 11:32:00',1,'I need more time to this task, like more 2 or 3 days',null, null,'NORMAL');
+
 
 
 

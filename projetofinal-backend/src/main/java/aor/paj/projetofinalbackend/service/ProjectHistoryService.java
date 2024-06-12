@@ -10,6 +10,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
+
 @Path("/projectHistory")
 public class ProjectHistoryService {
 
@@ -23,8 +25,8 @@ public class ProjectHistoryService {
     public Response createLog(@HeaderParam("Authorization") String authorizationHeader, ProjectHistoryDto projectHistoryDto,  @PathParam("projectId") Long projectId) {
         try {
             String token = authorizationHeader.substring("Bearer".length()).trim();
-            projectHistoryBean.addLog(projectHistoryDto, projectId, token);
-            return Response.status(Response.Status.CREATED).entity("log created").build();
+            List<ProjectHistoryDto> projectHistoryDtoList = projectHistoryBean.addLog(projectHistoryDto, projectId, token);
+            return Response.status(Response.Status.CREATED).entity(projectHistoryDtoList).build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
             cause.printStackTrace();
