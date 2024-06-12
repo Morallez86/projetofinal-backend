@@ -19,7 +19,8 @@ public class ProjectHistoryMapper {
         dto.setUserId(entity.getUser().getId());
         dto.setProjectId(entity.getProject().getId());
         if (entity.getTask()!=null) {
-        dto.setTaskId(entity.getTask().getId()); }
+        dto.setTaskId(entity.getTask().getId());
+        dto.setTaskName(entity.getTask().getTitle());}
         if (entity.getUser().getUsername() != null) {
             dto.setUserName(entity.getUser().getUsername());
         } else {
