@@ -86,6 +86,7 @@ public class ProjectEntity implements Serializable {
     private Set<InterestEntity> interests = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("timestamp DESC")
     private Set<ProjectHistoryEntity> historyRecords = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
