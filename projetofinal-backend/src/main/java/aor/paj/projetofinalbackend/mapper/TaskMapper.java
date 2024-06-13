@@ -29,13 +29,14 @@ public class TaskMapper {
         dto.setStartingDate(entity.getStartingDate());
         dto.setPlannedEndingDate(entity.getPlannedEndingDate());
         dto.setEndingDate(entity.getEndingDate());
-        dto.setStatus(entity.getStatus().ordinal());
+        dto.setStatus(entity.getStatus().getValue());
         dto.setPriority(entity.getPriority().getValue());
         dto.setContributors(entity.getContributors());
         dto.setUserId(entity.getUser().getId());
         dto.setDependencies(mapDependencies(entity.getDependencies(), depth));
         dto.setDependentTasks(mapDependencies(entity.getDependentTasks(), depth));
         dto.setProjectId(entity.getProject().getId());
+        dto.setUserName(entity.getUser().getUsername());
         return dto;
     }
 

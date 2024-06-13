@@ -42,6 +42,8 @@ public class TaskDto {
 
     private Long projectId;
 
+    private String userName;
+
     public TaskDto() {
     }
 
@@ -119,6 +121,11 @@ public class TaskDto {
         return projectId;
     }
 
+    @XmlElement
+    public String getUserName() {
+        return userName;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -175,4 +182,7 @@ public class TaskDto {
         this.dependentTasks = dependentTasks;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }
