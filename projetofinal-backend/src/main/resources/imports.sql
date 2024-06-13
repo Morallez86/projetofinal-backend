@@ -54,24 +54,24 @@ INSERT INTO component(project_id, workplace_id, brand, contact, description, ide
 VALUES (NULL, 1, 'brand3', '999-999', 'description2', 'identifier2', 'component2', 'observation2', 'supplier2');
 
 INSERT INTO project(approved, max_users, status, approved_date, creation_date, end_date, owner_id, planned_end_date,
-                    starting_date, description, motivation, title)
+                    starting_date, description, motivation, title, workplace_id)
 VALUES (true, 5, 'IN_PROGRESS', '2024-06-02T10:00:00', '2024-06-02T10:30:00', '2024-06-10T17:00:00', 1,
         '2024-06-10T17:00:00', '2024-06-03T09:00:00', 'This is a test project created in Postman.',
-        'To test the functionality.', 'Test Project 40'),
+        'To test the functionality.', 'Test Project 40', 1),
        (true, 5, 'PLANNING', '2024-06-02T11:00:00', '2024-06-02T11:30:00', '2024-07-01T17:00:00', 2,
         '2024-07-01T17:00:00', '2024-06-04T09:00:00', 'Another test project.', 'To check integration.',
-        'Project Alpha'),
+        'Project Alpha', 2),
        (true, 4, 'READY', '2024-06-02T12:00:00', '2024-06-02T12:30:00', '2024-06-30T17:00:00', 3, '2024-06-30T17:00:00',
-        '2024-06-05T09:00:00', 'Yet another test project.', 'To ensure robustness.', 'Project Beta'),
+        '2024-06-05T09:00:00', 'Yet another test project.', 'To ensure robustness.', 'Project Beta', 3),
        (true, 3, 'IN_PROGRESS', '2024-06-02T13:00:00', '2024-06-02T13:30:00', '2024-07-15T17:00:00', 4,
         '2024-07-15T17:00:00', '2024-06-06T09:00:00', 'Test project for new features.', 'To implement new features.',
-        'Project Gamma'),
+        'Project Gamma', 4),
        (true, 6, 'FINISHED', '2024-06-02T14:00:00', '2024-06-02T14:30:00', '2024-06-25T17:00:00', 5,
         '2024-06-25T17:00:00', '2024-06-07T09:00:00', 'Completed test project.', 'To finalize testing.',
-        'Project Delta'),
+        'Project Delta',5 ),
        (true, 5, 'CANCELLED', '2024-06-02T15:00:00', '2024-06-02T15:30:00', '2024-06-20T17:00:00', 1,
         '2024-06-20T17:00:00', '2024-06-08T09:00:00', 'Cancelled test project.', 'To halt progress.',
-        'Project Epsilon');
+        'Project Epsilon', 6);
 
 INSERT INTO user_project (is_admin, project_id, user_id)
 VALUES (false, 1, 2),

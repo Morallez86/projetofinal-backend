@@ -1,20 +1,15 @@
 package aor.paj.projetofinalbackend.bean;
 
 import aor.paj.projetofinalbackend.dao.*;
-import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.dto.ProjectDto;
-import aor.paj.projetofinalbackend.dto.ResourceDto;
 import aor.paj.projetofinalbackend.dto.TaskDto;
 import aor.paj.projetofinalbackend.dto.UserProjectDto;
 import aor.paj.projetofinalbackend.entity.*;
-import aor.paj.projetofinalbackend.mapper.InterestMapper;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.mapper.TaskMapper;
-import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
 import aor.paj.projetofinalbackend.utils.TaskPriority;
 import aor.paj.projetofinalbackend.utils.TaskStatus;
-import io.jsonwebtoken.Claims;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -56,13 +51,16 @@ public class ProjectBean {
     @EJB
     private TaskDao taskDao;
 
-    private ProjectMapper projectMapper = new ProjectMapper();
+    @EJB
+    private WorkplaceDao workplaceDao;
+
 
 
     @Transactional
     public void addProject(ProjectDto projectDto, String token) {
         // Extract user ID from the token
         Long userId = serviceBean.getUserIdFromToken(token);
+        System.out.println(projectDto.getWorkplace().getName());
 
         // Find the user by ID
         UserEntity user = userDao.findUserById(userId);
@@ -71,7 +69,7 @@ public class ProjectBean {
         }
 
         // Convert DTO to entity
-        ProjectEntity projectEntity = projectMapper.toEntity(projectDto);
+        ProjectEntity projectEntity = ProjectMapper.toEntity(projectDto);
 
         // Set the owner of the project
         projectEntity.setOwner(user);
@@ -145,7 +143,7 @@ public class ProjectBean {
                 existingResourceEntity.add(resourceEntity);
                 ResourceEntity resource = resourceDao.findById(resourceEntity.getId());
                 resourceEntity.setBrand(resource.getBrand());
-                resourceEntity.setName(resource.getSupplier());
+                resourceEntity.setName(resource.getName());
                 resourceEntity.setDescription(resource.getDescription());
                 resourceEntity.setContact(resource.getContact());
                 resourceEntity.setIdentifier(resource.getIdentifier());
@@ -154,13 +152,31 @@ public class ProjectBean {
             }
         }
 
+        // Handle workplaces
+        Set<WorkplaceEntity> existingWorkplaceEntity = new HashSet<>();
+        if (projectDto.getWorkplace() != null) {
+            WorkplaceEntity workplaceEntity = workplaceDao.findWorkplaceByName(projectDto.getWorkplace().getName());
+            if (workplaceEntity != null) {
+                existingWorkplaceEntity.add(workplaceEntity);
+            }
+        }
+        System.out.println("1");
+
+        // Finalize workplace associations
+        if (existingWorkplaceEntity != null && !existingWorkplaceEntity.isEmpty()) {
+            projectEntity.setWorkplace(existingWorkplaceEntity.iterator().next());
+        }
+
+        System.out.println("2");
+
         // Persist the project entity
         projectDao.persist(projectEntity);
+
+        System.out.println("3");
 
         // Associate user projects
         Set<UserProjectEntity> userProjectEntities = new HashSet<>();
         for (UserProjectDto userProjectDto : projectDto.getUserProjectDtos()) {
-            System.out.println(userProjectEntities.size());
             UserEntity projectUser = userDao.findUserById(userProjectDto.getUserId());
             if (projectUser != null) {
                 UserProjectEntity userProjectEntity = new UserProjectEntity();
@@ -240,8 +256,6 @@ public class ProjectBean {
         projectDao.merge(projectEntity);
     }
 
-
-
     @Transactional
     public Set<ProjectDto> getAllProjects(int page, int limit) {
         List<ProjectEntity> projects = projectDao.findAllProjects(page, limit);
@@ -271,5 +285,59 @@ public class ProjectBean {
                 .map(TaskMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void updateProject(Long projectId, ProjectDto projectDto, String token) {
+        // Extract user ID from the token
+        Long userId = serviceBean.getUserIdFromToken(token);
+        UserEntity user = userDao.findUserById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid user ID");
+        }
+
+        // Find the existing project
+        ProjectEntity projectEntity = projectDao.findProjectById(projectId);
+        if (projectEntity == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        // Update project details
+        projectEntity.setTitle(projectDto.getTitle());
+        projectEntity.setStatus(ProjectStatus.fromValue(projectDto.getStatus()));
+        projectEntity.setDescription(projectDto.getDescription());
+        projectEntity.setMotivation(projectDto.getMotivation());
+        projectEntity.setCreationDate(projectDto.getCreationDate());
+        projectEntity.setPlannedEndDate(projectDto.getPlannedEndDate());
+
+        // Handle workplace
+        if (projectDto.getWorkplace() != null) {
+            WorkplaceEntity workplaceEntity = workplaceDao.findWorkplaceByName(projectDto.getWorkplace().getName());
+            if (workplaceEntity != null) {
+                projectEntity.setWorkplace(workplaceEntity);
+            }
+        }
+        /*
+        // Update UserProject associations
+        Set<UserProjectEntity> userProjectEntities = new HashSet<>();
+        for (UserProjectDto userProjectDto : projectDto.getUserProjectDtos()) {
+            UserEntity projectUser = userDao.findUserById(userProjectDto.getUserId());
+            if (projectUser != null) {
+                UserProjectEntity userProjectEntity = userProjectDao.findByUserAndProject(projectUser.getId(), projectEntity.getId());
+                if (userProjectEntity == null) {
+                    userProjectEntity = new UserProjectEntity();
+                    userProjectEntity.setUser(projectUser);
+                    userProjectEntity.setProject(projectEntity);
+                    userProjectEntity.setIsAdmin(false);
+                }
+                userProjectEntities.add(userProjectEntity);
+            }
+        }
+        projectEntity.setUserProjects(userProjectEntities);
+        */
+
+        // Persist all changes
+        projectDao.merge(projectEntity);
+    }
+
 }
 

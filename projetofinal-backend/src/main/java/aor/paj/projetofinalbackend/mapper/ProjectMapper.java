@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 public class ProjectMapper {
     public static ProjectDto toDto(ProjectEntity entity) {
         ProjectDto dto = new ProjectDto();
+
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());
@@ -31,12 +32,21 @@ public class ProjectMapper {
         dto.setSkills(entity.getSkills().stream().map(SkillMapper::toDto).collect(Collectors.toList()));
         dto.setHistoryrecords(entity.getHistoryRecords().stream().map(ProjectHistoryMapper::toDto).collect(Collectors.toList()));
         dto.setChatMessage(entity.getChatMessages().stream().map(ChatMessageMapper::toDto).collect(Collectors.toList()));
+        dto.setWorkplace(WorkplaceMapper.toDto(entity.getWorkplace()));
 
         return dto;
     }
 
     public static ProjectEntity toEntity(ProjectDto dto) {
         ProjectEntity entity = new ProjectEntity();
+
+        // Validate the dates
+        if (dto.getStartingDate() != null && dto.getPlannedEndDate() != null) {
+            if (!dto.getStartingDate().isBefore(dto.getPlannedEndDate())) {
+                throw new IllegalArgumentException("Starting date must be before the planned end date");
+            }
+        }
+
         entity.setId(dto.getId());
         entity.setTitle(dto.getTitle());
         entity.setDescription(dto.getDescription());
@@ -69,6 +79,9 @@ public class ProjectMapper {
         }
         if (dto.getChatMessage() != null) {
             entity.setChatMessages(dto.getChatMessage().stream().map(ChatMessageMapper::toEntity).collect(Collectors.toSet()));
+        }
+        if (dto.getWorkplace() != null) {
+            entity.setWorkplace(WorkplaceMapper.toEntity(dto.getWorkplace()));
         }
 
         return entity;
