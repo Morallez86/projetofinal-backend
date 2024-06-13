@@ -5,6 +5,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "user_project")
+@NamedQueries({
+        @NamedQuery(name = "UserProjectEntity.findByUserAndProject",
+                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId")
+})
 public class UserProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -13,7 +13,6 @@ import java.util.*;
         @NamedQuery(name = "ProjectEntity.findProjectById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id"),
         @NamedQuery(name = "ProjectEntity.getTotalProjectCount", query = "SELECT COUNT(p) FROM ProjectEntity p"),
         @NamedQuery(name = "ProjectEntity.findTasksByProjectId", query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId")
-
 })
 public class ProjectEntity implements Serializable {
 
@@ -42,6 +41,10 @@ public class ProjectEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workplace_id", nullable = false)
+    private WorkplaceEntity workplace;
 
     @Column(name="approved")
     private Boolean approved;
@@ -99,6 +102,8 @@ public class ProjectEntity implements Serializable {
         this.title = title;
     }
 
+    // Getters and Setters for all attributes including the new workplace relationship
+
     public Long getId() {
         return id;
     }
@@ -153,6 +158,14 @@ public class ProjectEntity implements Serializable {
 
     public void setOwner(UserEntity owner) {
         this.owner = owner;
+    }
+
+    public WorkplaceEntity getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(WorkplaceEntity workplace) {
+        this.workplace = workplace;
     }
 
     public Boolean getApproved() {

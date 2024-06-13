@@ -27,11 +27,20 @@ public class WorkplaceEntity implements Serializable {
     @OneToMany(mappedBy = "workplace", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ComponentEntity> components = new HashSet<>();
 
+    @OneToMany(mappedBy = "workplace", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjectEntity> projects = new HashSet<>();
+
     public WorkplaceEntity() {
     }
 
+    // Getters and Setters for all attributes including the new projects relationship
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -57,5 +66,12 @@ public class WorkplaceEntity implements Serializable {
     public void setComponents(Set<ComponentEntity> components) {
         this.components = components;
     }
-}
 
+    public Set<ProjectEntity> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<ProjectEntity> projects) {
+        this.projects = projects;
+    }
+}

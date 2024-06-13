@@ -117,4 +117,26 @@ public class ProjectService {
         }
     }
 
+    @PUT
+    @Path("/{projectId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateProject(@HeaderParam("Authorization") String authorizationHeader,
+                                  @PathParam("projectId") Long projectId,
+                                  ProjectDto projectDto) {
+        try {
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            projectBean.updateProject(projectId, projectDto, token);
+            return Response.status(Response.Status.OK).entity("Project updated successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
 }
