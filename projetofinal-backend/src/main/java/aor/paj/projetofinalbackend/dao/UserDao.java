@@ -7,6 +7,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
 
+import java.util.Collections;
 import java.util.List;
 
 @Stateless
@@ -93,5 +94,24 @@ public class UserDao extends AbstractDao<UserEntity> {
                 .getResultList();
     }
 
+    public List<UserEntity> findAllUsers() {
+        try{
+            return em.createNamedQuery("User.findAllUsers", UserEntity.class).getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 
+    public List<UserEntity> searchUsers(String searchTerm, String workplace, String skills, String interests) {
+        try {
+            return em.createNamedQuery("User.searchUsers", UserEntity.class)
+                    .setParameter("searchTerm", searchTerm != null ? "%" + searchTerm.toLowerCase() + "%" : null)
+                    .setParameter("workplace", workplace)
+                    .setParameter("skills", skills != null && !skills.isEmpty() ? skills : null)
+                    .setParameter("interests", interests != null && !interests.isEmpty() ? interests : null)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return Collections.emptyList(); // Return an empty list instead of null
+        }
+    }
 }

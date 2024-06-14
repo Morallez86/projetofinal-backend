@@ -52,5 +52,11 @@ public class ComponentDao extends AbstractDao<ComponentEntity> {
                 .setParameter("keyword", keyword)
                 .getSingleResult();
     }
+
+    public List<ComponentEntity> findByWorkplaceId(Long workplaceId) {
+        return em.createNamedQuery("Component.findByWorkplaceId", ComponentEntity.class)
+                .setParameter("workplaceId", workplaceId)
+                .getResultList();
+    }
 }
 

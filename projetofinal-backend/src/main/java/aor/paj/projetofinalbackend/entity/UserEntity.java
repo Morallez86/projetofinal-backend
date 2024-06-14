@@ -10,12 +10,21 @@ import java.util.*;
 @Table(name="user")
 @NamedQueries({
         @NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email"),
+        @NamedQuery(name = "User.findAllUsers", query = "SELECT u FROM UserEntity u"),
         @NamedQuery(name = "User.findUserById", query = "SELECT u FROM UserEntity u WHERE u.id = :userId"),
         @NamedQuery(name = "User.findUserByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username"),
         @NamedQuery(name = "User.countTotalUsers", query = "SELECT COUNT(u) FROM UserEntity u"),
         @NamedQuery(name = "User.findUserByEmailValidationToken", query = "SELECT u FROM UserEntity u WHERE u.emailToken = :emailToken"),
         @NamedQuery(name = "User.getTotalProjectCount", query = "SELECT COUNT(p) FROM UserEntity u JOIN u.ownedProjects p WHERE u.id = :userId"),
         @NamedQuery(name = "User.findUsersByQuery", query = "SELECT u FROM UserEntity u WHERE LOWER(u.username) LIKE :query OR LOWER(u.email) LIKE :query"),
+        @NamedQuery(name = "User.searchUsers", query = "SELECT DISTINCT u FROM UserEntity u " +
+                "LEFT JOIN u.skills s " +
+                "LEFT JOIN u.interests i " +
+                "LEFT JOIN u.workplace w " +
+                "WHERE (:searchTerm IS NULL OR LOWER(u.username) LIKE :searchTerm OR LOWER(u.email) LIKE :searchTerm) " +
+                "AND (:workplace IS NULL OR w.name = :workplace) " +
+                "AND (:skills IS NULL OR s.name IN :skills) " +
+                "AND (:interests IS NULL OR i.name IN :interests)"),
 })
 public class UserEntity implements Serializable {
 

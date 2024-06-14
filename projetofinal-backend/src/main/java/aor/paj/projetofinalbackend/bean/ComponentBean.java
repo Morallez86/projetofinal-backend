@@ -77,6 +77,10 @@ public class ComponentBean {
         return componentEntities.stream().map(ComponentMapper::toDto).collect(Collectors.toList());
     }
 
+    public List<ComponentDto> getAllByWorkplaceId(Long workplaceId) {
+        List<ComponentEntity> componentEntities = componentDao.findByWorkplaceId(workplaceId);
+        return componentEntities.stream().map(ComponentMapper::toDto).collect(Collectors.toList());
     }
+}
 
 
