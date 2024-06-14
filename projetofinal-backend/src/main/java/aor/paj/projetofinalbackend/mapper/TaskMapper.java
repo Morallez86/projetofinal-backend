@@ -33,8 +33,12 @@ public class TaskMapper {
         dto.setPriority(entity.getPriority().getValue());
         dto.setContributors(entity.getContributors());
         dto.setUserId(entity.getUser().getId());
+        if (dto.getDependencies()!=null) {
         dto.setDependencies(mapDependencies(entity.getDependencies(), depth));
+        }
+        if (dto.getDependentTasks()!=null) {
         dto.setDependentTasks(mapDependencies(entity.getDependentTasks(), depth));
+        }
         dto.setProjectId(entity.getProject().getId());
         dto.setUserName(entity.getUser().getUsername());
         return dto;
@@ -63,8 +67,12 @@ public class TaskMapper {
         entity.setStatus(TaskStatus.fromValue(dto.getStatus()));
         entity.setPriority(TaskPriority.fromValue(dto.getPriority()));
         entity.setContributors(dto.getContributors());
-        entity.setDependencies(mapEntities(dto.getDependencies(), depth));
-        entity.setDependentTasks(mapEntities(dto.getDependentTasks(), depth));
+        if (dto.getDependencies()!= null) {
+            entity.setDependencies(mapEntities(dto.getDependencies(), depth));
+        }
+        if (dto.getDependentTasks()!=null) {
+            entity.setDependentTasks(mapEntities(dto.getDependentTasks(), depth));
+        }
         return entity;
     }
 

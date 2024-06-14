@@ -26,4 +26,16 @@ public class TaskService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-}
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editTask(@HeaderParam("Authorization") String authorizationHeader, TaskDto taskDto) {
+        try {
+            taskBean.editTask(taskDto);
+            return Response.ok("task updated").build();
+        }catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }}
