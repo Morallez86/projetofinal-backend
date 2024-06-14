@@ -30,7 +30,7 @@ public class TaskBean {
                 .collect(Collectors.toList());
     }
 
-    public void editTask (TaskDto dto) {
+    public TaskDto editTask (TaskDto dto) {
         TaskEntity task = TaskMapper.toEntity(dto);
         TaskEntity taskDataBase = taskDao.find(dto.getId());
         taskDataBase.setTitle(task.getTitle());
@@ -41,5 +41,6 @@ public class TaskBean {
         UserEntity user = userDao.findUserByUsername(dto.getUserName());
         taskDataBase.setUser(user);
         taskDao.merge(taskDataBase);
+        return TaskMapper.toDto(taskDataBase);
     }
 }
