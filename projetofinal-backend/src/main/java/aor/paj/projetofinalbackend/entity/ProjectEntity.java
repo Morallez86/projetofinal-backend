@@ -12,8 +12,8 @@ import java.util.*;
         @NamedQuery(name = "ProjectEntity.findAll", query = "SELECT p FROM ProjectEntity p ORDER BY p.creationDate DESC"),
         @NamedQuery(name = "ProjectEntity.findProjectById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id"),
         @NamedQuery(name = "ProjectEntity.getTotalProjectCount", query = "SELECT COUNT(p) FROM ProjectEntity p"),
-        @NamedQuery(name = "ProjectEntity.findTasksByProjectId", query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId")
-})
+        @NamedQuery(name = "ProjectEntity.findTasksByProjectId",
+                query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId ORDER BY CASE WHEN t.status = 'DONE' THEN 1 ELSE 0 END, t.plannedEndingDate ASC")})
 public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -73,8 +73,8 @@ public class ProjectEntity implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST}, mappedBy = "projects")
     private Set<ResourceEntity> resources = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TaskEntity> tasks = new HashSet<>();
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<TaskEntity> tasks = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "project_skill",
@@ -240,11 +240,11 @@ public class ProjectEntity implements Serializable {
         this.resources = resources;
     }
 
-    public Set<TaskEntity> getTasks() {
+    public List<TaskEntity> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Set<TaskEntity> tasks) {
+    public void setTasks(List<TaskEntity> tasks) {
         this.tasks = tasks;
     }
 

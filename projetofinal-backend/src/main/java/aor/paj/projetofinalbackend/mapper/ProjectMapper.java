@@ -72,7 +72,7 @@ public class ProjectMapper {
             entity.setSkills(dto.getSkills().stream().map(SkillMapper::toEntity).collect(Collectors.toSet()));
         }
         if (dto.getTasks() != null) {
-            entity.setTasks(dto.getTasks().stream().map(TaskMapper::toEntity).collect(Collectors.toSet()));
+            entity.setTasks(dto.getTasks().stream().map(TaskMapper::toEntity).collect(Collectors.toList()));
         }
         if (dto.getHistoryrecords() != null) {
             entity.setHistoryRecords(dto.getHistoryrecords().stream().map(ProjectHistoryMapper::toEntity).collect(Collectors.toSet()));
