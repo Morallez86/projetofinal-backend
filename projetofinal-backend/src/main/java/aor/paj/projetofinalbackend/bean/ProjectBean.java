@@ -15,10 +15,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -219,7 +216,7 @@ public class ProjectBean {
         projectEntity.setResources(completeResourceSet);
 
         // Handle tasks
-        Set<TaskEntity> taskEntities = new HashSet<>();
+        List<TaskEntity> taskEntities = new ArrayList<>();
         TaskEntity uniqueTask = new TaskEntity();
         uniqueTask.setTitle("Final Presentation");
         uniqueTask.setDescription("Last task");
@@ -247,7 +244,7 @@ public class ProjectBean {
             resourceDao.merge(resourceEntity);
         }
 
-        Set<TaskEntity> taskEntitiesFinal = new HashSet<>();
+        List<TaskEntity> taskEntitiesFinal = new ArrayList<>();
         for (TaskEntity task : projectEntity.getTasks()) {
             task.setProject(projectEntity);
             taskEntitiesFinal.add(task);
@@ -269,6 +266,15 @@ public class ProjectBean {
         ProjectEntity project = projectDao.findProjectById(projectId);
         if (project == null) {
             return null;
+        }
+        List<TaskEntity> orderedTasks = taskDao.findTasksByProjectId(projectId);
+        for (TaskEntity task : orderedTasks) {
+            System.out.println(task.getStatus());
+        }
+        project.setTasks(orderedTasks);
+        projectDao.merge(project);
+        for (TaskEntity task2 : project.getTasks()) {
+            System.out.println("2 " + task2.getStatus());
         }
         return ProjectMapper.toDto(project);
     }
