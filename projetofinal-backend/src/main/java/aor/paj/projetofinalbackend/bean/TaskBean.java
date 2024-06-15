@@ -53,7 +53,7 @@ public class TaskBean {
 
         taskDao.merge(taskDataBase);
 
-        System.out.println("-l,çl,lç " + dto.getProjectId());
+
         List<TaskEntity> orderedTasks = taskDao.findTasksByProjectId(dto.getProjectId());
 
         int index = orderedTasks.indexOf(taskDataBase) ;
