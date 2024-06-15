@@ -27,10 +27,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -246,4 +243,18 @@ public class UserBean {
         return userEntities.stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
 
+    //Return the list of users in the json format
+    public List<UserDto> getAllUsers() {
+        List<UserEntity> users = userDao.findAllUsers();
+        return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
+    }
+
+    public List<UserDto> searchUsers(String searchTerm, String workplace, String skills, String interests) {
+
+        List<UserEntity> users = userDao.searchUsers(searchTerm, workplace, skills, interests);
+        if (users == null || users.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
+    }
 }

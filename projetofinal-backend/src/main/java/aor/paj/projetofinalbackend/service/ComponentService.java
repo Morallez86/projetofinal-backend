@@ -100,9 +100,15 @@ public class ComponentService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response allComponentsWithoutFilters(@HeaderParam("Authorization") String authorizationHeader) {
+    public Response allComponents(@HeaderParam("Authorization") String authorizationHeader,
+                                  @QueryParam("workplace") Long workplaceId) {
         try {
-            List <ComponentDto> componentDtoList = componentBean.getAllWithoutFilters();
+            List<ComponentDto> componentDtoList;
+            if (workplaceId != null) {
+                componentDtoList = componentBean.getAllByWorkplaceId(workplaceId);
+            } else {
+                componentDtoList = componentBean.getAllWithoutFilters();
+            }
             return Response.status(Response.Status.OK).entity(componentDtoList).build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
@@ -113,8 +119,6 @@ public class ComponentService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-
-
-    }
+}
 
 

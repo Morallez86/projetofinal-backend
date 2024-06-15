@@ -10,6 +10,7 @@ import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.pojo.ConfirmationRequest;
 import aor.paj.projetofinalbackend.pojo.ResponseMessage;
+import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import aor.paj.projetofinalbackend.utils.JsonUtils;
@@ -43,6 +44,41 @@ public class UserService {
 
     @Inject
     EmailSender emailSender;
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsers(@QueryParam("searchTerm") String searchTerm,
+                             @QueryParam("workplace") String workplace,
+                             @QueryParam("skills") String skills,
+                             @QueryParam("interests") String interests,
+                             @HeaderParam("Authorization") String authorizationHeader) {
+        // Validate the token
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+        Response validationResponse = authBean.validateUserToken(token);
+        if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+            return validationResponse;
+        }
+
+        List<UserDto> users;
+
+        // Apply filters based on provided query parameters
+        if ((searchTerm == null || searchTerm.isEmpty()) && (workplace == null || workplace.isEmpty())
+                && (skills == null || skills.isEmpty()) && (interests == null || interests.isEmpty())) {
+            // If no search term or filters are provided, fetch all users
+            users = userBean.getAllUsers();
+        } else {
+            users = userBean.searchUsers(searchTerm, workplace, skills, interests);
+        }
+
+        if (users == null) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to search User").build();
+        }
+
+        return Response.ok(users).build();
+    }
+
+
+
 
     @POST
     @Path("/login")
@@ -229,7 +265,6 @@ public class UserService {
 
             imagesList.add(imageMap);
         }
-        System.out.println(imagesList);
 
         if (imagesList.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).entity("No valid user images found").build();
@@ -254,13 +289,37 @@ public class UserService {
             return validationResponse;
         }
 
-        ProfileDto profileDto = userBean.getProfileDtoById(userId);
-        if (profileDto == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Profile not found").build();
+        // Extract user ID from the token
+        Long tokenUserId;
+        try {
+            tokenUserId = JwtUtil.extractUserIdFromToken(token);
+        } catch (Exception e) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token").build();
         }
 
-        return Response.ok(profileDto).build();
+        // Check if the requested user ID matches the user ID from the token
+        if (tokenUserId.equals(userId)) {
+            System.out.println("1 " + userId);
+            // Return the profile if the id and token is the sae
+            ProfileDto profileDto = userBean.getProfileDtoById(userId);
+            if (profileDto == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Profile not found").build();
+            }
+            return Response.ok(profileDto).build();
+        } else {
+            System.out.println("2 " + userId);
+            // Check the visibility of the requested user's profile
+            ProfileDto profileDto = userBean.getProfileDtoById(userId);
+            if (profileDto == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Profile not found").build();
+            }
+            if (!profileDto.getVisibility()) {
+                return Response.status(Response.Status.FORBIDDEN).entity("Profile not visible").build();
+            }
+            return Response.ok(profileDto).build();
+        }
     }
+
 
     @PUT
     @Path("/profile/{userId}")

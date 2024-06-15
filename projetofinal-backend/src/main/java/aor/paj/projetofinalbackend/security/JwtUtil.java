@@ -37,4 +37,18 @@ public class JwtUtil {
     public static long getExpirationTime() {
         return EXPIRATION_TIME;
     }
+
+    public static Long extractUserIdFromToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(KEY)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.get("id", Long.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to extract user ID from token", e);
+        }
+    }
 }
