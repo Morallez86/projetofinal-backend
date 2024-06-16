@@ -7,6 +7,7 @@ import aor.paj.projetofinalbackend.dto.UserProjectDto;
 import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.mapper.TaskMapper;
+import aor.paj.projetofinalbackend.mapper.UserProjectMapper;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
 import aor.paj.projetofinalbackend.utils.TaskPriority;
 import aor.paj.projetofinalbackend.utils.TaskStatus;
@@ -343,6 +344,13 @@ public class ProjectBean {
 
         // Persist all changes
         projectDao.merge(projectEntity);
+    }
+
+    public List<UserProjectDto> getUsersByProject (Long projectId) {
+        List<UserProjectEntity> userProjectEntities = projectDao.findUserProjectsByProjectId(projectId);
+        return userProjectEntities.stream()
+                .map(UserProjectMapper::toDto)
+                .collect(Collectors.toList());
     }
 
 }

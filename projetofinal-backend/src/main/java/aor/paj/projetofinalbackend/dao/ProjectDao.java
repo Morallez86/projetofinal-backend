@@ -2,6 +2,7 @@ package aor.paj.projetofinalbackend.dao;
 
 import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.entity.UserProjectEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
@@ -41,6 +42,12 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         } catch (NoResultException e) {
             return 0;
         }
+    }
+
+    public List<UserProjectEntity> findUserProjectsByProjectId(Long projectId) {
+        return em.createNamedQuery("ProjectEntity.findUserProjectsByProjectId", UserProjectEntity.class)
+                .setParameter("projectId", projectId)
+                .getResultList();
     }
 
 }

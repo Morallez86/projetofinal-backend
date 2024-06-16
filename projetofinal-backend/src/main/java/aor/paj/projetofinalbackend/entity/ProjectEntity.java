@@ -13,7 +13,11 @@ import java.util.*;
         @NamedQuery(name = "ProjectEntity.findProjectById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id"),
         @NamedQuery(name = "ProjectEntity.getTotalProjectCount", query = "SELECT COUNT(p) FROM ProjectEntity p"),
         @NamedQuery(name = "ProjectEntity.findTasksByProjectId",
-                query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId ORDER BY CASE WHEN t.status = 'DONE' THEN 1 ELSE 0 END, t.plannedEndingDate ASC")})
+                query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId ORDER BY CASE WHEN t.status = 'DONE' THEN 1 ELSE 0 END, t.plannedEndingDate ASC"),
+        @NamedQuery(name = "ProjectEntity.findUserProjectsByProjectId",
+                query = "SELECT up FROM UserProjectEntity up WHERE up.project.id = :projectId")
+})
+
 public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
