@@ -4,16 +4,14 @@ import aor.paj.projetofinalbackend.bean.AuthBean;
 import aor.paj.projetofinalbackend.bean.ProjectBean;
 import aor.paj.projetofinalbackend.bean.ProjectHistoryBean;
 import aor.paj.projetofinalbackend.dao.TaskDao;
-import aor.paj.projetofinalbackend.dto.ProfileDto;
-import aor.paj.projetofinalbackend.dto.ProjectDto;
-import aor.paj.projetofinalbackend.dto.TaskDto;
-import aor.paj.projetofinalbackend.dto.UserProjectDto;
+import aor.paj.projetofinalbackend.dto.*;
 import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +130,23 @@ public class ProjectService {
 
         }
     }
+
+    @GET
+    @Path("/{projectId}/possibleDependentTasks")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTasksDependentByProjectId(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, TaskEndDateDto plannedEndingDate) {
+        try {
+            List<TaskDto> taskDtos = projectBean.getPossibleDependentTasks(projectId, plannedEndingDate);
+            return Response.status(Response.Status.OK).entity(taskDtos).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+
+        }
+    }
+
+
         @PUT
         @Path("/{projectId}")
         @Consumes(MediaType.APPLICATION_JSON)

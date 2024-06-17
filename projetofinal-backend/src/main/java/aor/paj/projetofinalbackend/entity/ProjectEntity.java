@@ -15,7 +15,10 @@ import java.util.*;
         @NamedQuery(name = "ProjectEntity.findTasksByProjectId",
                 query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId ORDER BY CASE WHEN t.status = 'DONE' THEN 1 ELSE 0 END, t.plannedEndingDate ASC"),
         @NamedQuery(name = "ProjectEntity.findUserProjectsByProjectId",
-                query = "SELECT up FROM UserProjectEntity up WHERE up.project.id = :projectId")
+                query = "SELECT up FROM UserProjectEntity up WHERE up.project.id = :projectId"),
+        @NamedQuery(name = "ProjectEntity.findTasksByProjectIdAndEndingDate",
+                query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId AND t.plannedEndingDate <= :plannedStartingDate ORDER BY t.plannedEndingDate ASC")
+
 })
 
 public class ProjectEntity implements Serializable {
