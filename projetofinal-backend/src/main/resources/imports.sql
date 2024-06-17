@@ -157,6 +157,29 @@ VALUES (1,null, '2024-01-15 11:30:00',1,null,null,'Skill added: Backend','ADD'),
        (1,1, '2024-01-17 11:33:00',2,null,null, 'Task 1 was removed','REMOVE'),
        (1,2, '2024-01-16 11:32:00',1,'I need more time to this task, like more 2 or 3 days',null, null,'NORMAL');
 
+-- Insert messages data
+INSERT INTO message (content, sender_id, receiver_id, timestamp, seen)
+VALUES ('Hello, Alice! How are you?', 1, 2, '2024-06-10 10:00:00', false),
+       ('Hi John! I am good, thank you!', 2, 1, '2024-06-10 10:05:00', true),
+       ('Hey Bob, do you have the project report ready?', 1, 3, '2024-06-10 11:00:00', false),
+       ('Yes, John. I will send it to you by EOD.', 3, 1, '2024-06-10 11:10:00', false),
+       ('Alice, could you review my code?', 3, 2, '2024-06-10 12:00:00', true),
+       ('Sure, Bob! I will take a look.', 2, 3, '2024-06-10 12:15:00', false),
+       ('Hi Dana, any updates on the new features?', 1, 5, '2024-06-10 14:00:00', true),
+       ('Yes, John. I have completed the initial implementation.', 5, 1, '2024-06-10 14:30:00', true),
+       ('Charlie, can you join the meeting at 3 PM?', 1, 4, '2024-06-10 13:00:00', false),
+       ('Got it, John. I will be there.', 4, 1, '2024-06-10 13:15:00', false),
+       ('Evan, we need to discuss the design specs.', 1, 6, '2024-06-10 15:00:00', true),
+       ('Sure, John. When are you available?', 6, 1, '2024-06-10 15:30:00', false),
+       ('Alice, have you checked the new commits?', 5, 2, '2024-06-10 16:00:00', false),
+       ('Yes, Dana. I have reviewed them.', 2, 5, '2024-06-10 16:30:00', true),
+       ('Bob, please update the documentation.', 4, 3, '2024-06-10 17:00:00', false),
+       ('Will do, Charlie.', 3, 4, '2024-06-10 17:15:00', false),
+       ('Hey Evan, can you fix the bug in module X?', 5, 6, '2024-06-10 18:00:00', false),
+       ('On it, Dana.', 6, 5, '2024-06-10 18:30:00', false),
+       ('John, any updates on the project approval?', 2, 1, '2024-06-10 19:00:00', true),
+       ('Yes, Alice. It has been approved.', 1, 2, '2024-06-10 19:30:00', true);
+
 
 
 

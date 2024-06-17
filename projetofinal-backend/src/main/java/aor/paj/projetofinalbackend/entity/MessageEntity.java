@@ -5,6 +5,14 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "message")
+@NamedQueries({
+        @NamedQuery(name = "Message.findReceivedMessagesByUserId", query = "SELECT m FROM MessageEntity m WHERE m.receiver.id = :userId"),
+        @NamedQuery(name = "Message.findSentMessagesByUserId", query = "SELECT m FROM MessageEntity m WHERE m.sender.id = :userId"),
+        @NamedQuery(name = "Message.countReceivedMessagesByUserId", query = "SELECT COUNT(m) FROM MessageEntity m WHERE m.receiver.id = :userId"),
+        @NamedQuery(name = "Message.countSentMessagesByUserId", query = "SELECT COUNT(m) FROM MessageEntity m WHERE m.sender.id = :userId"),
+        @NamedQuery(name = "Message.updateSeenStatusByIds",
+                query = "UPDATE MessageEntity m SET m.seen = :seen WHERE m.id IN :ids")
+})
 public class MessageEntity extends BaseMessageEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
