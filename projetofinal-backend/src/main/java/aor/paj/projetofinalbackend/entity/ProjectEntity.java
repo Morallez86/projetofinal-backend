@@ -16,8 +16,11 @@ import java.util.*;
                 query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId ORDER BY CASE WHEN t.status = 'DONE' THEN 1 ELSE 0 END, t.plannedEndingDate ASC"),
         @NamedQuery(name = "ProjectEntity.findUserProjectsByProjectId",
                 query = "SELECT up FROM UserProjectEntity up WHERE up.project.id = :projectId"),
-        @NamedQuery(name = "ProjectEntity.findTasksByProjectIdAndEndingDate",
-                query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId AND t.plannedEndingDate <= :plannedStartingDate ORDER BY t.plannedEndingDate ASC")
+        @NamedQuery(
+                name = "ProjectEntity.findTasksByProjectIdAndEndingDate",
+                query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId AND t.plannedEndingDate <= :plannedStartingDate AND t.status != 'DONE' ORDER BY t.plannedEndingDate ASC"
+        )
+
 
 })
 
