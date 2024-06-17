@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,9 +136,13 @@ public class ProjectService {
     @Path("/{projectId}/possibleDependentTasks")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTasksDependentByProjectId(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, TaskEndDateDto plannedStartingDate) {
+    public Response getTasksDependentByProjectId(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, @QueryParam("plannedStartingDate") String plannedStartingDate) {
         try {
-            List<TaskDto> taskDtos = projectBean.getPossibleDependentTasks(projectId, plannedStartingDate);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            LocalDateTime plannedStartingDateLocal = LocalDateTime.parse(plannedStartingDate, formatter);
+            TaskEndDateDto plannedStartingDateDto = new TaskEndDateDto(plannedStartingDateLocal);
+            List<TaskDto> taskDtos = projectBean.getPossibleDependentTasks(projectId, plannedStartingDateDto);
             return Response.status(Response.Status.OK).entity(taskDtos).build();
         } catch (Exception e) {
             e.printStackTrace();

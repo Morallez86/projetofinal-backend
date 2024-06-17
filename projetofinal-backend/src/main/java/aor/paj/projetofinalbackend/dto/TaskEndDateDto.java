@@ -17,6 +17,10 @@ public class TaskEndDateDto {
     public TaskEndDateDto() {
     }
 
+    public TaskEndDateDto(LocalDateTime plannedStartingDate) {
+        this.plannedStartingDate = plannedStartingDate;
+    }
+
     @XmlElement
     public LocalDateTime getPlannedStartingDate() {
         return plannedStartingDate;
