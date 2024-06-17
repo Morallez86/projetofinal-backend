@@ -135,9 +135,9 @@ public class ProjectService {
     @Path("/{projectId}/possibleDependentTasks")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTasksDependentByProjectId(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, TaskEndDateDto plannedEndingDate) {
+    public Response getTasksDependentByProjectId(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, TaskEndDateDto plannedStartingDate) {
         try {
-            List<TaskDto> taskDtos = projectBean.getPossibleDependentTasks(projectId, plannedEndingDate);
+            List<TaskDto> taskDtos = projectBean.getPossibleDependentTasks(projectId, plannedStartingDate);
             return Response.status(Response.Status.OK).entity(taskDtos).build();
         } catch (Exception e) {
             e.printStackTrace();
