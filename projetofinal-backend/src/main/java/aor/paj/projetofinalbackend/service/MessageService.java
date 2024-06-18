@@ -116,7 +116,7 @@ public class MessageService {
     public Response updateSeenStatus(UpdateSeenStatusDto updateSeenStatusDto, @HeaderParam("Authorization") String authorizationHeader) {
         try {
             // Update the seen status for the messages
-            messageBean.updateSeenStatus(updateSeenStatusDto.getMessageIds(), updateSeenStatusDto.isSeen());
+            messageBean.updateSeenStatus(updateSeenStatusDto.getMessageOrNotificationIds(), updateSeenStatusDto.isSeen());
 
             return Response.status(Response.Status.OK).build();
         } catch (Exception e) {

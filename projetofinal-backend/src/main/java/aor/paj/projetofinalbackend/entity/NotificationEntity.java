@@ -5,11 +5,28 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="notification")
+@Table(name = "notification")
+@NamedQueries({
+        @NamedQuery(
+                name = "Notification.findByTypeAndSeen",
+                query = "SELECT n FROM NotificationEntity n WHERE " +
+                        "(:type IS NULL OR n.type = :type) AND " +
+                        "(:seen IS NULL OR n.seen = :seen)"
+        ),
+        @NamedQuery(
+                name = "Notification.countByTypeAndSeen",
+                query = "SELECT COUNT(n) FROM NotificationEntity n WHERE " +
+                        "(:type IS NULL OR n.type = :type) AND " +
+                        "(:seen IS NULL OR n.seen = :seen)"
+        ),
+        @NamedQuery(name = "Notification.updateSeenStatusByIds",
+                query = "UPDATE NotificationEntity n SET n.seen = :seen WHERE n.id IN :ids"),
+})
 public class NotificationEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -27,8 +44,8 @@ public class NotificationEntity implements Serializable {
     @Column(name = "seen", nullable = false, unique = false, updatable = true)
     private boolean seen;
 
-    @Column(name = "time", nullable = false, unique = false, updatable = false)
-    private Instant time;
+    @Column(name = "timestamp", nullable = false, unique = false, updatable = false)
+    private LocalDateTime timestamp;
 
     @ManyToMany
     @JoinTable(
@@ -41,6 +58,10 @@ public class NotificationEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false)
     private UserEntity sender;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", nullable = false)
+    private ProjectEntity project;
 
     public NotificationEntity() {
     }
@@ -73,12 +94,20 @@ public class NotificationEntity implements Serializable {
         this.seen = seen;
     }
 
-    public Instant getTime() {
-        return time;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setTime(Instant time) {
-        this.time = time;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
     }
 
     public Set<UserEntity> getUsers() {
@@ -96,4 +125,5 @@ public class NotificationEntity implements Serializable {
     public void setSender(UserEntity sender) {
         this.sender = sender;
     }
+
 }
