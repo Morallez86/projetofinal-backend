@@ -33,7 +33,8 @@ public class MessageService {
             @QueryParam("type") String type,
             @QueryParam("page") int page,
             @QueryParam("limit") int limit,
-            @QueryParam("username") String username) {
+            @QueryParam("username") String username,
+            @QueryParam("content") String content) {
 
         try {
             // Extract the token from the header
@@ -45,16 +46,16 @@ public class MessageService {
 
             if ("received".equalsIgnoreCase(type)) {
                 // Get received messages for the user
-                messages = messageBean.getReceivedMessagesForUser(user.getId(), page, limit, username);
-                totalMessages = messageBean.getTotalReceivedMessagesForUser(user.getId());
+                messages = messageBean.getReceivedMessagesForUser(user.getId(), page, limit, username, content);
+                totalMessages = messageBean.getTotalReceivedMessagesForUser(user.getId(), username, content);
             } else if ("sent".equalsIgnoreCase(type)) {
                 // Get sent messages for the user
-                messages = messageBean.getSentMessagesForUser(user.getId(), page, limit, username);
-                totalMessages = messageBean.getTotalSentMessagesForUser(user.getId());
+                messages = messageBean.getSentMessagesForUser(user.getId(), page, limit, username, content);
+                totalMessages = messageBean.getTotalSentMessagesForUser(user.getId(), username, content);
             } else if ("unread".equalsIgnoreCase(type)) {
                 // Get unread messages for the user
-                messages = messageBean.getUnreadMessagesForUser(user.getId(), page, limit, username);
-                totalMessages = messageBean.getTotalUnreadMessagesForUser(user.getId());
+                messages = messageBean.getUnreadMessagesForUser(user.getId(), page, limit, username, content);
+                totalMessages = messageBean.getTotalUnreadMessagesForUser(user.getId(), username, content);
             } else {
                 return Response.status(Response.Status.BAD_REQUEST).entity("Invalid message type").build();
             }
@@ -77,6 +78,7 @@ public class MessageService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
 
 
 

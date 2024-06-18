@@ -50,11 +50,12 @@ public class MessageDao extends AbstractDao<MessageEntity> {
         }
     }
 
-    public List<MessageEntity> findReceivedMessagesByUserIdAndUsername(Long userId, String username, int offset, int limit) {
+    public List<MessageEntity> findReceivedMessagesByUserIdAndUsernameAndContent(Long userId, String username, String content, int offset, int limit) {
         try {
-            return em.createNamedQuery("Message.findReceivedMessagesByUserIdAndUsername", MessageEntity.class)
+            return em.createNamedQuery("Message.findReceivedMessagesByUserIdAndUsernameAndContent", MessageEntity.class)
                     .setParameter("userId", userId)
                     .setParameter("username", username)
+                    .setParameter("content", content)
                     .setFirstResult(offset)
                     .setMaxResults(limit)
                     .getResultList();
@@ -63,11 +64,12 @@ public class MessageDao extends AbstractDao<MessageEntity> {
         }
     }
 
-    public List<MessageEntity> findSentMessagesByUserIdAndUsername(Long userId, String username, int offset, int limit) {
+    public List<MessageEntity> findSentMessagesByUserIdAndUsernameAndContent(Long userId, String username, String content, int offset, int limit) {
         try {
-            return em.createNamedQuery("Message.findSentMessagesByUserIdAndUsername", MessageEntity.class)
+            return em.createNamedQuery("Message.findSentMessagesByUserIdAndUsernameAndContent", MessageEntity.class)
                     .setParameter("userId", userId)
                     .setParameter("username", username)
+                    .setParameter("content", content)
                     .setFirstResult(offset)
                     .setMaxResults(limit)
                     .getResultList();
@@ -76,11 +78,12 @@ public class MessageDao extends AbstractDao<MessageEntity> {
         }
     }
 
-    public List<MessageEntity> findUnreadMessagesByUserIdAndUsername(Long userId, String username, int offset, int limit) {
+    public List<MessageEntity> findUnreadMessagesByUserIdAndUsernameAndContent(Long userId, String username, String content, int offset, int limit) {
         try {
-            return em.createNamedQuery("Message.findUnreadMessagesByUserIdAndUsername", MessageEntity.class)
+            return em.createNamedQuery("Message.findUnreadMessagesByUserIdAndUsernameAndContent", MessageEntity.class)
                     .setParameter("userId", userId)
                     .setParameter("username", username)
+                    .setParameter("content", content)
                     .setFirstResult(offset)
                     .setMaxResults(limit)
                     .getResultList();
@@ -119,13 +122,46 @@ public class MessageDao extends AbstractDao<MessageEntity> {
         }
     }
 
+    public int countReceivedMessagesByUserIdAndUsernameAndContent(Long userId, String username, String content) {
+        try {
+            return ((Number) em.createNamedQuery("Message.countReceivedMessagesByUserIdAndUsernameAndContent")
+                    .setParameter("userId", userId)
+                    .setParameter("username", username)
+                    .setParameter("content", content)
+                    .getSingleResult()).intValue();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
+
+    public int countSentMessagesByUserIdAndUsernameAndContent(Long userId, String username, String content) {
+        try {
+            return ((Number) em.createNamedQuery("Message.countSentMessagesByUserIdAndUsernameAndContent")
+                    .setParameter("userId", userId)
+                    .setParameter("username", username)
+                    .setParameter("content", content)
+                    .getSingleResult()).intValue();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
+
+    public int countUnreadMessagesByUserIdAndUsernameAndContent(Long userId, String username, String content) {
+        try {
+            return ((Number) em.createNamedQuery("Message.countUnreadMessagesByUserIdAndUsernameAndContent")
+                    .setParameter("userId", userId)
+                    .setParameter("username", username)
+                    .setParameter("content", content)
+                    .getSingleResult()).intValue();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
+
     public void updateSeenStatus(List<Long> messageIds, boolean newStatus) {
         em.createNamedQuery("Message.updateSeenStatusByIds")
                 .setParameter("seen", newStatus)
                 .setParameter("ids", messageIds)
                 .executeUpdate();
     }
-
-
-
 }
