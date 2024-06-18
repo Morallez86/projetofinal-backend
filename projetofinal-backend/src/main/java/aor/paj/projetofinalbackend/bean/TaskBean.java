@@ -10,10 +10,12 @@ import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.TaskEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.TaskMapper;
+import aor.paj.projetofinalbackend.utils.TaskStatus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -60,5 +62,18 @@ public class TaskBean {
 
 
         return new EditTaskResult(TaskMapper.toDto(taskDataBase),index);
+    }
+
+    public void createTask (TaskDto dto) {
+        TaskEntity taskEntity = TaskMapper.toEntity(dto);
+        List<TaskEntity> taskEntityList=new ArrayList<>();
+        for (Long id : dto.getDependencies()) {
+            taskEntityList.add(taskDao.find(id));
+        }
+        taskEntity.setStatus(TaskStatus.TODO);
+        taskEntity.setProject(projectDao.findProjectById(dto.getProjectId()));
+        taskEntity.setUser(userDao.findUserById(dto.getUserId()));
+        taskEntity.setDependencies(taskEntityList);
+        taskDao.persist(taskEntity);
     }
 }

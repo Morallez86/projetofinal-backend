@@ -9,7 +9,9 @@ public enum TaskStatus {
 
     TaskStatus(int value) {this.value = value;}
 
-    public int getValue() {return value;};
+    public int getValue() {
+        return value;
+    }
 
     public static TaskStatus fromValue(int value) {
         for (TaskStatus status : TaskStatus.values()) {
@@ -17,6 +19,6 @@ public enum TaskStatus {
                 return status;
             }
         }
-        throw new IllegalArgumentException("Invalid ProjectStatus value: " + value);
+        throw new IllegalArgumentException("Invalid TaskStatus value: " + value);
     }
 }

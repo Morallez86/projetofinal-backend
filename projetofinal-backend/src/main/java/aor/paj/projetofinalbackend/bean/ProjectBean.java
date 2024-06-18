@@ -3,10 +3,12 @@ package aor.paj.projetofinalbackend.bean;
 import aor.paj.projetofinalbackend.dao.*;
 import aor.paj.projetofinalbackend.dto.ProjectDto;
 import aor.paj.projetofinalbackend.dto.TaskDto;
+import aor.paj.projetofinalbackend.dto.TaskEndDateDto;
 import aor.paj.projetofinalbackend.dto.UserProjectDto;
 import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.mapper.TaskMapper;
+import aor.paj.projetofinalbackend.mapper.UserProjectMapper;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
 import aor.paj.projetofinalbackend.utils.TaskPriority;
 import aor.paj.projetofinalbackend.utils.TaskStatus;
@@ -343,6 +345,21 @@ public class ProjectBean {
 
         // Persist all changes
         projectDao.merge(projectEntity);
+    }
+
+    public List<UserProjectDto> getUsersByProject (Long projectId) {
+        List<UserProjectEntity> userProjectEntities = projectDao.findUserProjectsByProjectId(projectId);
+        return userProjectEntities.stream()
+                .map(UserProjectMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<TaskDto> getPossibleDependentTasks (Long projectId, TaskEndDateDto plannedStartingDate) {
+        List <TaskEntity> taskEntities = projectDao.findTasksByProjectIdAndEndingDate(projectId, plannedStartingDate.getPlannedStartingDate());
+        return taskEntities.stream()
+                .map(TaskMapper::toDto)
+                .collect(Collectors.toList());
     }
 
 }

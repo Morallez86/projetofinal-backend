@@ -41,4 +41,22 @@ public class TaskService {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
-    }}
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createTask (@HeaderParam("Authorization") String authorizationHeader, TaskDto taskDto) {
+        try {
+            taskBean.createTask(taskDto);
+            return Response.status(Response.Status.CREATED).entity("Task created").build();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+
+
+}
