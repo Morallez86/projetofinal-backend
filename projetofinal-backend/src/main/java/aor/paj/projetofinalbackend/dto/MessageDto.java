@@ -17,7 +17,9 @@ public class MessageDto {
     private LocalDateTime timestamp;
     private String content;
     private Long senderId;
+    private String senderUsername;
     private Long receiverId;
+    private String receiverUsername;
     private Boolean seen;
 
     // Getters and setters
@@ -56,6 +58,24 @@ public class MessageDto {
 
     public void setSenderId(Long senderId) {
         this.senderId = senderId;
+    }
+
+    @XmlElement
+    public String getSenderUsername() {
+        return senderUsername;
+    }
+
+    public void setSenderUsername(String senderUsername) {
+        this.senderUsername = senderUsername;
+    }
+
+    @XmlElement
+    public String getReceiverUsername() {
+        return receiverUsername;
+    }
+
+    public void setReceiverUsername(String receiverUsername) {
+        this.receiverUsername = receiverUsername;
     }
 
     @XmlElement

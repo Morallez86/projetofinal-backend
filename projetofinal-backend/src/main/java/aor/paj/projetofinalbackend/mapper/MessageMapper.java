@@ -14,7 +14,9 @@ public class MessageMapper {
         dto.setTimestamp(entity.getTimestamp());
         dto.setContent(entity.getContent());
         dto.setSenderId(entity.getSender().getId());
+        dto.setSenderUsername(entity.getSender().getUsername());
         dto.setReceiverId(entity.getReceiver().getId());
+        dto.setReceiverUsername(entity.getReceiver().getUsername());
         dto.setSeen(entity.getSeen());
         return dto;
     }

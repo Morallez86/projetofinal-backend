@@ -32,7 +32,8 @@ public class MessageService {
             @HeaderParam("Authorization") String authorizationHeader,
             @QueryParam("type") String type,
             @QueryParam("page") int page,
-            @QueryParam("limit") int limit) {
+            @QueryParam("limit") int limit,
+            @QueryParam("username") String username) {
 
         try {
             // Extract the token from the header
@@ -44,12 +45,16 @@ public class MessageService {
 
             if ("received".equalsIgnoreCase(type)) {
                 // Get received messages for the user
-                messages = messageBean.getReceivedMessagesForUser(user.getId(), page, limit);
+                messages = messageBean.getReceivedMessagesForUser(user.getId(), page, limit, username);
                 totalMessages = messageBean.getTotalReceivedMessagesForUser(user.getId());
             } else if ("sent".equalsIgnoreCase(type)) {
                 // Get sent messages for the user
-                messages = messageBean.getSentMessagesForUser(user.getId(), page, limit);
+                messages = messageBean.getSentMessagesForUser(user.getId(), page, limit, username);
                 totalMessages = messageBean.getTotalSentMessagesForUser(user.getId());
+            } else if ("unread".equalsIgnoreCase(type)) {
+                // Get unread messages for the user
+                messages = messageBean.getUnreadMessagesForUser(user.getId(), page, limit, username);
+                totalMessages = messageBean.getTotalUnreadMessagesForUser(user.getId());
             } else {
                 return Response.status(Response.Status.BAD_REQUEST).entity("Invalid message type").build();
             }
@@ -73,11 +78,14 @@ public class MessageService {
         }
     }
 
+
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addMessage(MessageDto messageDto, @HeaderParam("Authorization") String authorizationHeader) {
         try {
+            System.out.println(messageDto.getContent());
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
             UserEntity sender = tokenDao.findUserByTokenValue(token);

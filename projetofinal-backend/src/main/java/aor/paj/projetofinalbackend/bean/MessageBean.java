@@ -21,15 +21,42 @@ public class MessageBean {
     @Inject
     UserDao userDao;
 
-    public List<MessageDto> getReceivedMessagesForUser(Long userId, int page, int limit) {
+    public List<MessageDto> getReceivedMessagesForUser(Long userId, int page, int limit, String username) {
         int offset = (page - 1) * limit;
-        List<MessageEntity> messages = messageDao.findReceivedMessagesByUserId(userId, offset, limit);
+        List<MessageEntity> messages;
+
+        if (username != null && !username.isEmpty()) {
+            messages = messageDao.findReceivedMessagesByUserIdAndUsername(userId, username, offset, limit);
+        } else {
+            messages = messageDao.findReceivedMessagesByUserId(userId, offset, limit);
+        }
+
         return MessageMapper.listToDto(messages);
     }
 
-    public List<MessageDto> getSentMessagesForUser(Long userId, int page, int limit) {
+    public List<MessageDto> getSentMessagesForUser(Long userId, int page, int limit, String username) {
         int offset = (page - 1) * limit;
-        List<MessageEntity> messages = messageDao.findSentMessagesByUserId(userId, offset, limit);
+        List<MessageEntity> messages;
+
+        if (username != null && !username.isEmpty()) {
+            messages = messageDao.findSentMessagesByUserIdAndUsername(userId, username, offset, limit);
+        } else {
+            messages = messageDao.findSentMessagesByUserId(userId, offset, limit);
+        }
+
+        return MessageMapper.listToDto(messages);
+    }
+
+    public List<MessageDto> getUnreadMessagesForUser(Long userId, int page, int limit, String username) {
+        int offset = (page - 1) * limit;
+        List<MessageEntity> messages;
+
+        if (username != null && !username.isEmpty()) {
+            messages = messageDao.findUnreadMessagesByUserIdAndUsername(userId, username, offset, limit);
+        } else {
+            messages = messageDao.findUnreadMessagesByUserId(userId, offset, limit);
+        }
+
         return MessageMapper.listToDto(messages);
     }
 
@@ -39,6 +66,10 @@ public class MessageBean {
 
     public int getTotalSentMessagesForUser(Long userId) {
         return messageDao.countSentMessagesByUserId(userId);
+    }
+
+    public int getTotalUnreadMessagesForUser(Long userId) {
+        return messageDao.countUnreadMessagesByUserId(userId);
     }
 
     public MessageEntity addMessage(MessageDto messageDto) {
