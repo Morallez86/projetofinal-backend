@@ -5,6 +5,7 @@ import aor.paj.projetofinalbackend.entity.TaskEntity;
 import aor.paj.projetofinalbackend.utils.TaskPriority;
 import aor.paj.projetofinalbackend.utils.TaskStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,10 +35,18 @@ public class TaskMapper {
         dto.setContributors(entity.getContributors());
         dto.setUserId(entity.getUser().getId());
         if (dto.getDependencies()!=null) {
-        dto.setDependencies(mapDependencies(entity.getDependencies(), depth));
+       List<Long> longList = new ArrayList<>();
+       for (TaskEntity entity1 : entity.getDependencies()) {
+           longList.add(entity1.getId());
+       }
+       dto.setDependencies(longList);
         }
         if (dto.getDependentTasks()!=null) {
-        dto.setDependentTasks(mapDependencies(entity.getDependentTasks(), depth));
+            List<Long> longList2 = new ArrayList<>();
+            for (TaskEntity entity1 : entity.getDependentTasks()) {
+                longList2.add(entity1.getId());
+            }
+            dto.setDependentTasks(longList2);
         }
         dto.setProjectId(entity.getProject().getId());
         dto.setUserName(entity.getUser().getUsername());
@@ -67,12 +76,6 @@ public class TaskMapper {
         entity.setStatus(TaskStatus.fromValue(dto.getStatus()));
         entity.setPriority(TaskPriority.fromValue(dto.getPriority()));
         entity.setContributors(dto.getContributors());
-        if (dto.getDependencies()!= null) {
-            entity.setDependencies(mapEntities(dto.getDependencies(), depth));
-        }
-        if (dto.getDependentTasks()!=null) {
-            entity.setDependentTasks(mapEntities(dto.getDependentTasks(), depth));
-        }
         return entity;
     }
 

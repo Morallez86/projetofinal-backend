@@ -37,9 +37,9 @@ public class TaskDto {
 
     private Long userId;
 
-    private List<TaskDto> dependencies;
+    private List<Long> dependencies;
 
-    private List<TaskDto> dependentTasks;
+    private List<Long> dependentTasks;
 
     private Long projectId;
 
@@ -99,16 +99,13 @@ public class TaskDto {
     public String getContributors() {
         return contributors;
     }
-
-
-
     @XmlElement
-    public List<TaskDto> getDependencies() {
+
+    public List<Long> getDependencies() {
         return dependencies;
     }
-
     @XmlElement
-    public List<TaskDto> getDependentTasks() {
+    public List<Long> getDependentTasks() {
         return dependentTasks;
     }
 
@@ -175,11 +172,11 @@ public class TaskDto {
         this.projectId = projectId;
     }
 
-    public void setDependencies(List<TaskDto> dependencies) {
+    public void setDependencies(List<Long> dependencies) {
         this.dependencies = dependencies;
     }
 
-    public void setDependentTasks(List<TaskDto> dependentTasks) {
+    public void setDependentTasks(List<Long> dependentTasks) {
         this.dependentTasks = dependentTasks;
     }
 
