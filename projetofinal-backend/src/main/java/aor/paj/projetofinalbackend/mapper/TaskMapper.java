@@ -34,14 +34,15 @@ public class TaskMapper {
         dto.setPriority(entity.getPriority().getValue());
         dto.setContributors(entity.getContributors());
         dto.setUserId(entity.getUser().getId());
-        if (dto.getDependencies()!=null) {
+        if (entity.getDependencies()!=null) {
        List<Long> longList = new ArrayList<>();
        for (TaskEntity entity1 : entity.getDependencies()) {
+           System.out.println(entity1.getId());
            longList.add(entity1.getId());
        }
        dto.setDependencies(longList);
         }
-        if (dto.getDependentTasks()!=null) {
+        if (entity.getDependentTasks()!=null) {
             List<Long> longList2 = new ArrayList<>();
             for (TaskEntity entity1 : entity.getDependentTasks()) {
                 longList2.add(entity1.getId());
