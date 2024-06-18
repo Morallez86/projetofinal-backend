@@ -49,7 +49,7 @@ public class TaskService {
     public Response createTask (@HeaderParam("Authorization") String authorizationHeader, TaskDto taskDto) {
         try {
             taskBean.createTask(taskDto);
-            return Response.ok().entity("Task created").build();
+            return Response.status(Response.Status.CREATED).entity("Task created").build();
         }
         catch (Exception e) {
             e.printStackTrace();
