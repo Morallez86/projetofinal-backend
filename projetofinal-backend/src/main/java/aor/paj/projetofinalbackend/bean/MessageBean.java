@@ -21,12 +21,12 @@ public class MessageBean {
     @Inject
     UserDao userDao;
 
-    public List<MessageDto> getReceivedMessagesForUser(Long userId, int page, int limit, String username) {
+    public List<MessageDto> getReceivedMessagesForUser(Long userId, int page, int limit, String username, String content) {
         int offset = (page - 1) * limit;
         List<MessageEntity> messages;
 
-        if (username != null && !username.isEmpty()) {
-            messages = messageDao.findReceivedMessagesByUserIdAndUsername(userId, username, offset, limit);
+        if ((username != null && !username.isEmpty()) || (content != null && !content.isEmpty())) {
+            messages = messageDao.findReceivedMessagesByUserIdAndUsernameAndContent(userId, username, content, offset, limit);
         } else {
             messages = messageDao.findReceivedMessagesByUserId(userId, offset, limit);
         }
@@ -34,12 +34,12 @@ public class MessageBean {
         return MessageMapper.listToDto(messages);
     }
 
-    public List<MessageDto> getSentMessagesForUser(Long userId, int page, int limit, String username) {
+    public List<MessageDto> getSentMessagesForUser(Long userId, int page, int limit, String username, String content) {
         int offset = (page - 1) * limit;
         List<MessageEntity> messages;
 
-        if (username != null && !username.isEmpty()) {
-            messages = messageDao.findSentMessagesByUserIdAndUsername(userId, username, offset, limit);
+        if ((username != null && !username.isEmpty()) || (content != null && !content.isEmpty())) {
+            messages = messageDao.findSentMessagesByUserIdAndUsernameAndContent(userId, username, content, offset, limit);
         } else {
             messages = messageDao.findSentMessagesByUserId(userId, offset, limit);
         }
@@ -47,12 +47,12 @@ public class MessageBean {
         return MessageMapper.listToDto(messages);
     }
 
-    public List<MessageDto> getUnreadMessagesForUser(Long userId, int page, int limit, String username) {
+    public List<MessageDto> getUnreadMessagesForUser(Long userId, int page, int limit, String username, String content) {
         int offset = (page - 1) * limit;
         List<MessageEntity> messages;
 
-        if (username != null && !username.isEmpty()) {
-            messages = messageDao.findUnreadMessagesByUserIdAndUsername(userId, username, offset, limit);
+        if ((username != null && !username.isEmpty()) || (content != null && !content.isEmpty())) {
+            messages = messageDao.findUnreadMessagesByUserIdAndUsernameAndContent(userId, username, content, offset, limit);
         } else {
             messages = messageDao.findUnreadMessagesByUserId(userId, offset, limit);
         }
@@ -60,16 +60,28 @@ public class MessageBean {
         return MessageMapper.listToDto(messages);
     }
 
-    public int getTotalReceivedMessagesForUser(Long userId) {
-        return messageDao.countReceivedMessagesByUserId(userId);
+    public int getTotalReceivedMessagesForUser(Long userId, String username, String content) {
+        if ((username != null && !username.isEmpty()) || (content != null && !content.isEmpty())) {
+            return messageDao.countReceivedMessagesByUserIdAndUsernameAndContent(userId, username, content);
+        } else {
+            return messageDao.countReceivedMessagesByUserId(userId);
+        }
     }
 
-    public int getTotalSentMessagesForUser(Long userId) {
-        return messageDao.countSentMessagesByUserId(userId);
+    public int getTotalSentMessagesForUser(Long userId, String username, String content) {
+        if ((username != null && !username.isEmpty()) || (content != null && !content.isEmpty())) {
+            return messageDao.countSentMessagesByUserIdAndUsernameAndContent(userId, username, content);
+        } else {
+            return messageDao.countSentMessagesByUserId(userId);
+        }
     }
 
-    public int getTotalUnreadMessagesForUser(Long userId) {
-        return messageDao.countUnreadMessagesByUserId(userId);
+    public int getTotalUnreadMessagesForUser(Long userId, String username, String content) {
+        if ((username != null && !username.isEmpty()) || (content != null && !content.isEmpty())) {
+            return messageDao.countUnreadMessagesByUserIdAndUsernameAndContent(userId, username, content);
+        } else {
+            return messageDao.countUnreadMessagesByUserId(userId);
+        }
     }
 
     public MessageEntity addMessage(MessageDto messageDto) {
