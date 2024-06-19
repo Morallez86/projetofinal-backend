@@ -15,9 +15,10 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
         super(NotificationEntity.class);
     }
 
-    public List<NotificationEntity> findByTypeAndSeen(NotificationType type, Boolean seen, int offset, int limit) {
+    public List<NotificationEntity> findByUserIdAndTypeAndSeen(Long userId, NotificationType type, Boolean seen, int offset, int limit) {
         try {
-            return em.createNamedQuery("Notification.findByTypeAndSeen", NotificationEntity.class)
+            return em.createNamedQuery("Notification.findByUserIdAndTypeAndSeen", NotificationEntity.class)
+                    .setParameter("userId", userId)
                     .setParameter("type", type)
                     .setParameter("seen", seen)
                     .setFirstResult(offset)
@@ -28,9 +29,10 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
         }
     }
 
-    public int countByTypeAndSeen(NotificationType type, Boolean seen) {
+    public int countByUserIdAndTypeAndSeen(Long userId, NotificationType type, Boolean seen) {
         try {
-            return ((Number) em.createNamedQuery("Notification.countByTypeAndSeen")
+            return ((Number) em.createNamedQuery("Notification.countByUserIdAndTypeAndSeen")
+                    .setParameter("userId", userId)
                     .setParameter("type", type)
                     .setParameter("seen", seen)
                     .getSingleResult()).intValue();
@@ -39,10 +41,11 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
         }
     }
 
-    public void updateSeenStatus(List<Long> notificationIds, boolean newStatus) {
-        em.createNamedQuery("Notification.updateSeenStatusByIds")
+    public void updateSeenStatusByUserIdAndIds(Long userId, List<Long> notificationIds, boolean newStatus) {
+        em.createNamedQuery("Notification.updateSeenStatusByUserIdAndIds")
                 .setParameter("seen", newStatus)
                 .setParameter("ids", notificationIds)
+                .setParameter("userId", userId)
                 .executeUpdate();
     }
 }

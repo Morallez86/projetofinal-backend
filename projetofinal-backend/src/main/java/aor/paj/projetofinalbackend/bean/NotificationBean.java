@@ -22,19 +22,31 @@ public class NotificationBean {
     @Inject
     UserDao userDao;
 
-    public List<NotificationDto> getNotificationsByTypeAndSeen(NotificationType type, Boolean seen, int page, int limit) {
+    public List<NotificationDto> getNotificationsByUserIdAndTypeAndSeen(Long userId, String type, Boolean seen, int page, int limit) {
         int offset = (page - 1) * limit;
-        List<NotificationEntity> notifications = notificationDao.findByTypeAndSeen(type, seen, offset, limit);
+        NotificationType notificationType = type != null ? NotificationType.valueOf(type) : null;
+        List<NotificationEntity> notifications = notificationDao.findByUserIdAndTypeAndSeen(userId, notificationType, seen, offset, limit);
         return NotificationMapper.listToDto(notifications);
     }
 
-    public int getTotalNotificationsByTypeAndSeen(NotificationType type, Boolean seen) {
-        return notificationDao.countByTypeAndSeen(type, seen);
+    public int getTotalNotificationsByUserIdAndTypeAndSeen(Long userId, String type, Boolean seen) {
+        NotificationType notificationType = type != null ? NotificationType.valueOf(type) : null;
+        return notificationDao.countByUserIdAndTypeAndSeen(userId, notificationType, seen);
     }
+
+    public List<NotificationDto> getNotificationsByUserIdAndSeen(Long userId, Boolean seen, int page, int limit) {
+        int offset = (page - 1) * limit;
+        List<NotificationEntity> notifications = notificationDao.findByUserIdAndTypeAndSeen(userId, null, seen, offset, limit);
+        return NotificationMapper.listToDto(notifications);
+    }
+
+    public int getTotalNotificationsByUserIdAndSeen(Long userId, Boolean seen) {
+        return notificationDao.countByUserIdAndTypeAndSeen(userId, null, seen);
+    }
+
 
     public NotificationEntity addNotification(NotificationDto notificationDto) {
         try {
-            // Fetch sender and project from database
             UserEntity sender = userDao.findUserById(notificationDto.getSenderId());
             if (sender == null) {
                 throw new IllegalArgumentException("Sender not found");
@@ -53,7 +65,7 @@ public class NotificationBean {
         }
     }
 
-    public void updateSeenStatus(List<Long> notificationIds, boolean seen) {
-        notificationDao.updateSeenStatus(notificationIds, seen);
+    public void updateSeenStatus(Long userId, List<Long> notificationIds, boolean seen) {
+        notificationDao.updateSeenStatusByUserIdAndIds(userId, notificationIds, seen);
     }
 }

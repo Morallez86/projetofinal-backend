@@ -13,19 +13,28 @@ import java.util.Set;
 @Table(name = "notification")
 @NamedQueries({
         @NamedQuery(
-                name = "Notification.findByTypeAndSeen",
-                query = "SELECT n FROM NotificationEntity n WHERE " +
-                        "(:type IS NULL OR n.type = :type) AND " +
-                        "(:seen IS NULL OR n.seen = :seen)"
+                name = "Notification.findByUserIdAndTypeAndSeen",
+                query = "SELECT n FROM NotificationEntity n " +
+                        "JOIN n.users u " +
+                        "WHERE u.id = :userId " +
+                        "AND (:type IS NULL OR n.type = :type) " +
+                        "AND (:seen IS NULL OR n.seen = :seen)"
         ),
         @NamedQuery(
-                name = "Notification.countByTypeAndSeen",
-                query = "SELECT COUNT(n) FROM NotificationEntity n WHERE " +
-                        "(:type IS NULL OR n.type = :type) AND " +
-                        "(:seen IS NULL OR n.seen = :seen)"
+                name = "Notification.countByUserIdAndTypeAndSeen",
+                query = "SELECT COUNT(n) FROM NotificationEntity n " +
+                        "JOIN n.users u " +
+                        "WHERE u.id = :userId " +
+                        "AND (:type IS NULL OR n.type = :type) " +
+                        "AND (:seen IS NULL OR n.seen = :seen)"
         ),
-        @NamedQuery(name = "Notification.updateSeenStatusByIds",
-                query = "UPDATE NotificationEntity n SET n.seen = :seen WHERE n.id IN :ids"),
+        @NamedQuery(
+                name = "Notification.updateSeenStatusByUserIdAndIds",
+                query = "UPDATE NotificationEntity n " +
+                        "SET n.seen = :seen " +
+                        "WHERE n.id IN :ids " +
+                        "AND EXISTS (SELECT 1 FROM n.users u WHERE u.id = :userId)"
+        ),
 })
 public class NotificationEntity implements Serializable {
     private static final long serialVersionUID = 1L;
