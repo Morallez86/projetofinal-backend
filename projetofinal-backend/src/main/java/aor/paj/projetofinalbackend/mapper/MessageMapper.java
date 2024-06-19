@@ -30,7 +30,7 @@ public class MessageMapper {
         entity.setId(dto.getId());
         entity.setTimestamp(dto.getTimestamp());
         entity.setContent(dto.getContent());
-        // Sender and receiver should be set separately in the service/bean
+
         return entity;
     }
 

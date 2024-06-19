@@ -71,10 +71,10 @@ public class UserEntity implements Serializable {
     @Column(name="biography")
     private String biography;
 
-    @Column(name="visibility", nullable = false, unique = false, updatable = true)
+    @Column(name="visibility", nullable = false)
     private Boolean visibility;
 
-    @Column(name="active_project", nullable = true, unique = false, updatable = true)
+    @Column(name="active_project")
     private Boolean activeProject;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -86,8 +86,8 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TokenEntity> tokens = new HashSet<>();
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    private Set<NotificationEntity> notifications = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserNotificationEntity> userNotifications = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_skill",
@@ -137,7 +137,6 @@ public class UserEntity implements Serializable {
     }
 
     // Getters and Setters
-
     public Long getId() {
         return id;
     }
@@ -283,12 +282,12 @@ public class UserEntity implements Serializable {
         this.tokens = tokens;
     }
 
-    public Set<NotificationEntity> getNotifications() {
-        return notifications;
+    public Set<UserNotificationEntity> getUserNotifications() {
+        return userNotifications;
     }
 
-    public void setNotifications(Set<NotificationEntity> notifications) {
-        this.notifications = notifications;
+    public void setUserNotifications(Set<UserNotificationEntity> userNotifications) {
+        this.userNotifications = userNotifications;
     }
 
     public Set<SkillEntity> getSkills() {

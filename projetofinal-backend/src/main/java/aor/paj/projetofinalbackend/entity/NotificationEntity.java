@@ -2,9 +2,7 @@ package aor.paj.projetofinalbackend.entity;
 
 import aor.paj.projetofinalbackend.utils.NotificationType;
 import jakarta.persistence.*;
-
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,25 +13,25 @@ import java.util.Set;
         @NamedQuery(
                 name = "Notification.findByUserIdAndTypeAndSeen",
                 query = "SELECT n FROM NotificationEntity n " +
-                        "JOIN n.users u " +
-                        "WHERE u.id = :userId " +
+                        "JOIN UserNotificationEntity un ON un.notification = n " +
+                        "WHERE un.user.id = :userId " +
                         "AND (:type IS NULL OR n.type = :type) " +
-                        "AND (:seen IS NULL OR n.seen = :seen)"
+                        "AND (:seen IS NULL OR un.seen = :seen)"
         ),
         @NamedQuery(
                 name = "Notification.countByUserIdAndTypeAndSeen",
                 query = "SELECT COUNT(n) FROM NotificationEntity n " +
-                        "JOIN n.users u " +
-                        "WHERE u.id = :userId " +
+                        "JOIN UserNotificationEntity un ON un.notification = n " +
+                        "WHERE un.user.id = :userId " +
                         "AND (:type IS NULL OR n.type = :type) " +
-                        "AND (:seen IS NULL OR n.seen = :seen)"
+                        "AND (:seen IS NULL OR un.seen = :seen)"
         ),
         @NamedQuery(
                 name = "Notification.updateSeenStatusByUserIdAndIds",
-                query = "UPDATE NotificationEntity n " +
-                        "SET n.seen = :seen " +
-                        "WHERE n.id IN :ids " +
-                        "AND EXISTS (SELECT 1 FROM n.users u WHERE u.id = :userId)"
+                query = "UPDATE UserNotificationEntity un " +
+                        "SET un.seen = :seen " +
+                        "WHERE un.notification.id IN :ids " +
+                        "AND un.user.id = :userId"
         ),
 })
 public class NotificationEntity implements Serializable {
@@ -43,26 +41,15 @@ public class NotificationEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "description", nullable = false, unique = false, updatable = false)
+    @Column(name = "description", nullable = false, updatable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private NotificationType type;
 
-    @Column(name = "seen", nullable = false, unique = false, updatable = true)
-    private boolean seen;
-
-    @Column(name = "timestamp", nullable = false, unique = false, updatable = false)
+    @Column(name = "timestamp", nullable = false, updatable = false)
     private LocalDateTime timestamp;
-
-    @ManyToMany
-    @JoinTable(
-            name = "user_notification",
-            joinColumns = @JoinColumn(name = "notification_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<UserEntity> users = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false)
@@ -72,9 +59,13 @@ public class NotificationEntity implements Serializable {
     @JoinColumn(name = "project_id", nullable = false)
     private ProjectEntity project;
 
+    @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserNotificationEntity> userNotifications = new HashSet<>();
+
     public NotificationEntity() {
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -95,14 +86,6 @@ public class NotificationEntity implements Serializable {
         this.type = type;
     }
 
-    public boolean isSeen() {
-        return seen;
-    }
-
-    public void setSeen(boolean seen) {
-        this.seen = seen;
-    }
-
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
@@ -119,14 +102,6 @@ public class NotificationEntity implements Serializable {
         this.project = project;
     }
 
-    public Set<UserEntity> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<UserEntity> users) {
-        this.users = users;
-    }
-
     public UserEntity getSender() {
         return sender;
     }
@@ -135,4 +110,11 @@ public class NotificationEntity implements Serializable {
         this.sender = sender;
     }
 
+    public Set<UserNotificationEntity> getUserNotifications() {
+        return userNotifications;
+    }
+
+    public void setUserNotifications(Set<UserNotificationEntity> userNotifications) {
+        this.userNotifications = userNotifications;
+    }
 }

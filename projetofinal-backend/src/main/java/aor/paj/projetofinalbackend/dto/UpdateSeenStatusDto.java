@@ -22,5 +22,10 @@ public class UpdateSeenStatusDto {
     public void setSeen(boolean seen) {
         this.seen = seen;
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
 
