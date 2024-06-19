@@ -7,7 +7,10 @@ import java.io.Serializable;
 @Table(name = "user_project")
 @NamedQueries({
         @NamedQuery(name = "UserProjectEntity.findByUserAndProject",
-                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId")
+                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId"),
+        @NamedQuery(name = "UserProjectEntity.findByUserId",
+                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId")
+
 })
 public class UserProjectEntity implements Serializable {
 
@@ -28,7 +31,11 @@ public class UserProjectEntity implements Serializable {
     @Column(name = "is_admin", nullable = false)
     private boolean isAdmin;
 
+    @Column(name = "active", nullable=false)
+    private boolean active = false;
+
     public UserProjectEntity() {
+
     }
 
     public Long getId() {
@@ -61,6 +68,18 @@ public class UserProjectEntity implements Serializable {
 
     public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
 

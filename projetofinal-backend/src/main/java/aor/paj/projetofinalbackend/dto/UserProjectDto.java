@@ -13,6 +13,8 @@ public class UserProjectDto {
     private Long projectId;
     private String username;
 
+    private boolean active;
+
 
     public UserProjectDto() {
     }
@@ -28,7 +30,10 @@ public class UserProjectDto {
         return isAdmin;
     }
 
-
+    @XmlElement
+    public boolean isActive() {
+        return active;
+    }
 
     @XmlElement
     public Long getId() {
@@ -62,5 +67,13 @@ public class UserProjectDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

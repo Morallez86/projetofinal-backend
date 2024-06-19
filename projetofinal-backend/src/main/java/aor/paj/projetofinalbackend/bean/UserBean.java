@@ -2,15 +2,13 @@ package aor.paj.projetofinalbackend.bean;
 
 import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dao.UserDao;
+import aor.paj.projetofinalbackend.dao.UserProjectDao;
 import aor.paj.projetofinalbackend.dao.WorkplaceDao;
 import aor.paj.projetofinalbackend.dto.ProfileDto;
 import aor.paj.projetofinalbackend.dto.ProjectDto;
 import aor.paj.projetofinalbackend.dto.UserDto;
 import aor.paj.projetofinalbackend.dto.UserPasswordUpdateDto;
-import aor.paj.projetofinalbackend.entity.ProjectEntity;
-import aor.paj.projetofinalbackend.entity.TokenEntity;
-import aor.paj.projetofinalbackend.entity.UserEntity;
-import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
+import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.ProfileMapper;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.mapper.UserMapper;
@@ -44,6 +42,9 @@ public class UserBean {
 
     @Inject
     EmailSender emailSender;
+
+    @EJB
+    UserProjectDao userProjectDao;
 
     public String generateToken() {
         String token = "";
@@ -81,6 +82,7 @@ public class UserBean {
         return ProfileMapper.toDto(userEntity);
     }
 
+    @Transactional
     public String createAndSaveToken(UserEntity user) {
         String tokenValue = JwtUtil.generateToken(user.getEmail(), user.getRole().getValue(), user.getId(), user.getUsername());
         LocalDateTime expirationTime = LocalDateTime.ofInstant(
@@ -96,6 +98,11 @@ public class UserBean {
 
         tokenDao.persist(tokenEntity);
 
+        List<UserProjectEntity> userProjectEntities = userProjectDao.findByUserId(user.getId());
+        for (UserProjectEntity userProject : userProjectEntities) {
+            userProject.setActive(true);
+            userProjectDao.merge(userProject);
+        }
         return tokenValue;
     }
 
