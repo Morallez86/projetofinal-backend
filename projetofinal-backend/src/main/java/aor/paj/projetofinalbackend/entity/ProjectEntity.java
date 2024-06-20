@@ -1,6 +1,7 @@
 package aor.paj.projetofinalbackend.entity;
 
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -103,6 +104,7 @@ public class ProjectEntity implements Serializable {
     private Set<ProjectHistoryEntity> historyRecords = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<ChatMessageEntity> chatMessages = new HashSet<>();
 
     public ProjectEntity() {

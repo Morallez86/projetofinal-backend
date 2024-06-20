@@ -182,6 +182,7 @@ VALUES ('Hello, Alice! How are you?', 1, 2, '2024-06-10 10:00:00', false),
        ('John, any updates on the project approval?', 2, 1, '2024-06-10 19:00:00', true),
        ('Yes, Alice. It has been approved.', 1, 2, '2024-06-10 19:30:00', true);
 
+
 INSERT INTO chat_message (project_id, sender_id, timestamp, content)
 VALUES (1,1,'2024-06-10 18:00:00','Hey, someone is here?'),
        (1,2,'2024-06-10 18:15:00', 'Im here, what do you need?'),

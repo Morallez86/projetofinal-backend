@@ -11,7 +11,7 @@ public class ChatMessageMapper {
         dto.setTimestamp(entity.getTimestamp());
         dto.setContent(entity.getContent());
         dto.setSender(UserMapper.toDto(entity.getSender()));
-        dto.setProject(ProjectMapper.toDto(entity.getProject()));
+        dto.setProjectId(entity.getProject().getId());
         return dto;
     }
 
@@ -21,7 +21,6 @@ public class ChatMessageMapper {
         entity.setTimestamp(dto.getTimestamp());
         entity.setContent(dto.getContent());
         entity.setSender(UserMapper.toEntity(dto.getSender()));
-        entity.setProject(ProjectMapper.toEntity(dto.getProject()));
         return entity;
     }
 }

@@ -6,7 +6,9 @@ import aor.paj.projetofinalbackend.utils.ProjectStatus;
 
 import java.util.stream.Collectors;
 
+
 public class ProjectMapper {
+
     public static ProjectDto toDto(ProjectEntity entity) {
         ProjectDto dto = new ProjectDto();
 
