@@ -180,6 +180,49 @@ VALUES ('Hello, Alice! How are you?', 1, 2, '2024-06-10 10:00:00', false),
        ('John, any updates on the project approval?', 2, 1, '2024-06-10 19:00:00', true),
        ('Yes, Alice. It has been approved.', 1, 2, '2024-06-10 19:30:00', true);
 
+INSERT INTO notification (description, type, timestamp, sender_id, project_id)
+VALUES
+    ('You have a new message from Alice.', 'MESSAGE', '2024-06-10 10:00:00', 1, 1),
+    ('Your task "Task 1" is due soon.', 'PROJECT', '2024-06-10 10:05:00', 1, 2),
+    ('Project "Test Project 40" has been updated.', 'PROJECT', '2024-06-10 11:00:00', 1, 3),
+    ('New skill added: Java.', 'MESSAGE', '2024-06-10 11:10:00', 1, 4),
+    ('You have a new message from Bob.', 'MESSAGE', '2024-06-10 12:00:00', 2, 1),
+    ('Reminder: Meeting at 3 PM.', 'MESSAGE', '2024-06-10 12:15:00', 2, 2),
+    ('System maintenance scheduled for tonight.', 'MESSAGE', '2024-06-10 14:00:00', 3, 1),
+    ('You have a new message from John.', 'MESSAGE', '2024-06-10 14:30:00', 1, 4),
+    ('Your task "Task 2" is in progress.', 'PROJECT', '2024-06-10 13:00:00', 1, 5),
+    ('Project "Project Alpha" has been updated.', 'PROJECT', '2024-06-10 13:15:00', 1, 6),
+    ('You have a new message from John.', 'MESSAGE', '2024-06-10 15:00:00', 1, 2),
+    ('Your task "Task 3" is due soon.', 'PROJECT', '2024-06-10 15:30:00', 1, 3),
+    ('Project "Project Beta" has been updated.', 'PROJECT', '2024-06-10 16:00:00', 1, 4),
+    ('You have a new message from John.', 'MESSAGE', '2024-06-10 16:30:00', 1, 5),
+    ('Your task "Task 4" is in progress.', 'PROJECT', '2024-06-10 17:00:00', 1, 6),
+    ('Project "Project Gamma" has been updated.', 'PROJECT', '2024-06-10 17:15:00', 1, 2),
+    ('You have a new message from John.', 'MESSAGE', '2024-06-10 18:00:00', 1, 3),
+    ('Your task "Task 5" is completed.', 'PROJECT', '2024-06-10 18:30:00', 1, 4),
+    ('Project "Project Delta" has been updated.', 'PROJECT', '2024-06-10 19:00:00', 1, 5),
+    ('You have a new message from John.', 'MESSAGE', '2024-06-10 19:30:00', 1, 6),
+    ('Your task "Task 6" is in progress.', 'PROJECT', '2024-06-10 20:00:00', 1, 2),
+    ('Project 1 needs approval.', 'MANAGING', '2024-06-10 20:00:00', 1, 1),
+    ('User Alice has invited you to project 1', 'INVITATION', '2024-06-10 20:00:00', 1, 1),
+    ('Project "Project Epsilon" has been updated.', 'PROJECT', '2024-06-10 20:30:00', 1, 3);
+
+INSERT INTO user_notification (user_id, notification_id, seen)
+VALUES
+    (1, 1, false),
+    (1, 2, false),
+    (1, 3, false),
+    (1, 4, true),
+    (1, 5, false),
+    (1, 6, false),
+    (1, 7, true),
+    (1, 8, true),
+    (1, 9, true),
+    (1, 10, false),
+    (1, 17, true),
+    (1, 18, false),
+    (1, 19, true);
+
 
 
 

@@ -114,9 +114,12 @@ public class MessageService {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Response updateSeenStatus(UpdateSeenStatusDto updateSeenStatusDto, @HeaderParam("Authorization") String authorizationHeader) {
+        System.out.println("yo");
+        System.out.println(updateSeenStatusDto.getMessageOrNotificationIds());
+
         try {
             // Update the seen status for the messages
-            messageBean.updateSeenStatus(updateSeenStatusDto.getMessageIds(), updateSeenStatusDto.isSeen());
+            messageBean.updateSeenStatus(updateSeenStatusDto.getMessageOrNotificationIds(), updateSeenStatusDto.isSeen());
 
             return Response.status(Response.Status.OK).build();
         } catch (Exception e) {

@@ -3,16 +3,16 @@ package aor.paj.projetofinalbackend.dto;
 import java.util.List;
 
 public class UpdateSeenStatusDto {
-    private List<Long> messageIds;
+    private List<Long> messageOrNotificationIds;
     private boolean seen;
 
     // Getters and Setters
-    public List<Long> getMessageIds() {
-        return messageIds;
+    public List<Long> getMessageOrNotificationIds() {
+        return messageOrNotificationIds;
     }
 
-    public void setMessageIds(List<Long> messageIds) {
-        this.messageIds = messageIds;
+    public void setMessageOrNotificationIds(List<Long> messageIds) {
+        this.messageOrNotificationIds = messageIds;
     }
 
     public boolean isSeen() {
@@ -21,6 +21,11 @@ public class UpdateSeenStatusDto {
 
     public void setSeen(boolean seen) {
         this.seen = seen;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }
 

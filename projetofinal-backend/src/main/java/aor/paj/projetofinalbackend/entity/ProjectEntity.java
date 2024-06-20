@@ -105,6 +105,9 @@ public class ProjectEntity implements Serializable {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ChatMessageEntity> chatMessages = new HashSet<>();
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<NotificationEntity> notifications = new HashSet<>();
+
     public ProjectEntity() {
     }
 
@@ -288,6 +291,14 @@ public class ProjectEntity implements Serializable {
 
     public void setChatMessages(Set<ChatMessageEntity> chatMessages) {
         this.chatMessages = chatMessages;
+    }
+
+    public Set<NotificationEntity> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<NotificationEntity> notifications) {
+        this.notifications = notifications;
     }
 
     @Override
