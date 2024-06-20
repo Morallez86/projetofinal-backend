@@ -1,6 +1,7 @@
 package aor.paj.projetofinalbackend.service;
 
 import aor.paj.projetofinalbackend.security.JwtFilter;
+import aor.paj.projetofinalbackend.websocket.ApplicationSocket;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
