@@ -73,24 +73,24 @@ VALUES (true, 5, 'IN_PROGRESS', '2024-06-02T10:00:00', '2024-06-02T10:30:00', '2
         '2024-06-20T17:00:00', '2024-06-08T09:00:00', 'Cancelled test project.', 'To halt progress.',
         'Project Epsilon', 6);
 
-INSERT INTO user_project (is_admin, project_id, user_id)
-VALUES (false, 1, 2),
-       (true, 1, 1),
-       (false, 1, 3),
-       (false, 2, 1),
-       (true, 2, 2),
-       (false, 2, 3),
-       (false, 3, 4),
-       (true, 3, 3),
-       (false, 4, 5),
-       (true, 4, 4),
-       (false, 5, 2),
-       (true, 5, 5),
-       (false, 5, 3),
-       (false, 5, 1),
-       (false, 6, 4),
-       (true, 6, 1),
-       (false, 6, 5);
+INSERT INTO user_project (is_admin, project_id, user_id,active)
+VALUES (false, 1, 2,false),
+       (true, 1, 1,false),
+       (false, 1, 3,false),
+       (false, 2, 1,false),
+       (true, 2, 2,false),
+       (false, 2, 3,false),
+       (false, 3, 4,false),
+       (true, 3, 3,false),
+       (false, 4, 5,false),
+       (true, 4, 4,false),
+       (false, 5, 2,false),
+       (true, 5, 5,false),
+       (false, 5, 3,false),
+       (false, 5, 1,false),
+       (false, 6, 4,false),
+       (true, 6, 1,false),
+       (false, 6, 5,false);
 
 INSERT INTO task (title, description, planned_starting_date, starting_date, planned_ending_date, ending_date, status,
                   priority, contributors, project_id, user_id)
@@ -114,9 +114,11 @@ VALUES ('Task 1', 'Description for Task 1', '2024-06-10 09:00:00', NULL, '2024-0
        ('Task 6', 'Description for Task 6', '2024-06-18 09:00:00', NULL, '2024-07-05 17:00:00', NULL, 'TODO', 'LOW',
         'Dana Evans', 6, 1);
 
-INSERT INTO task_dependencies (task_id, dependency_id)
+/*INSERT INTO task_dependencies (task_id, dependency_id)
 VALUES (2, 1),
-       (4, 3);
+       (4, 3);*/
+
+       INSERT INTO task_dependencies (dependency_id, task_id) VALUES (1,2), (3,4);
 
 INSERT INTO component(project_id, workplace_id, brand, contact, description, identifier, name, observation, supplier)
 VALUES (2, 2, 'brand4', '888-888', 'description3', 'identifier3', 'component3', 'observation3', 'supplier3'),
