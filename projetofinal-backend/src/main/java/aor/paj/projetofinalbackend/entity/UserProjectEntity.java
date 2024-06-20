@@ -7,7 +7,11 @@ import java.io.Serializable;
 @Table(name = "user_project")
 @NamedQueries({
         @NamedQuery(name = "UserProjectEntity.findByUserAndProject",
-                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId")
+                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId"),
+        @NamedQuery(name = "UserProjectEntity.findProjectsByUserId",
+                query = "SELECT up.project FROM UserProjectEntity up WHERE up.user.id = :userId"),
+        @NamedQuery(name = "UserProjectEntity.countProjectsByUserId",
+                query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.user.id = :userId")
 })
 public class UserProjectEntity implements Serializable {
 

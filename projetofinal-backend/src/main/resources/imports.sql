@@ -1,5 +1,5 @@
 INSERT INTO user (first_name, last_name, username, password, email, role, active, pending, visibility)
-VALUES ('John', 'Doe', 'johndoe', 'password123', 'johndoe@example.com', 'ADMIN', true, false, true),
+VALUES ('John', 'Doe', 'johndoe', '$2a$10$hi5DTIOktKs/CmBMVk1ZxeYpiC7hHkFDRKRg0dN3NqyCwUUGf78r2', 'johndoe@example.com', 'ADMIN', true, false, true),
        ('Alice', 'Smith', 'alicesmith', 'password123', 'alicesmith@example.com', 'USER', true, false, true),
        ('Bob', 'Brown', 'bobbrown', 'password123', 'bobbrown@example.com', 'USER', true, false, true),
        ('Charlie', 'Davis', 'charliedavis', 'password123', 'charliedavis@example.com', 'USER', true, false, true),

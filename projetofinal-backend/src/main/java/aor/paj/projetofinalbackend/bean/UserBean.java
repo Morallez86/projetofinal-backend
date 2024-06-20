@@ -2,6 +2,7 @@ package aor.paj.projetofinalbackend.bean;
 
 import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dao.UserDao;
+import aor.paj.projetofinalbackend.dao.UserProjectDao;
 import aor.paj.projetofinalbackend.dao.WorkplaceDao;
 import aor.paj.projetofinalbackend.dto.ProfileDto;
 import aor.paj.projetofinalbackend.dto.ProjectDto;
@@ -41,6 +42,9 @@ public class UserBean {
 
     @EJB
     TokenDao tokenDao;
+
+    @EJB
+    UserProjectDao userProjectDao; // Inject UserProjectDao
 
     @Inject
     EmailSender emailSender;
@@ -210,18 +214,13 @@ public class UserBean {
 
     @Transactional
     public Set<ProjectDto> getUserProjects(Long userId, int limit) {
-        UserEntity user = userDao.findUserByIdWithProjects(userId);
-        if (user == null) {
-            return null;
-        }
-
-        Set<ProjectEntity> userProjects = user.getOwnedProjects();
-        if (userProjects == null || userProjects.isEmpty()) {
+        List<ProjectEntity> projects = userProjectDao.findProjectsByUserId(userId);
+        if (projects == null || projects.isEmpty()) {
             return null;
         }
 
         // Always return the first page of projects based on the given limit
-        List<ProjectEntity> projectsPerPage = userProjects.stream()
+        List<ProjectEntity> projectsPerPage = projects.stream()
                 .limit(limit)
                 .collect(Collectors.toList());
 
@@ -230,9 +229,8 @@ public class UserBean {
                 .collect(Collectors.toSet());
     }
 
-
     public Long getTotalProjectCount(Long userId) {
-        return userDao.getTotalProjectCount(userId);
+        return userProjectDao.countProjectsByUserId(userId);
     }
 
     public List<UserDto> searchUsersByQuery(String query) {
@@ -243,7 +241,7 @@ public class UserBean {
         return userEntities.stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
 
-    //Return the list of users in the json format
+    // Return the list of users in the json format
     public List<UserDto> getAllUsers() {
         List<UserEntity> users = userDao.findAllUsers();
         return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
