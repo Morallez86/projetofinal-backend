@@ -116,4 +116,27 @@ public class NotificationService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
+    @GET
+    @Path("/unread/count")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUnreadNotificationsCount(@HeaderParam("Authorization") String authorizationHeader) {
+        try {
+            // Extract the token from the header
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
+
+            // Get the count of unread notifications for the user
+            int unreadCount = notificationBean.getTotalNotificationsByUserIdAndTypeAndSeen(user.getId(), null, false);
+
+            // Prepare response JSON
+            Map<String, Integer> response = new HashMap<>();
+            response.put("unreadCount", unreadCount);
+
+            return Response.ok(response).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error fetching unread notifications count").build();
+        }
+    }
 }
