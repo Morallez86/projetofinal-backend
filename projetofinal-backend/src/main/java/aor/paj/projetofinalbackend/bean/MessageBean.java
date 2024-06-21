@@ -4,13 +4,16 @@ import aor.paj.projetofinalbackend.dao.MessageDao;
 import aor.paj.projetofinalbackend.dao.UserDao;
 import aor.paj.projetofinalbackend.dto.MessageDto;
 import aor.paj.projetofinalbackend.entity.MessageEntity;
+import aor.paj.projetofinalbackend.entity.TokenEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.MessageMapper;
+import aor.paj.projetofinalbackend.websocket.ApplicationSocket;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Stateless
 public class MessageBean {
@@ -20,6 +23,7 @@ public class MessageBean {
 
     @Inject
     UserDao userDao;
+
 
     public List<MessageDto> getReceivedMessagesForUser(Long userId, int page, int limit, String username, String content) {
         int offset = (page - 1) * limit;
@@ -101,6 +105,12 @@ public class MessageBean {
             messageEntity.setTimestamp(LocalDateTime.now());
 
             messageDao.persist(messageEntity);
+
+            List<TokenEntity> activeTokens = receiver.getTokens().stream()
+                    .filter(TokenEntity::isActiveToken)
+                    .collect(Collectors.toList());
+
+            activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "message"));
 
             return messageEntity;
         } catch (Exception e) {
