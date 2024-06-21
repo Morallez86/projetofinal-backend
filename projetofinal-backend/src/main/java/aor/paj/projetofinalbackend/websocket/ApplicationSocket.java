@@ -1,9 +1,6 @@
 package aor.paj.projetofinalbackend.websocket;
 
-import aor.paj.projetofinalbackend.bean.MessageBean;
-import aor.paj.projetofinalbackend.bean.NotificationBean;
 import aor.paj.projetofinalbackend.bean.TokenBean;
-import aor.paj.projetofinalbackend.dto.MessageDto;
 import aor.paj.projetofinalbackend.dto.NotificationDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -23,12 +20,6 @@ public class ApplicationSocket {
 
     @Inject
     private TokenBean tokenBean;
-
-    @Inject
-    private MessageBean messageBean;
-
-    @Inject
-    private NotificationBean notificationBean;
 
     private static final Map<String, Session> sessions = new ConcurrentHashMap<>();
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -68,28 +59,15 @@ public class ApplicationSocket {
         }
     }
 
-    public static void sendNotification(String token, NotificationDto notification) {
+    // Method to send notifications to frontend based on events
+    public static void sendNotification(String token, String notificationType) {
         try {
-            String notificationJson = mapper.writeValueAsString(notification);
+            // You can construct a simple JSON or text message indicating the event
+            String notificationJson = "{\"type\": \"" + notificationType + "\"}";
             Session session = sessions.get(token);
             if (session != null && session.isOpen()) {
                 session.getBasicRemote().sendText(notificationJson);
                 System.out.println("Notification sent: " + notificationJson);
-            } else {
-                System.out.println("Session not found or closed for token: " + token);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendMessage(String token, MessageDto message) {
-        try {
-            String messageJson = mapper.writeValueAsString(message);
-            Session session = sessions.get(token);
-            if (session != null && session.isOpen()) {
-                session.getBasicRemote().sendText(messageJson);
-                System.out.println("Message sent: " + messageJson);
             } else {
                 System.out.println("Session not found or closed for token: " + token);
             }
