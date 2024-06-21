@@ -12,6 +12,7 @@ public class UserProjectMapper {
         dto.setIsAdmin(entity.isAdmin());
         dto.setProjectId(entity.getProject().getId());
         dto.setUsername(entity.getUser().getUsername());
+        dto.setActive(entity.isActive());
         return dto;
     }
 
@@ -19,6 +20,7 @@ public class UserProjectMapper {
         UserProjectEntity entity = new UserProjectEntity();
         entity.setId(dto.getId());;
         entity.setIsAdmin(dto.isAdmin());
+        entity.setActive(dto.isActive());
         return entity;
     }
 }

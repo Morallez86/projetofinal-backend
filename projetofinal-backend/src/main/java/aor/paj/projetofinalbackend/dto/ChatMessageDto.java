@@ -1,5 +1,9 @@
 package aor.paj.projetofinalbackend.dto;
 
+import aor.paj.projetofinalbackend.utils.CustomLocalDateTimeDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.xml.bind.annotation.XmlElement;
 
 import java.time.LocalDateTime;
@@ -7,13 +11,15 @@ import java.time.LocalDateTime;
 public class ChatMessageDto {
     private Long id;
 
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime timestamp;
 
     private String content;
 
     private UserDto sender;
 
-    private ProjectDto project;
+    private Long projectId;
 
     public ChatMessageDto() {
     }
@@ -35,9 +41,10 @@ public class ChatMessageDto {
     public UserDto getSender() {
         return sender;
     }
+
     @XmlElement
-    public ProjectDto getProject() {
-        return project;
+    public Long getProjectId() {
+        return projectId;
     }
 
     public void setId(Long id) {
@@ -56,7 +63,7 @@ public class ChatMessageDto {
         this.sender = sender;
     }
 
-    public void setProject(ProjectDto project) {
-        this.project = project;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

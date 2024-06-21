@@ -23,6 +23,7 @@ public class UserMapper {
         dto.setBiography(user.getBiography());
         dto.setVisibility(user.getVisibility());
         dto.setActiveProject(user.getActiveProject());
+        dto.setOnline(user.getOnline());
         return dto;
     }
 
@@ -42,6 +43,7 @@ public class UserMapper {
         user.setBiography(dto.getBiography());
         user.setVisibility(dto.getVisibility());
         user.setActiveProject(dto.getActiveProject());
+        user.setOnline(dto.getOnline());
         return user;
     }
 }

@@ -129,6 +129,9 @@ public class UserEntity implements Serializable {
     @Column(name="profile_image_path")
     private String profileImagePath;
 
+    @Column(name = "online")
+    private Boolean online = false;
+
     public UserEntity() {
     }
 
@@ -377,4 +380,18 @@ public class UserEntity implements Serializable {
     public void setProfileImagePath(String profileImagePath) {
         this.profileImagePath = profileImagePath;
     }
+
+    public Boolean getOnline() {
+        return online;
+    }
+
+    public void setOnline(Boolean online) {
+        this.online = online;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
 }

@@ -50,3 +50,12 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity> {
     }
 }
 
+    public List<UserProjectEntity> findByUserId(Long userId) {
+        return em.createNamedQuery("UserProjectEntity.findByUserId", UserProjectEntity.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
+    }
+
+
+
