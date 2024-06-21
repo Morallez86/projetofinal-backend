@@ -104,7 +104,7 @@ public class ProjectEntity implements Serializable {
     private Set<ProjectHistoryEntity> historyRecords = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @OrderBy("timestamp ASC")
     private Set<ChatMessageEntity> chatMessages = new HashSet<>();
 
     public ProjectEntity() {
