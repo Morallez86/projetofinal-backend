@@ -214,7 +214,8 @@ VALUES (1,1,'2024-06-10 18:00:00','Hey, someone is here?'),
        (1,3,'2024-06-10 18:30:00', 'Just give me 5min, pls...'),
        (1,2,'2024-06-11 18:15:00', 'So, did you fall asleep? Do you still need anything?'),
        (1,3, '2024-06-11 18:30:00', 'Yup, Im still here btw...'),
-       (1,1, '2024-06-13 18:15:00', 'Sorry guys, was 3 crazy days to me... Are you available for a meeting in 1 hour?')
+       (1,1, '2024-06-13 18:15:00', 'Sorry guys, was 3 crazy days to me... Are you available for a meeting in 1 hour?');
+
 INSERT INTO user_notification (user_id, notification_id, seen)
 VALUES
     (1, 1, false),

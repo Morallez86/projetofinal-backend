@@ -9,7 +9,7 @@ import java.io.Serializable;
         @NamedQuery(name = "UserProjectEntity.findByUserAndProject",
                 query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId"),
         @NamedQuery(name = "UserProjectEntity.findByUserId",
-                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId")
+                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId"),
 
         @NamedQuery(name = "UserProjectEntity.findProjectsByUserId",
                 query = "SELECT up.project FROM UserProjectEntity up WHERE up.user.id = :userId"),

@@ -48,14 +48,17 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity> {
             return 0L; // Return 0 if no results found
         }
     }
-}
 
     public List<UserProjectEntity> findByUserId(Long userId) {
         return em.createNamedQuery("UserProjectEntity.findByUserId", UserProjectEntity.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
-    }
+}
+
+
+
+
 
 
 

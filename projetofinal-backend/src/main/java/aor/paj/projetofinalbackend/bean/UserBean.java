@@ -46,8 +46,6 @@ public class UserBean {
     @Inject
     EmailSender emailSender;
 
-    @EJB
-    UserProjectDao userProjectDao;
 
     public String generateToken() {
         String token = "";
