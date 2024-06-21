@@ -26,6 +26,8 @@ public class UserDto {
 
     private String  workplace;
 
+    private Boolean online;
+
     public UserDto() {
     }
     @XmlElement
@@ -147,5 +149,14 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @XmlElement
+    public Boolean getOnline() {
+        return online;
+    }
+
+    public void setOnline(Boolean online) {
+        this.online = online;
     }
 }

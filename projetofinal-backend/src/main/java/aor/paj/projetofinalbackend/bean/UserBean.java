@@ -100,8 +100,11 @@ public class UserBean {
 
         List<UserProjectEntity> userProjectEntities = userProjectDao.findByUserId(user.getId());
         for (UserProjectEntity userProject : userProjectEntities) {
+            UserEntity userEntity = userDao.findUserById(userProject.getUser().getId());
+            userEntity.setOnline(true);
             userProject.setActive(true);
             userProjectDao.merge(userProject);
+            userDao.merge(userEntity);
         }
         return tokenValue;
     }

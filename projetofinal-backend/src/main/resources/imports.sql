@@ -1,11 +1,10 @@
-INSERT INTO user (first_name, last_name, username, password, email, role, active, pending, visibility)
-VALUES ('John', 'Doe', 'johndoe', 'password123', 'johndoe@example.com', 'ADMIN', true, false, true),
-       ('Alice', 'Smith', 'alicesmith', 'password123', 'alicesmith@example.com', 'USER', true, false, true),
-       ('Bob', 'Brown', 'bobbrown', 'password123', 'bobbrown@example.com', 'USER', true, false, true),
-       ('Charlie', 'Davis', 'charliedavis', 'password123', 'charliedavis@example.com', 'USER', true, false, true),
-       ('Dana', 'Evans', 'danaevans', 'password123', 'danaevans@example.com', 'USER', true, false, true),
-       ('Evan', 'Garcia', 'evangarcia', 'password123', 'evangarcia@example.com', 'USER', true, false, true);
-
+INSERT INTO user (first_name, last_name, username, password, email, role, active, pending, visibility,online)
+VALUES ('John', 'Doe', 'johndoe', 'password123', 'johndoe@example.com', 'ADMIN', true, false, true,false),
+       ('Alice', 'Smith', 'alicesmith', 'password123', 'alicesmith@example.com', 'USER', true, false, true,false),
+       ('Bob', 'Brown', 'bobbrown', 'password123', 'bobbrown@example.com', 'USER', true, false, true,false),
+       ('Charlie', 'Davis', 'charliedavis', 'password123', 'charliedavis@example.com', 'USER', true, false, true,false),
+       ('Dana', 'Evans', 'danaevans', 'password123', 'danaevans@example.com', 'USER', true, false, true,false),
+       ('Evan', 'Garcia', 'evangarcia', 'password123', 'evangarcia@example.com', 'USER', true, false, true,false);
 
 INSERT INTO skill (name, type, creator_id)
 VALUES ('Java', 'SOFTWARE', 1);
