@@ -184,8 +184,8 @@ public class ProjectService {
         @Produces(MediaType.APPLICATION_JSON)
         public Response createChatMsg (@HeaderParam("Authorization") String authorizationHeader, ChatMessageDto chatMessageDto) {
             try {
-                chatMessageBean.createChatMsg(chatMessageDto);
-                return Response.status(Response.Status.CREATED).entity("msg created").build();
+                ChatMessageDto chatMessageDtoNew = chatMessageBean.createChatMsg(chatMessageDto);
+                return Response.status(Response.Status.CREATED).entity(chatMessageDtoNew).build();
             } catch (Exception e) {
                 e.printStackTrace();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

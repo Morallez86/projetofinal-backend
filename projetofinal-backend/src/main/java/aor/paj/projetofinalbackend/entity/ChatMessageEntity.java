@@ -5,6 +5,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "chat_message")
+@NamedQuery(
+        name = "ChatMessageEntity.findByProjectIdTimestampSenderId",
+        query = "SELECT c FROM ChatMessageEntity c WHERE c.project.id = :projectId AND c.timestamp = :timestamp AND c.sender.id = :senderId"
+)
 public class ChatMessageEntity extends BaseMessageEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

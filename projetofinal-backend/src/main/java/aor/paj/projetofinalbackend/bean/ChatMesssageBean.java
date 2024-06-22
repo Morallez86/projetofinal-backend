@@ -25,7 +25,7 @@ public class ChatMesssageBean {
    @EJB
     ProjectDao projectDao;
 
-    public void createChatMsg (ChatMessageDto chatMessageDto) {
+    public ChatMessageDto createChatMsg (ChatMessageDto chatMessageDto) {
         ChatMessageEntity chatMessageEntity = ChatMessageMapper.toEntity(chatMessageDto);
         UserEntity user = userDao.findUserById(chatMessageDto.getSenderId());
         chatMessageEntity.setSender(user);
@@ -33,5 +33,7 @@ public class ChatMesssageBean {
         chatMessageEntity.setProject(project);
         chatMessageEntity.setTimestamp(LocalDateTime.now());
         chatMessageDao.persist(chatMessageEntity);
+        ChatMessageEntity chatMessageSaved = chatMessageDao.findChatMessage(chatMessageEntity.getProject().getId(),chatMessageEntity.getTimestamp(),chatMessageEntity.getSender().getId());
+        return ChatMessageMapper.toDto(chatMessageSaved);
     }
 }
