@@ -186,7 +186,6 @@ public class ProjectService {
             try {
                 chatMessageBean.createChatMsg(chatMessageDto);
                 return Response.status(Response.Status.CREATED).entity("msg created").build();
-
             } catch (Exception e) {
                 e.printStackTrace();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

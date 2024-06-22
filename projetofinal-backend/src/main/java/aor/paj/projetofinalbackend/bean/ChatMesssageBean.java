@@ -11,6 +11,8 @@ import aor.paj.projetofinalbackend.mapper.ChatMessageMapper;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 
+import java.time.LocalDateTime;
+
 @Stateless
 public class ChatMesssageBean {
 
@@ -29,6 +31,7 @@ public class ChatMesssageBean {
         chatMessageEntity.setSender(user);
         ProjectEntity project = projectDao.findProjectById(chatMessageDto.getProjectId());
         chatMessageEntity.setProject(project);
+        chatMessageEntity.setTimestamp(LocalDateTime.now());
         chatMessageDao.persist(chatMessageEntity);
     }
 }

@@ -8,7 +8,8 @@ public class ChatMessageMapper {
     public static ChatMessageDto toDto(ChatMessageEntity entity) {
         ChatMessageDto dto = new ChatMessageDto();
         dto.setId(entity.getId());
-        dto.setTimestamp(entity.getTimestamp());
+        if (entity.getTimestamp()!=null) {
+        dto.setTimestamp(entity.getTimestamp());}
         dto.setContent(entity.getContent());
         dto.setSenderId(entity.getSender().getId());
         dto.setSenderOnline(entity.getSender().getOnline());
@@ -20,7 +21,8 @@ public class ChatMessageMapper {
     public static ChatMessageEntity toEntity(ChatMessageDto dto) {
         ChatMessageEntity entity = new ChatMessageEntity();
         entity.setId(dto.getId());
-        entity.setTimestamp(dto.getTimestamp());
+        if (dto.getTimestamp()!=null) {
+        entity.setTimestamp(dto.getTimestamp()); }
         entity.setContent(dto.getContent());
         return entity;
     }
