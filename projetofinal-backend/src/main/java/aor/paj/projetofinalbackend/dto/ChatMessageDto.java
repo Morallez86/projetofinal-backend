@@ -17,7 +17,11 @@ public class ChatMessageDto {
 
     private String content;
 
-    private UserDto sender;
+    private Long senderId;
+
+    private String senderUsername;
+
+    private Boolean senderOnline;
 
     private Long projectId;
 
@@ -37,9 +41,19 @@ public class ChatMessageDto {
     public String getContent() {
         return content;
     }
+
     @XmlElement
-    public UserDto getSender() {
-        return sender;
+    public Long getSenderId() {
+        return senderId;
+    }
+
+    @XmlElement
+    public String getSenderUsername() {
+        return senderUsername;
+    }
+    @XmlElement
+    public Boolean getSenderOnline() {
+        return senderOnline;
     }
 
     @XmlElement
@@ -59,8 +73,16 @@ public class ChatMessageDto {
         this.content = content;
     }
 
-    public void setSender(UserDto sender) {
-        this.sender = sender;
+    public void setSenderId(Long senderId) {
+        this.senderId = senderId;
+    }
+
+    public void setSenderUsername(String senderUsername) {
+        this.senderUsername = senderUsername;
+    }
+
+    public void setSenderOnline(Boolean senderOnline) {
+        this.senderOnline = senderOnline;
     }
 
     public void setProjectId(Long projectId) {

@@ -1,6 +1,7 @@
 package aor.paj.projetofinalbackend.service;
 
 import aor.paj.projetofinalbackend.bean.AuthBean;
+import aor.paj.projetofinalbackend.bean.ChatMesssageBean;
 import aor.paj.projetofinalbackend.bean.ProjectBean;
 import aor.paj.projetofinalbackend.bean.ProjectHistoryBean;
 import aor.paj.projetofinalbackend.dao.TaskDao;
@@ -29,6 +30,9 @@ public class ProjectService {
 
     @Inject
     ProjectHistoryBean projectHistoryBean;
+
+    @Inject
+    ChatMesssageBean chatMessageBean;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -168,6 +172,21 @@ public class ProjectService {
 
                 projectBean.updateProject(projectId, projectDto, token);
                 return Response.status(Response.Status.OK).entity("Project updated successfully").build();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+            }
+        }
+
+        @POST
+        @Path("/createChatMsg")
+        @Consumes(MediaType.APPLICATION_JSON)
+        @Produces(MediaType.APPLICATION_JSON)
+        public Response createChatMsg (@HeaderParam("Authorization") String authorizationHeader, ChatMessageDto chatMessageDto) {
+            try {
+                chatMessageBean.createChatMsg(chatMessageDto);
+                return Response.status(Response.Status.CREATED).entity("msg created").build();
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
