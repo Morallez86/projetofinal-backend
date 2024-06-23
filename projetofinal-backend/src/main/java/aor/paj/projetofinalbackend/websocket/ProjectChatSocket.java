@@ -47,23 +47,24 @@ public class ProjectChatSocket {
 
     public void send(ChatMessageDto messageDto, String message) {
         ProjectEntity project = projectDao.findProjectById(messageDto.getProjectId());
-        /*TokenEntity senderToken = tokenDao.findTokenByUserId(messageDto.getSenderId());
-        String tokenSender = senderToken.getTokenValue();
-        Session senderSession = sessions.get(tokenSender);*/
+        UserEntity userSender = userDao.findUserById(messageDto.getSenderId());
         List<UserEntity> usersFromProject = new ArrayList<>();
         List<Session> userSessions = new ArrayList<>();
 
         for (UserProjectEntity user : project.getUserProjects()) {
-            if (user != null) {
+            if (user != null && user.getUser().getId()!=userSender.getId()) {
                 usersFromProject.add(user.getUser());
             }
         }
+
         for (UserEntity user : usersFromProject) {
-            TokenEntity token = tokenDao.findTokenByUserId(user.getId());
-            if (token != null && token.isActiveToken()) {
-                Session userSession = sessions.get(token.getTokenValue());
-                if (userSession != null) {
-                    userSessions.add(userSession);
+            List<TokenEntity> tokens = tokenDao.findTokensByUserId(user.getId());
+            for (TokenEntity token : tokens) {
+                if (token != null && token.isActiveToken()) {
+                    Session userSession = sessions.get(token.getTokenValue());
+                    if (userSession != null) {
+                        userSessions.add(userSession);
+                    }
                 }
             }
         }
@@ -77,7 +78,6 @@ public class ProjectChatSocket {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     @OnOpen
