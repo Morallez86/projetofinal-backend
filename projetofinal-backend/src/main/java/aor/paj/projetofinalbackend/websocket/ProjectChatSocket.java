@@ -1,7 +1,19 @@
 package aor.paj.projetofinalbackend.websocket;
 
+import aor.paj.projetofinalbackend.dao.ProjectDao;
+import aor.paj.projetofinalbackend.dao.TokenDao;
+import aor.paj.projetofinalbackend.dao.UserDao;
+import aor.paj.projetofinalbackend.dto.ChatMessageDto;
+import aor.paj.projetofinalbackend.entity.ProjectEntity;
+import aor.paj.projetofinalbackend.entity.TokenEntity;
+import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.entity.UserProjectEntity;
+import aor.paj.projetofinalbackend.utils.LocalDateTimeAdapter;
+import com.fasterxml.jackson.core.io.CharTypes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
@@ -13,24 +25,59 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@Singleton
+@ApplicationScoped
 @ServerEndpoint("/websocket/projectChat/{token}")
 public class ProjectChatSocket {
 
+    @Inject
+    ProjectDao projectDao;
+
+    @Inject
+    TokenDao tokenDao;
+
+    @Inject
+    UserDao userDao;
+
     private static final Map<String, Session> sessions = new HashMap<>();
 
-    public void send(String token, String message) {
-        Session session = sessions.get(token);
-        if (session != null && session.isOpen()) {
-            try {
-                session.getBasicRemote().sendText(message);
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void send(ChatMessageDto messageDto, String message) {
+        ProjectEntity project = projectDao.findProjectById(messageDto.getProjectId());
+        /*TokenEntity senderToken = tokenDao.findTokenByUserId(messageDto.getSenderId());
+        String tokenSender = senderToken.getTokenValue();
+        Session senderSession = sessions.get(tokenSender);*/
+        List<UserEntity> usersFromProject = new ArrayList<>();
+        List<Session> userSessions = new ArrayList<>();
+
+        for (UserProjectEntity user : project.getUserProjects()) {
+            if (user != null) {
+                usersFromProject.add(user.getUser());
             }
         }
+        for (UserEntity user : usersFromProject) {
+            TokenEntity token = tokenDao.findTokenByUserId(user.getId());
+            if (token != null && token.isActiveToken()) {
+                Session userSession = sessions.get(token.getTokenValue());
+                if (userSession != null) {
+                    userSessions.add(userSession);
+                }
+            }
+        }
+
+        for (Session session : userSessions) {
+            try {
+                session.getBasicRemote().sendObject(message);
+            } catch (IOException e) {
+                System.out.println("Something went wrong!");
+            } catch (EncodeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
     @OnOpen
@@ -46,9 +93,13 @@ public class ProjectChatSocket {
     }
 
     @OnMessage
-    public void toDoOnMessage(String message, @PathParam("token") String token) throws NamingException {
-        System.out.println("Received message from token " + token + ": " + message);
-        // Adicione lógica para processar a mensagem recebida, se necessário
+    public void toDoOnMessage(String message) throws NamingException {
+        System.out.println("Received message " + message);
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
+        ChatMessageDto chatMessageDto = gson.fromJson(message, ChatMessageDto.class);
+        send(chatMessageDto,message);
     }
 
     @OnError

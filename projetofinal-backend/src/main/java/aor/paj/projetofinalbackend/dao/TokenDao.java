@@ -44,4 +44,14 @@ public class TokenDao extends AbstractDao<TokenEntity> {
                 .setParameter("currentDateTime", currentDateTime)
                 .getResultList();
     }
+
+    public TokenEntity findTokenByUserId(Long userId) {
+        try {
+            return em.createNamedQuery("Token.findTokenByUserId", TokenEntity.class)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }
