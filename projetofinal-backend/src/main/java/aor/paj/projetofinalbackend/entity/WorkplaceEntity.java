@@ -9,7 +9,11 @@ import java.util.*;
 @Table(name = "workplace")
 @NamedQueries({
         @NamedQuery(name = "Workplace.findWorkplaceByName", query = "SELECT w FROM WorkplaceEntity w WHERE w.name = :name"),
-        @NamedQuery(name = "Workplace.findAllWorkplaces", query = "SELECT w FROM WorkplaceEntity w")
+        @NamedQuery(name = "Workplace.findAllWorkplaces", query = "SELECT w FROM WorkplaceEntity w"),
+        @NamedQuery(
+                name = "Workplace.findProjectCountPerWorkplace",
+                query = "SELECT w.name, COUNT(p.id) as projectCount FROM WorkplaceEntity w LEFT JOIN w.projects p GROUP BY w.name"
+        )
 })
 public class WorkplaceEntity implements Serializable {
     private static final long serialVersionUID = 1L;

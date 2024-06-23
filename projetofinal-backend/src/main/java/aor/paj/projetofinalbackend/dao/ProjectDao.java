@@ -59,4 +59,37 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
                 .getResultList();
     }
 
+    public long getTotalUserCount() {
+        try {
+            return em.createNamedQuery("ProjectEntity.getTotalUserCount", Long.class)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
+
+    public long getApprovedProjectCount() {
+        return em.createNamedQuery("ProjectEntity.getApprovedProjectCount", Long.class).getSingleResult();
+    }
+
+    public long getFinishedProjectCount() {
+        return em.createNamedQuery("ProjectEntity.getFinishedProjectCount", Long.class).getSingleResult();
+    }
+
+    public long getCanceledProjectCount() {
+        return em.createNamedQuery("ProjectEntity.getCanceledProjectCount", Long.class).getSingleResult();
+    }
+
+    public double getAverageExecutionTime() {
+        return em.createNamedQuery("ProjectEntity.getAverageExecutionTime", Double.class).getSingleResult();
+    }
+
+    public double getPercentage(long part, long total) {
+        if (total == 0) {
+            return 0;
+        }
+        return (double) part / total * 100;
+    }
+
+
 }

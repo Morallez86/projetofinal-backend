@@ -362,5 +362,21 @@ public class ProjectBean {
                 .collect(Collectors.toList());
     }
 
+    public double getAverageUsersPerProject() {
+        long totalProjects = projectDao.getTotalProjectCount();
+        long totalUsers = projectDao.getTotalUserCount();
+        if (totalProjects == 0) {
+            return 0;
+        }
+        return (double) totalUsers / totalProjects;
+    }
+
+    public double getPercentage(long part, long total) {
+        if (total == 0) {
+            return 0;
+        }
+        return (double) part / total * 100;
+    }
+
 }
 
