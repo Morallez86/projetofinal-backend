@@ -47,7 +47,7 @@ public class ChatMesssageBean {
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
         String jsonMsg = gson.toJson(ChatMessageMapper.toDto(chatMessageSaved));
-        projectChatSocket.toDoOnMessage(jsonMsg);
+        projectChatSocket.onMessage(jsonMsg);
         return ChatMessageMapper.toDto(chatMessageSaved);
     }
 }
