@@ -53,16 +53,29 @@ public class ProjectService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProjects(@HeaderParam("Authorization") String authorizationHeader,
                                    @QueryParam("page") Integer page,
-                                   @QueryParam("limit") Integer limit) {
+                                   @QueryParam("limit") Integer limit,
+                                   @QueryParam("searchTerm") String searchTerm,
+                                   @QueryParam("skills") String skills,
+                                   @QueryParam("interests") String interests) {
         try {
             Set<ProjectDto> projectDtos;
             long totalProjects;
             int totalPages;
 
-            if (page == null || limit == null) {
-                // No pagination parameters provided, return all projects
+            if ((page == null || limit == null) && (searchTerm == null && skills == null && interests == null)) {
+                // No pagination or search parameters provided, return all projects
                 projectDtos = projectBean.getAllProjectsNoQueries();
-                totalPages = 1;
+                totalPages = 1; // Since we're returning all projects in a single response
+            } else if (searchTerm != null || skills != null || interests != null) {
+                // Search parameters provided, return filtered projects
+                projectDtos = projectBean.searchProjects(searchTerm, skills, interests);
+                System.out.println("Project names Mapper:");
+                for (ProjectDto project : projectDtos) {
+                    System.out.println(project.getTitle());  // Assuming getTitle() method exists in ProjectEntity
+                }
+
+                totalProjects = projectDtos.size(); // Total projects based on search criteria
+                totalPages = (int) Math.ceil((double) totalProjects / (limit != null ? limit : totalProjects));
             } else {
                 // Pagination parameters provided, return paginated projects
                 projectDtos = projectBean.getAllProjects(page, limit);

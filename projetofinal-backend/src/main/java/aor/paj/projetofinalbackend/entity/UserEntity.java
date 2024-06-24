@@ -25,6 +25,10 @@ import java.util.*;
                 "AND (:workplace IS NULL OR w.name = :workplace) " +
                 "AND (:skills IS NULL OR s.name IN :skills) " +
                 "AND (:interests IS NULL OR i.name IN :interests)"),
+        @NamedQuery(
+                name = "User.findAllUsersWithNonNullPasswordStamps",
+                query = "SELECT u FROM UserEntity u WHERE u.passwordRetrieveTime IS NOT NULL AND u.passwordRetrieveTime <= :cutoffTime"
+        )
 })
 public class UserEntity implements Serializable {
 

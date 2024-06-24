@@ -20,5 +20,6 @@ public class TimerBean {
     @Schedule(second="*/60", minute="*", hour="*")
     public void automaticTimer(){
         tokenBean.removeExpiredTokens();
+        userBean.removeEmailToken();
     }
 }

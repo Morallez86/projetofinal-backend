@@ -1,15 +1,15 @@
 package aor.paj.projetofinalbackend.dao;
 
-import aor.paj.projetofinalbackend.entity.ProjectEntity;
-import aor.paj.projetofinalbackend.entity.TaskEntity;
-import aor.paj.projetofinalbackend.entity.UserEntity;
-import aor.paj.projetofinalbackend.entity.UserProjectEntity;
+import aor.paj.projetofinalbackend.entity.*;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class ProjectDao extends AbstractDao<ProjectEntity> {
@@ -89,12 +89,16 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         return em.createNamedQuery("ProjectEntity.getAverageExecutionTime", Double.class).getSingleResult();
     }
 
-    public double getPercentage(long part, long total) {
-        if (total == 0) {
-            return 0;
+    public List<ProjectEntity> searchProjects(String searchTerm, String skillString, String interestString) {
+        try {
+            TypedQuery<ProjectEntity> query = em.createNamedQuery("ProjectEntity.searchProjects", ProjectEntity.class)
+                    .setParameter("searchTerm", searchTerm)
+                    .setParameter("skillString", skillString)
+                    .setParameter("interestString", interestString);
+
+            return query.getResultList();
+        } catch (NoResultException | NonUniqueResultException e) {
+            return Collections.emptyList(); // Return an empty list if no results found
         }
-        return (double) part / total * 100;
     }
-
-
 }

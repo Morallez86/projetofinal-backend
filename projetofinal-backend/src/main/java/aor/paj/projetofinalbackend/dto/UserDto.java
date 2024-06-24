@@ -159,4 +159,26 @@ public class UserDto {
     public void setOnline(Boolean online) {
         this.online = online;
     }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", active=" + active +
+                ", pending=" + pending +
+                ", emailToken='" + emailToken + '\'' +
+                ", biography='" + biography + '\'' +
+                ", visibility=" + visibility +
+                ", activeProject=" + activeProject +
+                ", registTime=" + registTime +
+                ", password='" + password + '\'' +
+                ", workplace='" + workplace + '\'' +
+                ", online=" + online +
+                '}';
+    }
 }

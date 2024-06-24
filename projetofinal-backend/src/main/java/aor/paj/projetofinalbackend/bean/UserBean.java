@@ -136,6 +136,7 @@ public class UserBean {
         if (userDao.findUserByUsername(userDto.getUsername()) != null) {
             throw new IllegalArgumentException("Username is already in use");
         }
+        System.out.println(userDto);
         UserEntity user = UserMapper.toEntity(userDto);
         String emailToken = generateToken();
         user.setPassword(EncryptHelper.encryptPassword(userDto.getPassword()));
@@ -261,5 +262,15 @@ public class UserBean {
             return Collections.emptyList();
         }
         return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
+    }
+
+    public void removeEmailToken () {
+        List<UserEntity> expiredEmailTokens = userDao.findAllUsersWithNonNullPasswordStamps(LocalDateTime.now().minusHours(1));
+        if(!expiredEmailTokens.isEmpty()){
+            for(UserEntity user: expiredEmailTokens){
+                user.setEmailToken(null);
+                userDao.merge(user);
+            }
+        }
     }
 }

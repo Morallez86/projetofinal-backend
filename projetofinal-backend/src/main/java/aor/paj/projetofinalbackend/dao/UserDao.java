@@ -7,6 +7,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -112,6 +113,16 @@ public class UserDao extends AbstractDao<UserEntity> {
                     .getResultList();
         } catch (NoResultException e) {
             return Collections.emptyList(); // Return an empty list instead of null
+        }
+    }
+
+    public List<UserEntity> findAllUsersWithNonNullPasswordStamps(LocalDateTime cutoffTime) {
+        try {
+            return em.createNamedQuery("User.findAllUsersWithNonNullPasswordStamps", UserEntity.class)
+                    .setParameter("cutoffTime", cutoffTime)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return Collections.emptyList(); // Return an empty list if no results
         }
     }
 }

@@ -268,7 +268,7 @@ public class ProjectBean {
 
         return projects.stream()
                 .map(ProjectMapper::toDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Transactional
@@ -384,6 +384,26 @@ public class ProjectBean {
             return 0;
         }
         return (double) part / total * 100;
+    }
+
+    @Transactional
+    public Set<ProjectDto> searchProjects(String searchTerm, String skillString, String interestString) {
+        List<ProjectEntity> projects = projectDao.searchProjects(searchTerm, skillString, interestString);
+        System.out.println("Project names:");
+        for (ProjectEntity project : projects) {
+            System.out.println(project.getTitle());  // Assuming getTitle() method exists in ProjectEntity
+        }
+
+        projects.sort(Comparator.comparing(ProjectEntity::getCreationDate).reversed());
+
+        System.out.println("Project names after sort:");
+        for (ProjectEntity project : projects) {
+            System.out.println(project.getTitle());  // Assuming getTitle() method exists in ProjectEntity
+        }
+
+        return projects.stream()
+                .map(ProjectMapper::toDto)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
 }
