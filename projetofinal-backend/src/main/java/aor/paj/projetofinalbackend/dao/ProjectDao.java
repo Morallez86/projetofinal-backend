@@ -37,6 +37,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
                 .getResultList();
     }
 
+    public List<ProjectEntity> getAllProjectsNoQueries() {
+        return em.createNamedQuery("ProjectEntity.findAll", ProjectEntity.class)
+                .getResultList();
+    }
+
     public long getTotalProjectCount() {
         try {
             return em.createNamedQuery("ProjectEntity.getTotalProjectCount", Long.class)

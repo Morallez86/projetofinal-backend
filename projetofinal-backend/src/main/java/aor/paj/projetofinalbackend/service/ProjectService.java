@@ -52,20 +52,23 @@ public class ProjectService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProjects(@HeaderParam("Authorization") String authorizationHeader,
-                                   @QueryParam("page") @DefaultValue("1") int page,
-                                   @QueryParam("limit") @DefaultValue("10") int limit) {
+                                   @QueryParam("page") Integer page,
+                                   @QueryParam("limit") Integer limit) {
         try {
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                String token = authorizationHeader.substring("Bearer".length()).trim();
-                Response validationResponse = authBean.validateUserToken(token);
-                if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-                    return validationResponse;
-                }
-            }
+            Set<ProjectDto> projectDtos;
+            long totalProjects;
+            int totalPages;
 
-            Set<ProjectDto> projectDtos = projectBean.getAllProjects(page, limit);
-            long totalProjects = projectBean.getTotalProjectCount();
-            int totalPages = (int) Math.ceil((double) totalProjects / limit);
+            if (page == null || limit == null) {
+                // No pagination parameters provided, return all projects
+                projectDtos = projectBean.getAllProjectsNoQueries();
+                totalPages = 1;
+            } else {
+                // Pagination parameters provided, return paginated projects
+                projectDtos = projectBean.getAllProjects(page, limit);
+                totalProjects = projectBean.getTotalProjectCount();
+                totalPages = (int) Math.ceil((double) totalProjects / limit);
+            }
 
             // Include total number of pages in the response
             Map<String, Object> responseMap = new HashMap<>();

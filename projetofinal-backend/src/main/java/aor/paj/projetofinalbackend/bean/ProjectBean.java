@@ -159,19 +159,16 @@ public class ProjectBean {
                 existingWorkplaceEntity.add(workplaceEntity);
             }
         }
-        System.out.println("1");
 
         // Finalize workplace associations
         if (existingWorkplaceEntity != null && !existingWorkplaceEntity.isEmpty()) {
             projectEntity.setWorkplace(existingWorkplaceEntity.iterator().next());
         }
 
-        System.out.println("2");
 
         // Persist the project entity
         projectDao.persist(projectEntity);
 
-        System.out.println("3");
 
         // Associate user projects
         Set<UserProjectEntity> userProjectEntities = new HashSet<>();
@@ -263,6 +260,17 @@ public class ProjectBean {
                 .map(ProjectMapper::toDto)
                 .collect(Collectors.toSet());
     }
+
+    @Transactional
+    public Set<ProjectDto> getAllProjectsNoQueries() {
+        List<ProjectEntity> projects = projectDao.getAllProjectsNoQueries();
+        System.out.println(projects.size() + ": size");
+
+        return projects.stream()
+                .map(ProjectMapper::toDto)
+                .collect(Collectors.toSet());
+    }
+
     @Transactional
     public ProjectDto getProjectById(Long projectId) {
         ProjectEntity project = projectDao.findProjectById(projectId);
