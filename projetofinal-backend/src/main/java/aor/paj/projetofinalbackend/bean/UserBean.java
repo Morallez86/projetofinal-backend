@@ -232,9 +232,9 @@ public class UserBean {
                 .limit(limit)
                 .collect(Collectors.toList());
 
-        return projectsPerPage.stream()
+        return projects.stream()
                 .map(ProjectMapper::toDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public Long getTotalProjectCount(Long userId) {

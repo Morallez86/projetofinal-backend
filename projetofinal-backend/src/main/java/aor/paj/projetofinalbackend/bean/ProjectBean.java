@@ -258,7 +258,7 @@ public class ProjectBean {
 
         return projects.stream()
                 .map(ProjectMapper::toDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Transactional

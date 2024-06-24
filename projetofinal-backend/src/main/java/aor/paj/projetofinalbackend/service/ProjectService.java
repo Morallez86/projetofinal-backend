@@ -69,7 +69,6 @@ public class ProjectService {
             } else if (searchTerm != null || skills != null || interests != null) {
                 // Search parameters provided, return filtered projects
                 projectDtos = projectBean.searchProjects(searchTerm, skills, interests);
-                System.out.println("Project names Mapper:");
                 for (ProjectDto project : projectDtos) {
                     System.out.println(project.getTitle());  // Assuming getTitle() method exists in ProjectEntity
                 }
