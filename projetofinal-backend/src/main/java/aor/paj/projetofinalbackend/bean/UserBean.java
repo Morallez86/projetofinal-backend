@@ -297,41 +297,35 @@ public class UserBean {
             }
         }
     }
-}
-
-   /*public void updateChatTimer (String token, LocalDateTime chatNewTimeClosed ) {
-        UserEntity userEntity = tokenDao.findUserByTokenValue(token);
-        List<LocalDateTime> listchatimers = userEntity.getLastTimeChatOpen();
-        listchatimers.add(chatNewTimeClosed);
-        userEntity.setLastTimeChatOpen(listchatimers);
-        userDao.merge(userEntity);
-    }*/ //logout
 
     public void updateTimersChat (String token, HashMap<Long, LocalDateTime>mapTimersChat) {
         UserEntity user = tokenDao.findUserByTokenValue(token);
         Set<UserProjectEntity> userProjectEntities = user.getUserProjects();
 
 
-            for (UserProjectEntity userProject : userProjectEntities) {
-                Long projectId = userProject.getProject().getId();
+        for (UserProjectEntity userProject : userProjectEntities) {
+            Long projectId = userProject.getProject().getId();
 
 
-                if (mapTimersChat.containsKey(projectId)) {
-                    LocalDateTime newTimestamp = mapTimersChat.get(projectId);
-                    ProjectTimerChat projectTimerChat = userProject.getProjectTimerChat();
+            if (mapTimersChat.containsKey(projectId)) {
+                LocalDateTime newTimestamp = mapTimersChat.get(projectId);
+                ProjectTimerChat projectTimerChat = userProject.getProjectTimerChat();
 
-                    // Adicionar apenas se for diferente do último timestamp na lista
-                    if (projectTimerChat != null && !projectTimerChat.getTimestamps().isEmpty()) {
-                        LocalDateTime lastTimestamp = projectTimerChat.getTimestamps().get(projectTimerChat.getTimestamps().size() - 1);
-                        if (!lastTimestamp.equals(newTimestamp)) {
-                            projectTimerChat.getTimestamps().add(newTimestamp);
-                            userProjectDao.merge(userProject); // Atualiza o UserProjectEntity no banco de dados
-                        }
+                // Adicionar apenas se for diferente do último timestamp na lista
+                if (projectTimerChat != null && !projectTimerChat.getTimestamps().isEmpty()) {
+                    LocalDateTime lastTimestamp = projectTimerChat.getTimestamps().get(projectTimerChat.getTimestamps().size() - 1);
+                    if (!lastTimestamp.equals(newTimestamp)) {
+                        projectTimerChat.getTimestamps().add(newTimestamp);
+                        userProjectDao.merge(userProject); // Atualiza o UserProjectEntity no banco de dados
                     }
                 }
             }
         }
     }
+}
+
+
+
 
 
 
