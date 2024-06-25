@@ -1,12 +1,15 @@
 package aor.paj.projetofinalbackend.bean;
 
 import aor.paj.projetofinalbackend.dao.TokenDao;
+import aor.paj.projetofinalbackend.dao.UserDao;
 import aor.paj.projetofinalbackend.entity.TokenEntity;
+import aor.paj.projetofinalbackend.entity.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.NoResultException;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @ApplicationScoped
@@ -14,6 +17,9 @@ public class TokenBean {
 
     @EJB
     TokenDao tokenDao;
+
+    @EJB
+    UserDao userDao;
 
     public TokenEntity findTokenByValue(String tokenValue) {
         return tokenDao.findTokenByValue(tokenValue);
@@ -28,10 +34,12 @@ public class TokenBean {
     }
 
     public boolean deactivateToken(String token) {
+
         try {
             TokenEntity tokenEntity = findTokenByValue(token);
             tokenEntity.setActiveToken(false);
             tokenDao.merge(tokenEntity);
+
             return true;
         } catch (NoResultException e) {
             return false;

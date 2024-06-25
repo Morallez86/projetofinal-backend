@@ -38,6 +38,9 @@ public class UserProjectEntity implements Serializable {
     @Column(name = "active", nullable=false)
     private boolean active = false;
 
+    @Embedded
+    private ProjectTimerChat projectTimerChat;
+
     public UserProjectEntity() {
 
     }
@@ -84,6 +87,14 @@ public class UserProjectEntity implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public ProjectTimerChat getProjectTimerChat() {
+        return projectTimerChat;
+    }
+
+    public void setProjectTimerChat(ProjectTimerChat projectTimerChat) {
+        this.projectTimerChat = projectTimerChat;
     }
 }
 

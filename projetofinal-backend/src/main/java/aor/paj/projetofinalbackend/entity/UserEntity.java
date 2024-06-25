@@ -25,6 +25,7 @@ import java.util.*;
                 "AND (:workplace IS NULL OR w.name = :workplace) " +
                 "AND (:skills IS NULL OR s.name IN :skills) " +
                 "AND (:interests IS NULL OR i.name IN :interests)"),
+
 })
 public class UserEntity implements Serializable {
 
@@ -131,6 +132,7 @@ public class UserEntity implements Serializable {
 
     @Column(name = "online")
     private Boolean online = false;
+
 
     public UserEntity() {
     }
@@ -392,6 +394,7 @@ public class UserEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
 
 
 }

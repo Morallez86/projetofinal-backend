@@ -1,10 +1,16 @@
 package aor.paj.projetofinalbackend.dto;
 
 import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
+import aor.paj.projetofinalbackend.utils.CustomLocalDateTimeDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @XmlRootElement
 public class UserDto {
 
@@ -27,6 +33,10 @@ public class UserDto {
     private String  workplace;
 
     private Boolean online;
+
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private List<LocalDateTime> lastTimeChatOpen;
 
     public UserDto() {
     }
@@ -158,5 +168,14 @@ public class UserDto {
 
     public void setOnline(Boolean online) {
         this.online = online;
+    }
+
+    @XmlElement
+    public List<LocalDateTime> getLastTimeChatOpen() {
+        return lastTimeChatOpen;
+    }
+
+    public void setLastTimeChatOpen(List<LocalDateTime> lastTimeChatOpen) {
+        this.lastTimeChatOpen = lastTimeChatOpen;
     }
 }

@@ -5,8 +5,10 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.hibernate.Hibernate;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -114,4 +116,8 @@ public class UserDao extends AbstractDao<UserEntity> {
             return Collections.emptyList(); // Return an empty list instead of null
         }
     }
+
+
+
+
 }
