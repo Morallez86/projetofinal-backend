@@ -50,7 +50,7 @@ public class ProjectEntity implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "motivation", nullable = false)
+    @Column(name = "motivation")
     private String motivation;
 
     @Enumerated(EnumType.STRING)

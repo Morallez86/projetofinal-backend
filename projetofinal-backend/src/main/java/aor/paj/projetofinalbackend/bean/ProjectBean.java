@@ -263,12 +263,17 @@ public class ProjectBean {
 
     @Transactional
     public Set<ProjectDto> getAllProjectsNoQueries() {
-        List<ProjectEntity> projects = projectDao.getAllProjectsNoQueries();
-        System.out.println(projects.size() + ": size");
-
-        return projects.stream()
-                .map(ProjectMapper::toDto)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        try {
+            List<ProjectEntity> projects = projectDao.getAllProjectsNoQueries();
+            System.out.println(projects.size() + ": size");
+            return projects.stream()
+                    .map(ProjectMapper::toDto)
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+        } catch (Exception e) {
+            // Log the exception for debugging
+            e.printStackTrace();
+            throw e; // Ensure the exception is thrown so the transaction is marked for rollback
+        }
     }
 
     @Transactional
