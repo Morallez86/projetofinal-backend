@@ -93,7 +93,7 @@ public class UserBean {
 
 
 
-        // Iterar sobre os projetos do usuário
+
         for (UserProjectEntity userProject : user.getUserProjects()) {
 
             Long projectId = userProject.getProject().getId();
