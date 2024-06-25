@@ -15,6 +15,7 @@ import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import aor.paj.projetofinalbackend.utils.JsonUtils;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -24,6 +25,7 @@ import jakarta.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -84,6 +86,7 @@ public class UserService {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response login(UserCredentials credentials) {
 
         UserEntity user = userBean.findUserByEmail(credentials.getEmail());
@@ -102,9 +105,11 @@ public class UserService {
     @POST
     @Path("/logout")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response logout(@HeaderParam("Authorization") String authHeader) {
+    public Response logout(@HeaderParam("Authorization") String authHeader, HashMap<Long, LocalDateTime> mapTimersChat) {
 
         String token = authHeader.substring("Bearer".length()).trim();
+
+        userBean.updateTimersChat(token, mapTimersChat);
 
         if (tokenBean.deactivateToken(token)) {
             return Response.status(Response.Status.OK)

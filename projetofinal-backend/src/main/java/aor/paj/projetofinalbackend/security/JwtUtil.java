@@ -6,7 +6,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Map;
 
 public class JwtUtil {
 
@@ -14,12 +16,13 @@ public class JwtUtil {
     private static final Key KEY = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     public static final long EXPIRATION_TIME = 3600000;
 
-    public static String generateToken(String email, int role, Long id, String username) {
+    public static String generateToken(String email, int role, Long id, String username, Map<Long, LocalDateTime> projectTimestamps) {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
                 .claim("id", id)
                 .claim("username", username)
+                .claim("projectTimestamps", projectTimestamps)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(KEY, SignatureAlgorithm.HS256)

@@ -8,6 +8,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
@@ -43,5 +44,16 @@ public class TokenDao extends AbstractDao<TokenEntity> {
         return em.createNamedQuery("Token.findExpiredTokens", TokenEntity.class)
                 .setParameter("currentDateTime", currentDateTime)
                 .getResultList();
+    }
+
+    public List<TokenEntity> findTokensByUserId(Long userId) {
+        try {
+            return em.createNamedQuery("Token.findTokenByUserId", TokenEntity.class)
+                    .setParameter("userId", userId)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }

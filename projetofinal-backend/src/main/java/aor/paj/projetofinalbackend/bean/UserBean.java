@@ -19,6 +19,7 @@ import aor.paj.projetofinalbackend.utils.Role;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import org.hibernate.Hibernate;
 import org.mindrot.jbcrypt.BCrypt;
@@ -85,7 +86,29 @@ public class UserBean {
 
     @Transactional
     public String createAndSaveToken(UserEntity user) {
-        String tokenValue = JwtUtil.generateToken(user.getEmail(), user.getRole().getValue(), user.getId(), user.getUsername());
+
+        Hibernate.initialize(user.getUserProjects());
+        // Criar o HashMap para armazenar os timestamps mais recentes dos projetos
+        Map<Long, LocalDateTime> projectTimestamps = new HashMap<>();
+
+
+
+
+        for (UserProjectEntity userProject : user.getUserProjects()) {
+
+            Long projectId = userProject.getProject().getId();
+            ProjectTimerChat projectTimerChat = userProject.getProjectTimerChat();
+
+            if (projectTimerChat != null) {
+                LocalDateTime mostRecentTimestamp = projectTimerChat.getMostRecentTimestamp();
+                if (mostRecentTimestamp != null) {
+                    projectTimestamps.put(projectId, mostRecentTimestamp);
+                }
+            }
+        }
+
+
+        String tokenValue = JwtUtil.generateToken(user.getEmail(), user.getRole().getValue(), user.getId(), user.getUsername(),projectTimestamps);
         LocalDateTime expirationTime = LocalDateTime.ofInstant(
                 new Date(System.currentTimeMillis() + JwtUtil.EXPIRATION_TIME).toInstant(),
                 ZoneId.systemDefault()
@@ -107,6 +130,7 @@ public class UserBean {
             userProjectDao.merge(userProject);
             userDao.merge(userEntity);
         }
+
         return tokenValue;
     }
 
@@ -262,4 +286,40 @@ public class UserBean {
         }
         return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
-}
+
+   /*public void updateChatTimer (String token, LocalDateTime chatNewTimeClosed ) {
+        UserEntity userEntity = tokenDao.findUserByTokenValue(token);
+        List<LocalDateTime> listchatimers = userEntity.getLastTimeChatOpen();
+        listchatimers.add(chatNewTimeClosed);
+        userEntity.setLastTimeChatOpen(listchatimers);
+        userDao.merge(userEntity);
+    }*/ //logout
+
+    public void updateTimersChat (String token, HashMap<Long, LocalDateTime>mapTimersChat) {
+        UserEntity user = tokenDao.findUserByTokenValue(token);
+        Set<UserProjectEntity> userProjectEntities = user.getUserProjects();
+
+
+            for (UserProjectEntity userProject : userProjectEntities) {
+                Long projectId = userProject.getProject().getId();
+
+
+                if (mapTimersChat.containsKey(projectId)) {
+                    LocalDateTime newTimestamp = mapTimersChat.get(projectId);
+                    ProjectTimerChat projectTimerChat = userProject.getProjectTimerChat();
+
+                    // Adicionar apenas se for diferente do último timestamp na lista
+                    if (projectTimerChat != null && !projectTimerChat.getTimestamps().isEmpty()) {
+                        LocalDateTime lastTimestamp = projectTimerChat.getTimestamps().get(projectTimerChat.getTimestamps().size() - 1);
+                        if (!lastTimestamp.equals(newTimestamp)) {
+                            projectTimerChat.getTimestamps().add(newTimestamp);
+                            userProjectDao.merge(userProject); // Atualiza o UserProjectEntity no banco de dados
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
