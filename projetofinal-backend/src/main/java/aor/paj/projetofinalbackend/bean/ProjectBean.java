@@ -159,19 +159,16 @@ public class ProjectBean {
                 existingWorkplaceEntity.add(workplaceEntity);
             }
         }
-        System.out.println("1");
 
         // Finalize workplace associations
         if (existingWorkplaceEntity != null && !existingWorkplaceEntity.isEmpty()) {
             projectEntity.setWorkplace(existingWorkplaceEntity.iterator().next());
         }
 
-        System.out.println("2");
 
         // Persist the project entity
         projectDao.persist(projectEntity);
 
-        System.out.println("3");
 
         // Associate user projects
         Set<UserProjectEntity> userProjectEntities = new HashSet<>();
@@ -261,8 +258,24 @@ public class ProjectBean {
 
         return projects.stream()
                 .map(ProjectMapper::toDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
+
+    @Transactional
+    public Set<ProjectDto> getAllProjectsNoQueries() {
+        try {
+            List<ProjectEntity> projects = projectDao.getAllProjectsNoQueries();
+            System.out.println(projects.size() + ": size");
+            return projects.stream()
+                    .map(ProjectMapper::toDto)
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+        } catch (Exception e) {
+            // Log the exception for debugging
+            e.printStackTrace();
+            throw e; // Ensure the exception is thrown so the transaction is marked for rollback
+        }
+    }
+
     @Transactional
     public ProjectDto getProjectById(Long projectId) {
         ProjectEntity project = projectDao.findProjectById(projectId);
@@ -360,6 +373,42 @@ public class ProjectBean {
         return taskEntities.stream()
                 .map(TaskMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public double getAverageUsersPerProject() {
+        long totalProjects = projectDao.getTotalProjectCount();
+        long totalUsers = projectDao.getTotalUserCount();
+        if (totalProjects == 0) {
+            return 0;
+        }
+        return (double) totalUsers / totalProjects;
+    }
+
+    public double getPercentage(long part, long total) {
+        if (total == 0) {
+            return 0;
+        }
+        return (double) part / total * 100;
+    }
+
+    @Transactional
+    public Set<ProjectDto> searchProjects(String searchTerm, String skillString, String interestString) {
+        List<ProjectEntity> projects = projectDao.searchProjects(searchTerm, skillString, interestString);
+        System.out.println("Project names:");
+        for (ProjectEntity project : projects) {
+            System.out.println(project.getTitle());  // Assuming getTitle() method exists in ProjectEntity
+        }
+
+        projects.sort(Comparator.comparing(ProjectEntity::getCreationDate).reversed());
+
+        System.out.println("Project names after sort:");
+        for (ProjectEntity project : projects) {
+            System.out.println(project.getTitle());  // Assuming getTitle() method exists in ProjectEntity
+        }
+
+        return projects.stream()
+                .map(ProjectMapper::toDto)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
 }

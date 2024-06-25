@@ -7,6 +7,7 @@ import aor.paj.projetofinalbackend.entity.NotificationEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.NotificationMapper;
 import aor.paj.projetofinalbackend.utils.NotificationType;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
@@ -16,10 +17,10 @@ import java.util.List;
 @Stateless
 public class NotificationBean {
 
-    @Inject
+    @EJB
     NotificationDao notificationDao;
 
-    @Inject
+    @EJB
     UserDao userDao;
 
     public List<NotificationDto> getNotificationsByUserIdAndTypeAndSeen(Long userId, String type, Boolean seen, int page, int limit) {

@@ -160,6 +160,7 @@ public class UserBean {
         if (userDao.findUserByUsername(userDto.getUsername()) != null) {
             throw new IllegalArgumentException("Username is already in use");
         }
+        System.out.println(userDto);
         UserEntity user = UserMapper.toEntity(userDto);
         String emailToken = generateToken();
         user.setPassword(EncryptHelper.encryptPassword(userDto.getPassword()));
@@ -255,9 +256,9 @@ public class UserBean {
                 .limit(limit)
                 .collect(Collectors.toList());
 
-        return projectsPerPage.stream()
+        return projects.stream()
                 .map(ProjectMapper::toDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public Long getTotalProjectCount(Long userId) {
@@ -286,6 +287,17 @@ public class UserBean {
         }
         return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
+
+    public void removeEmailToken () {
+        List<UserEntity> expiredEmailTokens = userDao.findAllUsersWithNonNullPasswordStamps(LocalDateTime.now().minusHours(1));
+        if(!expiredEmailTokens.isEmpty()){
+            for(UserEntity user: expiredEmailTokens){
+                user.setEmailToken(null);
+                userDao.merge(user);
+            }
+        }
+    }
+}
 
    /*public void updateChatTimer (String token, LocalDateTime chatNewTimeClosed ) {
         UserEntity userEntity = tokenDao.findUserByTokenValue(token);

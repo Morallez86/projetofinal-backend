@@ -20,9 +20,20 @@ import java.util.*;
         @NamedQuery(
                 name = "ProjectEntity.findTasksByProjectIdAndEndingDate",
                 query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId AND t.plannedEndingDate <= :plannedStartingDate AND t.status != 'DONE' ORDER BY t.plannedEndingDate ASC"
-        )
-
-
+        ),
+        @NamedQuery(name = "ProjectEntity.getTotalUserCount", query = "SELECT COUNT(up) FROM UserProjectEntity up"),
+        @NamedQuery(name = "ProjectEntity.getApprovedProjectCount", query = "SELECT COUNT(p) FROM ProjectEntity p WHERE p.approved = TRUE"),
+        @NamedQuery(name = "ProjectEntity.getFinishedProjectCount", query = "SELECT COUNT(p) FROM ProjectEntity p WHERE p.status = 'FINISHED'"),
+        @NamedQuery(name = "ProjectEntity.getCanceledProjectCount", query = "SELECT COUNT(p) FROM ProjectEntity p WHERE p.status = 'CANCELLED'"),
+        @NamedQuery(name = "ProjectEntity.getAverageExecutionTime", query = "SELECT AVG(FUNCTION('DATEDIFF', p.endDate, p.startingDate)) FROM ProjectEntity p WHERE p.endDate IS NOT NULL"),
+        @NamedQuery(name = "ProjectEntity.searchProjects",
+                query = "SELECT p FROM ProjectEntity p " +
+                        "WHERE (:searchTerm IS NULL OR " +
+                        "       LOWER(p.title) LIKE CONCAT('%', LOWER(:searchTerm), '%') OR " +
+                        "       LOWER(p.description) LIKE CONCAT('%', LOWER(:searchTerm), '%')) " +
+                        "  AND (:skillString IS NULL OR EXISTS (SELECT s FROM p.skills s WHERE LOWER(s.name) LIKE CONCAT('%', LOWER(:skillString), '%'))) " +
+                        "  AND (:interestString IS NULL OR EXISTS (SELECT i FROM p.interests i WHERE LOWER(i.name) LIKE CONCAT('%', LOWER(:interestString), '%'))) " +
+                        "ORDER BY p.creationDate DESC")
 })
 
 public class ProjectEntity implements Serializable {
@@ -39,7 +50,7 @@ public class ProjectEntity implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "motivation", nullable = false)
+    @Column(name = "motivation")
     private String motivation;
 
     @Enumerated(EnumType.STRING)

@@ -1,15 +1,15 @@
 package aor.paj.projetofinalbackend.dao;
 
-import aor.paj.projetofinalbackend.entity.ProjectEntity;
-import aor.paj.projetofinalbackend.entity.TaskEntity;
-import aor.paj.projetofinalbackend.entity.UserEntity;
-import aor.paj.projetofinalbackend.entity.UserProjectEntity;
+import aor.paj.projetofinalbackend.entity.*;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class ProjectDao extends AbstractDao<ProjectEntity> {
@@ -37,6 +37,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
                 .getResultList();
     }
 
+    public List<ProjectEntity> getAllProjectsNoQueries() {
+        return em.createNamedQuery("ProjectEntity.findAll", ProjectEntity.class)
+                .getResultList();
+    }
+
     public long getTotalProjectCount() {
         try {
             return em.createNamedQuery("ProjectEntity.getTotalProjectCount", Long.class)
@@ -59,4 +64,41 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
                 .getResultList();
     }
 
+    public long getTotalUserCount() {
+        try {
+            return em.createNamedQuery("ProjectEntity.getTotalUserCount", Long.class)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
+
+    public long getApprovedProjectCount() {
+        return em.createNamedQuery("ProjectEntity.getApprovedProjectCount", Long.class).getSingleResult();
+    }
+
+    public long getFinishedProjectCount() {
+        return em.createNamedQuery("ProjectEntity.getFinishedProjectCount", Long.class).getSingleResult();
+    }
+
+    public long getCanceledProjectCount() {
+        return em.createNamedQuery("ProjectEntity.getCanceledProjectCount", Long.class).getSingleResult();
+    }
+
+    public double getAverageExecutionTime() {
+        return em.createNamedQuery("ProjectEntity.getAverageExecutionTime", Double.class).getSingleResult();
+    }
+
+    public List<ProjectEntity> searchProjects(String searchTerm, String skillString, String interestString) {
+        try {
+            TypedQuery<ProjectEntity> query = em.createNamedQuery("ProjectEntity.searchProjects", ProjectEntity.class)
+                    .setParameter("searchTerm", searchTerm)
+                    .setParameter("skillString", skillString)
+                    .setParameter("interestString", interestString);
+
+            return query.getResultList();
+        } catch (NoResultException | NonUniqueResultException e) {
+            return Collections.emptyList(); // Return an empty list if no results found
+        }
+    }
 }

@@ -56,20 +56,35 @@ public class ProjectService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProjects(@HeaderParam("Authorization") String authorizationHeader,
-                                   @QueryParam("page") @DefaultValue("1") int page,
-                                   @QueryParam("limit") @DefaultValue("10") int limit) {
+                                   @QueryParam("page") Integer page,
+                                   @QueryParam("limit") Integer limit,
+                                   @QueryParam("searchTerm") String searchTerm,
+                                   @QueryParam("skills") String skills,
+                                   @QueryParam("interests") String interests) {
         try {
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                String token = authorizationHeader.substring("Bearer".length()).trim();
-                Response validationResponse = authBean.validateUserToken(token);
-                if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-                    return validationResponse;
-                }
-            }
+            Set<ProjectDto> projectDtos;
+            long totalProjects;
+            int totalPages;
 
-            Set<ProjectDto> projectDtos = projectBean.getAllProjects(page, limit);
-            long totalProjects = projectBean.getTotalProjectCount();
-            int totalPages = (int) Math.ceil((double) totalProjects / limit);
+            if ((page == null || limit == null) && (searchTerm == null && skills == null && interests == null)) {
+                // No pagination or search parameters provided, return all projects
+                projectDtos = projectBean.getAllProjectsNoQueries();
+                totalPages = 1; // Since we're returning all projects in a single response
+            } else if (searchTerm != null || skills != null || interests != null) {
+                // Search parameters provided, return filtered projects
+                projectDtos = projectBean.searchProjects(searchTerm, skills, interests);
+                for (ProjectDto project : projectDtos) {
+                    System.out.println(project.getTitle());  // Assuming getTitle() method exists in ProjectEntity
+                }
+
+                totalProjects = projectDtos.size(); // Total projects based on search criteria
+                totalPages = (int) Math.ceil((double) totalProjects / (limit != null ? limit : totalProjects));
+            } else {
+                // Pagination parameters provided, return paginated projects
+                projectDtos = projectBean.getAllProjects(page, limit);
+                totalProjects = projectBean.getTotalProjectCount();
+                totalPages = (int) Math.ceil((double) totalProjects / limit);
+            }
 
             // Include total number of pages in the response
             Map<String, Object> responseMap = new HashMap<>();

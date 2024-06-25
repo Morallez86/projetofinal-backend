@@ -4,6 +4,7 @@ import aor.paj.projetofinalbackend.entity.SkillEntity;
 import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +33,16 @@ public class WorkplaceDao extends AbstractDao<WorkplaceEntity> {
             return em.createNamedQuery("Workplace.findAllWorkplaces", WorkplaceEntity.class)
                     .getResultList();
         } catch (Exception e){
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Object[]> getProjectCountPerWorkplace() {
+        try {
+            return em.createNamedQuery("Workplace.findProjectCountPerWorkplace", Object[].class)
+                    .getResultList();
+        } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
         }

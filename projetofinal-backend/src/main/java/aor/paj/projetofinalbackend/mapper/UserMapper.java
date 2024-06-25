@@ -36,7 +36,6 @@ public class UserMapper {
         user.setLastName(dto.getLastName());
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
-        user.setRole(Role.fromValue(dto.getRole()));
         user.setActive(dto.getActive());
         user.setPending(dto.getPending());
         user.setEmailToken(dto.getEmailToken());

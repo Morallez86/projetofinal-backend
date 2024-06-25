@@ -132,7 +132,9 @@ public class UserService {
             userBean.registerUser(userDto);
             return Response.status(Response.Status.CREATED).entity("User registered successfully").build();
         } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("User registration failed: " + e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An unexpected error occurred").build();
         }
     }
 

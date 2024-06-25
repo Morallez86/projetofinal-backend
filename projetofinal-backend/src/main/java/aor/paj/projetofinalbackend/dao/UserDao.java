@@ -117,7 +117,13 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
-
-
-
+    public List<UserEntity> findAllUsersWithNonNullPasswordStamps(LocalDateTime cutoffTime) {
+        try {
+            return em.createNamedQuery("User.findAllUsersWithNonNullPasswordStamps", UserEntity.class)
+                    .setParameter("cutoffTime", cutoffTime)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return Collections.emptyList(); // Return an empty list if no results
+        }
+    }
 }
