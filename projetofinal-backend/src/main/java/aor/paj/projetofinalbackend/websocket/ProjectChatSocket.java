@@ -47,7 +47,7 @@ public class ProjectChatSocket {
 
         for (UserProjectEntity userProject : project.getUserProjects()) {
             UserEntity user = userProject.getUser();
-            if (user != null && !user.getId().equals(userSender.getId())) {
+            if (user != null) {
                 usersFromProject.add(user);
                 System.out.println("user " + user.getUsername());
             }
@@ -56,7 +56,7 @@ public class ProjectChatSocket {
         for (UserEntity user : usersFromProject) {
             List<TokenEntity> tokens = tokenDao.findTokensByUserId(user.getId());
             for (TokenEntity token : tokens) {
-                if (token != null && token.isActiveToken()) {
+                if (token != null) {
                     Map<String, Session> sessions = projectSessions.get(messageDto.getProjectId());
                     if (sessions != null) {
                         Session userSession = sessions.get(token.getTokenValue());
