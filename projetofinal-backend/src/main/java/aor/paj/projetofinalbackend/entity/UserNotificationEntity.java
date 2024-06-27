@@ -70,8 +70,8 @@ public class UserNotificationEntity implements Serializable {
     public String toString() {
         return "UserNotificationEntity{" +
                 "id=" + id +
-                ", user=" + user.getId() + // Assuming UserEntity has getId() method
-                ", notification=" + notification.getId() + // Assuming NotificationEntity has getId() method
+                ", user=" + user.getId() +
+                ", notification=" + notification.getId() +
                 ", seen=" + seen +
                 '}';
     }

@@ -392,24 +392,23 @@ public class ProjectBean {
     }
 
     @Transactional
-    public Set<ProjectDto> searchProjects(String searchTerm, String skillString, String interestString) {
-        List<ProjectEntity> projects = projectDao.searchProjects(searchTerm, skillString, interestString);
+    public Set<ProjectDto> searchProjects(String searchTerm, String skillString, String interestString, ProjectStatus status) {
+        List<ProjectEntity> projects = projectDao.searchProjects(searchTerm, skillString, interestString, status);
         System.out.println("Project names:");
         for (ProjectEntity project : projects) {
-            System.out.println(project.getTitle());  // Assuming getTitle() method exists in ProjectEntity
+            System.out.println(project.getTitle());
         }
 
         projects.sort(Comparator.comparing(ProjectEntity::getCreationDate).reversed());
 
         System.out.println("Project names after sort:");
         for (ProjectEntity project : projects) {
-            System.out.println(project.getTitle());  // Assuming getTitle() method exists in ProjectEntity
+            System.out.println(project.getTitle());
         }
 
         return projects.stream()
                 .map(ProjectMapper::toDto)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
-
 }
 

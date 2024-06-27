@@ -1,6 +1,7 @@
 package aor.paj.projetofinalbackend.dao;
 
 import aor.paj.projetofinalbackend.entity.*;
+import aor.paj.projetofinalbackend.utils.ProjectStatus;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.NonUniqueResultException;
@@ -89,12 +90,13 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         return em.createNamedQuery("ProjectEntity.getAverageExecutionTime", Double.class).getSingleResult();
     }
 
-    public List<ProjectEntity> searchProjects(String searchTerm, String skillString, String interestString) {
+    public List<ProjectEntity> searchProjects(String searchTerm, String skillString, String interestString, ProjectStatus status) {
         try {
             TypedQuery<ProjectEntity> query = em.createNamedQuery("ProjectEntity.searchProjects", ProjectEntity.class)
                     .setParameter("searchTerm", searchTerm)
                     .setParameter("skillString", skillString)
-                    .setParameter("interestString", interestString);
+                    .setParameter("interestString", interestString)
+                    .setParameter("status", status);
 
             return query.getResultList();
         } catch (NoResultException | NonUniqueResultException e) {
