@@ -42,7 +42,7 @@ public class UserBean {
     TokenDao tokenDao;
 
     @EJB
-    UserProjectDao userProjectDao; // Inject UserProjectDao
+    UserProjectDao userProjectDao;
 
     @Inject
     EmailSender emailSender;
@@ -90,9 +90,6 @@ public class UserBean {
         Hibernate.initialize(user.getUserProjects());
         // Criar o HashMap para armazenar os timestamps mais recentes dos projetos
         Map<Long, LocalDateTime> projectTimestamps = new HashMap<>();
-
-
-
 
         for (UserProjectEntity userProject : user.getUserProjects()) {
 

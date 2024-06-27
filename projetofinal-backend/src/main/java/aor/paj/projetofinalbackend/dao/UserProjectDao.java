@@ -7,6 +7,7 @@ import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
 
+import java.util.Collections;
 import java.util.List;
 
 @Stateless
@@ -54,11 +55,15 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity> {
                 .setParameter("userId", userId)
                 .getResultList();
     }
+
+    public List<UserEntity> findAdminsByProjectId(Long projectId) {
+        try {
+            return em.createNamedQuery("UserProjectEntity.findAdminsByProjectId", UserEntity.class)
+                    .setParameter("projectId", projectId)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return Collections.emptyList();
+        }
+    }
 }
-
-
-
-
-
-
 

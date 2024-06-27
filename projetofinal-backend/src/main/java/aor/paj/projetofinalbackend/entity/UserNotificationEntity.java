@@ -23,12 +23,11 @@ public class UserNotificationEntity implements Serializable {
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("notificationId")
     @JoinColumn(name = "notification_id")
     private NotificationEntity notification;
 
     @Column(name = "seen", nullable = false)
-    private boolean seen;
+    private Boolean seen;
 
     public UserNotificationEntity() {
     }
@@ -59,11 +58,21 @@ public class UserNotificationEntity implements Serializable {
         this.notification = notification;
     }
 
-    public boolean isSeen() {
+    public Boolean isSeen() {
         return seen;
     }
 
-    public void setSeen(boolean seen) {
+    public void setSeen(Boolean seen) {
         this.seen = seen;
+    }
+
+    @Override
+    public String toString() {
+        return "UserNotificationEntity{" +
+                "id=" + id +
+                ", user=" + user.getId() + // Assuming UserEntity has getId() method
+                ", notification=" + notification.getId() + // Assuming NotificationEntity has getId() method
+                ", seen=" + seen +
+                '}';
     }
 }

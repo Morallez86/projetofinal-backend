@@ -24,6 +24,9 @@ public class TokenBean {
     public TokenEntity findTokenByValue(String tokenValue) {
         return tokenDao.findTokenByValue(tokenValue);
     }
+
+    public UserEntity findUserByToken(String tokenValue) {return tokenDao.findUserByTokenValue(tokenValue);}
+
     public boolean isTokenActive(String token) {
         try {
             TokenEntity tokenEntity = findTokenByValue(token);

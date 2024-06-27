@@ -119,7 +119,15 @@ public class MessageBean {
         }
     }
 
-    public void updateSeenStatus(List<Long> messageIds, boolean seen) {
+    //Updates the seen status on messages and returns a signal in websocket that will render the counter on the frontend
+    public void updateSeenStatus(List<Long> messageIds, boolean seen, UserEntity sender) {
+
         messageDao.updateSeenStatus(messageIds, seen);
+
+        List<TokenEntity> activeTokens = sender.getTokens().stream()
+                .filter(TokenEntity::isActiveToken)
+                .collect(Collectors.toList());
+
+        activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "refresh"));
     }
 }

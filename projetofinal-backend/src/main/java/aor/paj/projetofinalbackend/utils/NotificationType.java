@@ -13,4 +13,13 @@ public enum NotificationType {
     public int getValue() {
         return value;
     }
+
+    public static NotificationType fromValue(int value) {
+        for (NotificationType type : NotificationType.values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Invalid TaskStatus value: " + value);
+    }
 }

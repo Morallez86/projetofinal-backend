@@ -44,6 +44,9 @@ public class NotificationEntity implements Serializable {
     @Column(name = "description", nullable = false, updatable = false)
     private String description;
 
+    @Column(name = "approval")
+    private Boolean approval;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private NotificationType type;
@@ -116,5 +119,13 @@ public class NotificationEntity implements Serializable {
 
     public void setUserNotifications(Set<UserNotificationEntity> userNotifications) {
         this.userNotifications = userNotifications;
+    }
+
+    public Boolean isApproval() {
+        return approval;
+    }
+
+    public void setApproval(Boolean approval) {
+        this.approval = approval;
     }
 }
