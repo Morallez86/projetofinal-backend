@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @ApplicationScoped
 @ServerEndpoint("/websocket/projectChat/{projectId}/{token}")
@@ -37,7 +38,7 @@ public class ProjectChatSocket {
     @Inject
     private UserDao userDao;
 
-    private static final Map<Long, Map<String, Session>> projectSessions = new HashMap<>();
+    private static final Map<Long, Map<String, Session>> projectSessions = new ConcurrentHashMap<>();
 
     public void send(ChatMessageDto messageDto, String message) {
         ProjectEntity project = projectDao.findProjectById(messageDto.getProjectId());
@@ -106,9 +107,4 @@ public class ProjectChatSocket {
         send(chatMessageDto, message);
     }
 
-    @OnError
-    public void onError(Session session, Throwable throwable) {
-        System.err.println("Error in WebSocket session: " + throwable.getMessage());
-        throwable.printStackTrace();
-    }
 }
