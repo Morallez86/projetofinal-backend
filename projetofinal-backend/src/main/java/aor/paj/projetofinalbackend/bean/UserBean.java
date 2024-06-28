@@ -319,6 +319,15 @@ public class UserBean {
             }
         }
     }
+
+    public void updateUserRole(Long userId, UserDto userDto) {
+        UserEntity user = userDao.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        user.setRole(Role.fromValue(userDto.getRole()));
+        userDao.merge(user);
+    }
 }
 
 

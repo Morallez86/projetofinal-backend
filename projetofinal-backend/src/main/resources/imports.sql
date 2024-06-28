@@ -1,10 +1,10 @@
-INSERT INTO user (first_name, last_name, username, password, email, role, active, pending, visibility,online)
-VALUES ('John', 'Doe', 'johndoe', 'password123', 'johndoe@example.com', 'ADMIN', true, false, true,false),
-       ('Alice', 'Smith', 'alicesmith', 'password123', 'alicesmith@example.com', 'USER', true, false, true,false),
-       ('Bob', 'Brown', 'bobbrown', 'password123', 'bobbrown@example.com', 'USER', true, false, true,false),
-       ('Charlie', 'Davis', 'charliedavis', 'password123', 'charliedavis@example.com', 'USER', true, false, true,false),
-       ('Dana', 'Evans', 'danaevans', 'password123', 'danaevans@example.com', 'USER', true, false, true,false),
-       ('Evan', 'Garcia', 'evangarcia', 'password123', 'evangarcia@example.com', 'USER', true, false, true,false);
+INSERT INTO user (first_name, last_name, username, password, email, role, active, pending, visibility,online, biography, workplace_id)
+VALUES ('John', 'Doe', 'johndoe', 'password123', 'johndoe@example.com', 'ADMIN', true, false, true,false, 'My purpose is to be tested',1),
+       ('Alice', 'Smith', 'alicesmith', 'password123', 'alicesmith@example.com', 'USER', true, false, true,false, 'My purpose is to be tested',2),
+       ('Bob', 'Brown', 'bobbrown', 'password123', 'bobbrown@example.com', 'USER', true, false, true,false, 'My purpose is to exist in database',3),
+       ('Charlie', 'Davis', 'charliedavis', 'password123', 'charliedavis@example.com', 'USER', true, false, true,false, 'My purpose is to exist in database',4),
+       ('Dana', 'Evans', 'danaevans', 'password123', 'danaevans@example.com', 'USER', true, false, true,false, 'My purpose is to exist in database',5),
+       ('Evan', 'Garcia', 'evangarcia', 'password123', 'evangarcia@example.com', 'USER', true, false, true,false, 'My purpose is to exist in database',6);
 
 INSERT INTO skill (name, type, creator_id)
 VALUES ('Java', 'SOFTWARE', 1);
@@ -44,6 +44,30 @@ INSERT INTO user_skill (user_id, skill_id)
 VALUES (1, 5);
 INSERT INTO user_skill (user_id, skill_id)
 VALUES (1, 6);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (2, 1);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (2, 3);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (2, 5);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (2, 6);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (3, 2);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (3, 4);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (4, 1);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (4, 3);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (5, 2);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (5, 4);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (6, 5);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (6, 6);
 
 INSERT INTO resource (expiration_date, brand, contact, description, identifier, name, supplier)
 VALUES ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier35', 'name2', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier376', 'name10', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier3767', 'name3', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier3764', 'name4', 'supplier2');
