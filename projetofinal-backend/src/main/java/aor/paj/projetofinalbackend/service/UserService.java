@@ -439,4 +439,42 @@ public class UserService {
         return Response.ok(users).build();
     }
 
+    @PUT
+    @Path("/role/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateUserRole(@HeaderParam("Authorization") String authorizationHeader, @PathParam("userId") Long userId, UserDto userDto) {
+        // Extract the token
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+
+        // Validate the token
+        Response validationResponse = authBean.validateUserToken(token);
+        if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+            return validationResponse;
+        }
+
+        // Extract user ID from the token to ensure that only authorized users can change roles
+        Long tokenUserId;
+        try {
+            tokenUserId = JwtUtil.extractUserIdFromToken(token);
+        } catch (Exception e) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token").build();
+        }
+
+        // Check if the current user is an admin
+        UserEntity currentUser = userBean.findUserById(tokenUserId);
+        if (currentUser == null || currentUser.getRole().getValue() != 200) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Only admins can update roles").build();
+        }
+
+        // Update the role
+        try {
+            userBean.updateUserRole(userId, userDto);
+            return Response.ok().entity("User role updated successfully").build();
+        } catch (RuntimeException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+
+
 }

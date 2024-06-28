@@ -28,7 +28,8 @@ import java.util.*;
         @NamedQuery(
                 name = "User.findAllUsersWithNonNullPasswordStamps",
                 query = "SELECT u FROM UserEntity u WHERE u.passwordRetrieveTime IS NOT NULL AND u.passwordRetrieveTime <= :cutoffTime"
-        )
+        ),
+        @NamedQuery(name = "User.findAdmins", query = "SELECT u FROM UserEntity u WHERE u.role = :role")
 })
 public class UserEntity implements Serializable {
 

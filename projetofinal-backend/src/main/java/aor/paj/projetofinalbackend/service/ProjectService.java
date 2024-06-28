@@ -7,6 +7,7 @@ import aor.paj.projetofinalbackend.bean.ProjectHistoryBean;
 import aor.paj.projetofinalbackend.dao.TaskDao;
 import aor.paj.projetofinalbackend.dto.*;
 import aor.paj.projetofinalbackend.entity.ProjectEntity;
+import aor.paj.projetofinalbackend.utils.ProjectStatus;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -60,21 +61,37 @@ public class ProjectService {
                                    @QueryParam("limit") Integer limit,
                                    @QueryParam("searchTerm") String searchTerm,
                                    @QueryParam("skills") String skills,
-                                   @QueryParam("interests") String interests) {
+                                   @QueryParam("interests") String interests,
+                                   @QueryParam("status") String status
+                                   ) {
         try {
             Set<ProjectDto> projectDtos;
             long totalProjects;
             int totalPages;
+            System.out.println(status);
+
+            ProjectStatus projectStatus = null;
+            if (status != null) {
+                try {
+                    projectStatus = ProjectStatus.fromValue(Integer.parseInt(status));
+                } catch (IllegalArgumentException e) {
+                    return Response.status(Response.Status.BAD_REQUEST).entity("Invalid status value").build();
+                }
+            }
 
             if ((page == null || limit == null) && (searchTerm == null && skills == null && interests == null)) {
                 // No pagination or search parameters provided, return all projects
                 projectDtos = projectBean.getAllProjectsNoQueries();
                 totalPages = 1; // Since we're returning all projects in a single response
-            } else if (searchTerm != null || skills != null || interests != null) {
+            } else if (searchTerm != null || skills != null || interests != null || status !=null ) {
                 // Search parameters provided, return filtered projects
-                projectDtos = projectBean.searchProjects(searchTerm, skills, interests);
+                projectDtos = projectBean.searchProjects(searchTerm, skills, interests, projectStatus);
+                System.out.println(searchTerm);
+                System.out.println(skills);
+                System.out.println(interests);
+                System.out.println(status);
                 for (ProjectDto project : projectDtos) {
-                    System.out.println(project.getTitle());  // Assuming getTitle() method exists in ProjectEntity
+                    System.out.println(project.getTitle());
                 }
 
                 totalProjects = projectDtos.size(); // Total projects based on search criteria

@@ -32,6 +32,8 @@ public class NotificationDto {
 
     private String projectTitle;
 
+    private boolean approval;
+
     // Getters and setters
 
     @XmlElement
@@ -122,5 +124,14 @@ public class NotificationDto {
 
     public void setProjectTitle(String projectTitle) {
         this.projectTitle = projectTitle;
+    }
+
+    @XmlElement
+    public boolean isApproval() {
+        return approval;
+    }
+
+    public void setApproval(boolean approval) {
+        this.approval = approval;
     }
 }

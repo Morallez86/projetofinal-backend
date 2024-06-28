@@ -29,10 +29,10 @@ import java.util.*;
         @NamedQuery(name = "ProjectEntity.searchProjects",
                 query = "SELECT p FROM ProjectEntity p " +
                         "WHERE (:searchTerm IS NULL OR " +
-                        "       LOWER(p.title) LIKE CONCAT('%', LOWER(:searchTerm), '%') OR " +
-                        "       LOWER(p.description) LIKE CONCAT('%', LOWER(:searchTerm), '%')) " +
+                        "       LOWER(p.title) LIKE CONCAT('%', LOWER(:searchTerm), '%')) " +
                         "  AND (:skillString IS NULL OR EXISTS (SELECT s FROM p.skills s WHERE LOWER(s.name) LIKE CONCAT('%', LOWER(:skillString), '%'))) " +
                         "  AND (:interestString IS NULL OR EXISTS (SELECT i FROM p.interests i WHERE LOWER(i.name) LIKE CONCAT('%', LOWER(:interestString), '%'))) " +
+                        "  AND (:status IS NULL OR p.status = :status) " +
                         "ORDER BY p.creationDate DESC")
 })
 

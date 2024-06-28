@@ -25,6 +25,7 @@ public class ProfileMapper {
         dto.setEmail(user.getEmail());
         dto.setBiography(user.getBiography());
         dto.setVisibility(user.getVisibility());
+        dto.setRole(user.getRole().getValue());
 
         List<InterestDto> interests = user.getInterests().stream()
                 .map(ProfileMapper::interestToDto)

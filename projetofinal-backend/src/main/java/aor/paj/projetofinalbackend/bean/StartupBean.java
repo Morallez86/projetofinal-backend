@@ -49,6 +49,7 @@ public class StartupBean {
                 admin.setRegistTime(LocalDateTime.now());
                 admin.setVisibility(true);
                 admin.setActiveProject(false);
+                admin.setBiography("The GOAT");
 
                 userdao.persist(admin);
                 logger.info("Default admin user created.");

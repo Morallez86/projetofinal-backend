@@ -1,6 +1,7 @@
 package aor.paj.projetofinalbackend.dao;
 
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.utils.Role;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -124,6 +125,16 @@ public class UserDao extends AbstractDao<UserEntity> {
                     .getResultList();
         } catch (NoResultException e) {
             return Collections.emptyList(); // Return an empty list if no results
+        }
+    }
+
+    public List<UserEntity> findAdmins() {
+        try {
+            return em.createNamedQuery("User.findAdmins", UserEntity.class)
+                    .setParameter("role", Role.ADMIN)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return Collections.emptyList();
         }
     }
 }

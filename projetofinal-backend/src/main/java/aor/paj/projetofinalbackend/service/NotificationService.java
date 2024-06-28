@@ -1,13 +1,11 @@
 package aor.paj.projetofinalbackend.service;
 
 import aor.paj.projetofinalbackend.bean.NotificationBean;
-import aor.paj.projetofinalbackend.dao.TokenDao;
+import aor.paj.projetofinalbackend.bean.TokenBean;
+import aor.paj.projetofinalbackend.bean.UserProjectBean;
 import aor.paj.projetofinalbackend.dto.NotificationDto;
 import aor.paj.projetofinalbackend.dto.UpdateSeenStatusDto;
-import aor.paj.projetofinalbackend.entity.NotificationEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
-import aor.paj.projetofinalbackend.mapper.NotificationMapper;
-import aor.paj.projetofinalbackend.utils.NotificationType;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -17,6 +15,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Path("/notifications")
 public class NotificationService {
@@ -25,7 +24,10 @@ public class NotificationService {
     NotificationBean notificationBean;
 
     @Inject
-    TokenDao tokenDao;
+    UserProjectBean userProjectBean;
+
+    @Inject
+    TokenBean tokenBean;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -38,7 +40,7 @@ public class NotificationService {
 
         try {
             String token = authorizationHeader.substring("Bearer".length()).trim();
-            UserEntity user = tokenDao.findUserByTokenValue(token);
+            UserEntity user = tokenBean.findUserByToken(token);
 
             if (user != null) {
                 List<NotificationDto> notifications;
@@ -77,15 +79,17 @@ public class NotificationService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addNotification(NotificationDto notificationDto, @HeaderParam("Authorization") String authorizationHeader) {
+    public Response addNotification(@HeaderParam("Authorization") String authorizationHeader, NotificationDto notificationDto) {
         try {
             String token = authorizationHeader.substring("Bearer".length()).trim();
-            UserEntity sender = tokenDao.findUserByTokenValue(token);
-
+            UserEntity sender = tokenBean.findUserByToken(token);
             if (sender != null) {
-                notificationDto.setSenderId(sender.getId());
-                NotificationEntity newNotification = notificationBean.addNotification(notificationDto);
-                return Response.status(Response.Status.CREATED).entity(NotificationMapper.entityToDto(newNotification)).build();
+                if(Objects.equals(notificationDto.getType(), "300")){
+                    notificationBean.sendRequestInvitationProject(sender, notificationDto);
+                    return Response.status(Response.Status.OK).build();
+                } else {
+                    return Response.status(Response.Status.BAD_REQUEST).entity("Invalid notification type").build();
+                }
             } else {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("User not authorized").build();
             }
@@ -103,10 +107,10 @@ public class NotificationService {
     public Response updateSeenStatus(UpdateSeenStatusDto updateSeenStatusDto, @HeaderParam("Authorization") String authorizationHeader) {
         try {
             String token = authorizationHeader.substring("Bearer".length()).trim();
-            UserEntity user = tokenDao.findUserByTokenValue(token);
+            UserEntity user = tokenBean.findUserByToken(token);
 
             if (user != null) {
-                notificationBean.updateSeenStatus(user.getId(), updateSeenStatusDto.getMessageOrNotificationIds(), updateSeenStatusDto.isSeen());
+                notificationBean.updateSeenStatus(user.getId(), updateSeenStatusDto.getMessageOrNotificationIds(), updateSeenStatusDto.isSeen(), user);
                 return Response.status(Response.Status.OK).build();
             } else {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("User not authorized").build();
@@ -124,7 +128,7 @@ public class NotificationService {
         try {
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
-            UserEntity user = tokenDao.findUserByTokenValue(token);
+            UserEntity user = tokenBean.findUserByToken(token);
 
             // Get the count of unread notifications for the user
             int unreadCount = notificationBean.getTotalNotificationsByUserIdAndTypeAndSeen(user.getId(), null, false);
@@ -139,4 +143,38 @@ public class NotificationService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error fetching unread notifications count").build();
         }
     }
+
+    @PUT
+    @Path("/approval")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response approveOrRejectNotification(
+            @HeaderParam("Authorization") String authorizationHeader, NotificationDto notificationDto) {
+        try {
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenBean.findUserByToken(token);
+
+            if (user == null) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity("User not authorized").build();
+            }
+
+            // Verify if the user is already in the project
+            if (userProjectBean.isUserInProject(notificationDto.getReceiverId(), notificationDto.getProjectId())) {
+                return Response.status(Response.Status.CONFLICT).entity("User is already a member of the project").build();
+            }
+
+            // Verify if the project has an available slot
+            if (userProjectBean.isProjectAtMaxUsers(notificationDto.getProjectId())) {
+                return Response.status(Response.Status.CONFLICT).entity("Project has reached maximum capacity").build();
+            }
+
+            notificationBean.approveOrRejectNotification(notificationDto, user);
+            return Response.status(Response.Status.OK).build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
 }

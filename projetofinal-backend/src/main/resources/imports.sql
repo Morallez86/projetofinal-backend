@@ -1,10 +1,10 @@
-INSERT INTO user (first_name, last_name, username, password, email, role, active, pending, visibility,online)
-VALUES ('John', 'Doe', 'johndoe', 'password123', 'johndoe@example.com', 'ADMIN', true, false, true,false),
-       ('Alice', 'Smith', 'alicesmith', 'password123', 'alicesmith@example.com', 'USER', true, false, true,false),
-       ('Bob', 'Brown', 'bobbrown', 'password123', 'bobbrown@example.com', 'USER', true, false, true,false),
-       ('Charlie', 'Davis', 'charliedavis', 'password123', 'charliedavis@example.com', 'USER', true, false, true,false),
-       ('Dana', 'Evans', 'danaevans', 'password123', 'danaevans@example.com', 'USER', true, false, true,false),
-       ('Evan', 'Garcia', 'evangarcia', 'password123', 'evangarcia@example.com', 'USER', true, false, true,false);
+INSERT INTO user (first_name, last_name, username, password, email, role, active, pending, visibility,online, biography, workplace_id)
+VALUES ('John', 'Doe', 'johndoe', 'password123', 'johndoe@example.com', 'ADMIN', true, false, true,false, 'My purpose is to be tested',1),
+       ('Alice', 'Smith', 'alicesmith', 'password123', 'alicesmith@example.com', 'USER', true, false, true,false, 'My purpose is to be tested',2),
+       ('Bob', 'Brown', 'bobbrown', 'password123', 'bobbrown@example.com', 'USER', true, false, true,false, 'My purpose is to exist in database',3),
+       ('Charlie', 'Davis', 'charliedavis', 'password123', 'charliedavis@example.com', 'USER', true, false, true,false, 'My purpose is to exist in database',4),
+       ('Dana', 'Evans', 'danaevans', 'password123', 'danaevans@example.com', 'USER', true, false, true,false, 'My purpose is to exist in database',5),
+       ('Evan', 'Garcia', 'evangarcia', 'password123', 'evangarcia@example.com', 'USER', true, false, true,false, 'My purpose is to exist in database',6);
 
 INSERT INTO skill (name, type, creator_id)
 VALUES ('Java', 'SOFTWARE', 1);
@@ -44,6 +44,30 @@ INSERT INTO user_skill (user_id, skill_id)
 VALUES (1, 5);
 INSERT INTO user_skill (user_id, skill_id)
 VALUES (1, 6);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (2, 1);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (2, 3);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (2, 5);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (2, 6);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (3, 2);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (3, 4);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (4, 1);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (4, 3);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (5, 2);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (5, 4);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (6, 5);
+INSERT INTO user_skill (user_id, skill_id)
+VALUES (6, 6);
 
 INSERT INTO resource (expiration_date, brand, contact, description, identifier, name, supplier)
 VALUES ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier35', 'name2', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier376', 'name10', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier3767', 'name3', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier3764', 'name4', 'supplier2');
@@ -120,15 +144,22 @@ VALUES (2, 1),
        INSERT INTO task_dependencies (dependency_id, task_id) VALUES (1,2), (3,4);
 
 INSERT INTO component(project_id, workplace_id, brand, contact, description, identifier, name, observation, supplier)
-VALUES (2, 2, 'brand4', '888-888', 'description3', 'identifier3', 'component3', 'observation3', 'supplier3'),
-       (3, 3, 'brand5', '777-777', 'description4', 'identifier4', 'component4', 'observation4', 'supplier4'),
-       (4, 4, 'brand6', '666-666', 'description5', 'identifier5', 'component5', 'observation5', 'supplier5'),
-       (5, 5, 'brand7', '555-555', 'description6', 'identifier6', 'component6', 'observation6', 'supplier6'),
-       (6, 6, 'brand8', '444-444', 'description7', 'identifier7', 'component7', 'observation7', 'supplier7'),
-       (1, 1, 'brand9', '333-333', 'description8', 'identifier8', 'component8', 'observation8', 'supplier8'),
-       (2, 2, 'brand1', '222-222', 'description9', 'identifier9', 'component9', 'observation9', 'supplier1'),
-       (3, 3, 'brand2', '111-111', 'description10', 'identifier10', 'component10', 'observation10', 'supplier2'),
-       (4, 4, 'brand3', '000-000', 'description11', 'identifier11', 'component11', 'observation11', 'supplier3');
+VALUES (2, 2, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12345', 'Core i5-8600K', 'OEM packaging', 'TechSupply'),
+       (2, 2, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12346', 'Core i5-8600K', 'OEM packaging', 'TechSupply'),
+       (null, 1, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12347', 'Core i5-8600K', 'OEM packaging', 'TechSupply'),
+       (null, 1, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12348', 'Core i5-8600K', 'OEM packaging', 'TechSupply'),
+       (3, 3, 'Samsung', '800-555-5678', '1TB NVMe SSD', 'ST-67890', '970 EVO Plus', 'Retail packaging', 'MemoryWorld'),
+       (null, 3, 'Samsung', '800-555-5678', '1TB NVMe SSD', 'ST-67891', '970 EVO Plus', 'Retail packaging', 'MemoryWorld'),
+       (null, 3, 'Samsung', '800-555-5678', '1TB NVMe SSD', 'ST-67892', '970 EVO Plus', 'Retail packaging', 'MemoryWorld'),
+       (4, 4, 'Corsair', '800-555-2345', '16GB DDR4 RAM', 'RM-11223', 'Vengeance LPX', 'Heat spreader included', 'RAMSource'),
+       (null, 2, 'Corsair', '800-555-2345', '16GB DDR4 RAM', 'RM-11224', 'Vengeance LPX', 'Heat spreader included', 'RAMSource'),
+       (5, 5, 'Asus', '800-555-3456', 'Gaming Motherboard', 'MB-33445', 'ROG Strix Z390-E', 'Includes Wi-Fi adapter', 'BoardMakers'),
+       (null, 5, 'Asus', '800-555-3456', 'Gaming Motherboard', 'MB-33446', 'ROG Strix Z390-E', 'Includes Wi-Fi adapter', 'BoardMakers'),
+       (6, 6, 'Cooler Master', '800-555-4567', '120mm Case Fan', 'CF-55678', 'MasterFan Pro', 'Silent operation', 'FanSupplyCo'),
+       (1, 1, 'NVIDIA', '800-555-6789', 'Graphics Card', 'GC-66789', 'GeForce RTX 2070', 'Ray tracing enabled', 'GraphixDepot'),
+       (2, 2, 'Seagate', '800-555-7890', '4TB External HDD', 'HD-77890', 'Backup Plus', 'USB 3.0 interface', 'StorageCentral'),
+       (3, 3, 'Logitech', '800-555-8901', 'Wireless Mouse', 'MS-88901', 'MX Master 3', 'Ergonomic design', 'PeripheralStore'),
+       (4, 4, 'Dell', '800-555-9012', '27-inch Monitor', 'MN-99012', 'UltraSharp U2719D', 'QHD resolution', 'ScreenSupplier');
 
 INSERT INTO resource (expiration_date, brand, contact, description, identifier, name, supplier)
 VALUES ('2024-07-15 12:00:00', 'brand1', 'contact1', 'description1', 'identifier36', 'name3', 'supplier3'),

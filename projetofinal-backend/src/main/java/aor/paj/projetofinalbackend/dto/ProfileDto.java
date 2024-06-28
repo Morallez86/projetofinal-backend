@@ -19,6 +19,7 @@ public class ProfileDto {
     private String workplace;
     private List <InterestDto> interests;
     private List <SkillDto> skills;
+    private int role;
 
 
 
@@ -106,6 +107,15 @@ public class ProfileDto {
 
     public void setSkills(List<SkillDto> skills) {
         this.skills = skills;
+    }
+
+    @XmlElement
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 
     @Override
