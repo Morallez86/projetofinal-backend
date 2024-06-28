@@ -17,6 +17,8 @@ public class ResourceDto {
     private String supplier;
     private String description;
 
+    private String observation;
+
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime expirationDate;
@@ -110,5 +112,13 @@ public class ResourceDto {
 
     public void setProjectIds(List<Long> projectIds) {
         this.projectIds = projectIds;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 }

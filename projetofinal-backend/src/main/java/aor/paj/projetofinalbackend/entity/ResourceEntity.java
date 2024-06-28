@@ -49,6 +49,9 @@ public class ResourceEntity implements Serializable {
     @Column(name = "identifier", nullable = false, unique = true)
     private String identifier;
 
+    @Column(name = "observation")
+    private String observation;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "project_resource",
             joinColumns = @JoinColumn(name = "resource_id"),
@@ -129,5 +132,13 @@ public class ResourceEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 }

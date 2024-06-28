@@ -17,8 +17,9 @@ public class TimerBean {
     UserBean userBean;
 
 
-    @Schedule(second="*/60", minute="*", hour="*")
-    public void automaticTimer(){
+    // Runs every minute at the start of the minute
+    @Schedule(second = "0", minute = "*", hour = "*", persistent = false)
+    public void automaticTimer() {
         tokenBean.removeExpiredTokens();
         userBean.removeEmailToken();
     }

@@ -2,8 +2,11 @@ package aor.paj.projetofinalbackend.service;
 
 import aor.paj.projetofinalbackend.bean.ComponentBean;
 import aor.paj.projetofinalbackend.bean.ResourceBean;
+import aor.paj.projetofinalbackend.bean.UserBean;
 import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.dto.ResourceDto;
+import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.security.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -19,6 +22,9 @@ public class ResourceService {
 
     @Inject
     ResourceBean resourceBean;
+
+    @Inject
+    UserBean userBean;
 
     @GET
     @Path(("/toTables"))
@@ -60,6 +66,20 @@ public class ResourceService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateComponent(@HeaderParam("Authorization") String authorizationHeader, ResourceDto resourceDto) {
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+
+        Long tokenUserId;
+        try {
+            tokenUserId = JwtUtil.extractUserIdFromToken(token);
+        } catch (Exception e) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token").build();
+        }
+
+        // Check if the current user is an admin
+        UserEntity currentUser = userBean.findUserById(tokenUserId);
+        if (currentUser == null || currentUser.getRole().getValue() != 200) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Only admins can update roles").build();
+        }
         try {
             resourceBean.updateResource(resourceDto);
             return Response.status(Response.Status.OK).entity("component updated").build();

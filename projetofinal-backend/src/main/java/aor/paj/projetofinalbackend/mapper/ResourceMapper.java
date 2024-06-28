@@ -17,6 +17,7 @@ public class ResourceMapper {
         dto.setExpirationDate(entity.getExpirationDate());
         dto.setIdentifier(entity.getIdentifier());
         dto.setContact(entity.getContact());
+        dto.setObservation(entity.getObservation());
         return dto;
     }
 
@@ -30,6 +31,7 @@ public class ResourceMapper {
         entity.setExpirationDate(dto.getExpirationDate());
         entity.setIdentifier(dto.getIdentifier());
         entity.setContact(dto.getContact());
+        entity.setObservation(dto.getObservation());
         return entity;
     }
 }
