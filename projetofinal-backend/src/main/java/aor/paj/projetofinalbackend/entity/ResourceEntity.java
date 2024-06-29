@@ -17,8 +17,9 @@ import java.util.*;
         @NamedQuery(name = "Resource.findByKeywordOrderedByName",
                 query = "SELECT r FROM ResourceEntity r WHERE r.name LIKE CONCAT('%', :keyword, '%') OR r.brand LIKE CONCAT('%', :keyword, '%') OR r.supplier LIKE CONCAT('%', :keyword, '%') OR r.identifier LIKE CONCAT('%', :keyword, '%') ORDER BY r.name ASC"
         ),
-        @NamedQuery(name = "Resource.countByKeyword", query = "SELECT COUNT(r) FROM ResourceEntity r WHERE r.name LIKE CONCAT('%', :keyword, '%') OR r.brand LIKE CONCAT('%', :keyword, '%') OR r.supplier LIKE CONCAT('%', :keyword, '%') OR r.identifier LIKE CONCAT('%', :keyword, '%')")
-
+        @NamedQuery(name = "Resource.countByKeyword", query = "SELECT COUNT(r) FROM ResourceEntity r WHERE r.name LIKE CONCAT('%', :keyword, '%') OR r.brand LIKE CONCAT('%', :keyword, '%') OR r.supplier LIKE CONCAT('%', :keyword, '%') OR r.identifier LIKE CONCAT('%', :keyword, '%')"),
+        @NamedQuery(name = "ResourceEntity.findResourcesExpiringWithinWeek",
+                query = "SELECT r FROM ResourceEntity r WHERE r.expirationDate BETWEEN :now AND :oneWeekFromNow")
 })
 public class ResourceEntity implements Serializable {
 
@@ -52,7 +53,7 @@ public class ResourceEntity implements Serializable {
     @Column(name = "observation")
     private String observation;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "project_resource",
             joinColumns = @JoinColumn(name = "resource_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id"))

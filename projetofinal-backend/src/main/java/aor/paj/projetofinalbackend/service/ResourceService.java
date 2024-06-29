@@ -62,10 +62,31 @@ public class ResourceService {
         }
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createResource(@HeaderParam("Authorization") String authorizationHeader, ResourceDto resourceDto) {
+        try {
+            if (resourceDto.getProjectIds()== null) {
+                resourceBean.addResourceDefault(resourceDto);
+            } else {
+                resourceBean.addResourceInProject(resourceDto, resourceDto.getProjectIds());
+            }
+            return Response.status(Response.Status.CREATED).entity("component created").build();
+        } catch (ExceptionInInitializerError e) {
+            Throwable cause = e.getCause();
+            cause.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(cause.getMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateComponent(@HeaderParam("Authorization") String authorizationHeader, ResourceDto resourceDto) {
+    public Response updateResource(@HeaderParam("Authorization") String authorizationHeader, ResourceDto resourceDto) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
 
         Long tokenUserId;

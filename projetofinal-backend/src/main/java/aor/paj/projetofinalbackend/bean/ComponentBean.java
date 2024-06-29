@@ -38,7 +38,7 @@ public class ComponentBean {
         componentDao.persist(componentEntity);
     }
 
-@Transactional
+    @Transactional
     public void addComponentInProject( ComponentDto dto, Long projectId) {
         ProjectEntity project = projectDao.findProjectById(projectId);
         ComponentEntity componentEntity = ComponentMapper.toEntity(dto);

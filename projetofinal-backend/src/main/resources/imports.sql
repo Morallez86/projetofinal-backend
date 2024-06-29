@@ -162,15 +162,16 @@ VALUES (2, 2, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12345', 
        (4, 4, 'Dell', '800-555-9012', '27-inch Monitor', 'MN-99012', 'UltraSharp U2719D', 'QHD resolution', 'ScreenSupplier');
 
 INSERT INTO resource (expiration_date, brand, contact, description, identifier, name, supplier)
-VALUES ('2024-07-15 12:00:00', 'brand1', 'contact1', 'description1', 'identifier36', 'name3', 'supplier3'),
-       ('2024-08-20 08:30:00', 'brand2', 'contact3', 'description3', 'identifier37', 'name4', 'supplier1'),
-       ('2024-09-25 14:45:00', 'brand3', 'contact4', 'description4', 'identifier38', 'name5', 'supplier2'),
-       ('2024-10-30 19:00:00', 'brand4', 'contact5', 'description5', 'identifier39', 'name6', 'supplier3'),
-       ('2024-11-05 07:15:00', 'brand5', 'contact6', 'description6', 'identifier40', 'name7', 'supplier1'),
-       ('2024-12-10 10:00:00', 'brand6', 'contact7', 'description7', 'identifier41', 'name8', 'supplier4'),
-       ('2025-01-15 11:30:00', 'brand7', 'contact8', 'description8', 'identifier42', 'name9', 'supplier5'),
-       ('2025-02-20 09:45:00', 'brand8', 'contact9', 'description9', 'identifier43', 'name10', 'supplier6'),
-       ('2025-03-25 16:30:00', 'brand9', 'contact10', 'description10', 'identifier44', 'name11', 'supplier7');
+VALUES ('2025-12-31 23:59:59', 'Microsoft', 'contact@microsoft.com', 'License for Microsoft Office 365', 'ms365-001', 'Microsoft Office 365', 'Microsoft Inc.'),
+       ('2026-06-30 23:59:59', 'JetBrains', 'support@jetbrains.com', 'Subscription for JetBrains All Products Pack', 'jbapp-002', 'JetBrains All Products Pack', 'JetBrains s.r.o.'),
+       ('2025-11-15 23:59:59', 'Atlassian', 'sales@atlassian.com', 'License for Jira Software', 'jira-003', 'Jira Software', 'Atlassian Pty Ltd'),
+       ('2026-09-01 23:59:59', 'Slack', 'help@slack.com', 'Subscription for Slack Workspace', 'slack-004', 'Slack Workspace', 'Slack Technologies'),
+       ('2025-08-20 23:59:59', 'Adobe', 'support@adobe.com', 'License for Adobe Creative Cloud', 'adobe-005', 'Adobe Creative Cloud', 'Adobe Inc.'),
+       ('2026-03-31 23:59:59', 'GitHub', 'contact@github.com', 'GitHub Enterprise License', 'ghub-006', 'GitHub Enterprise', 'GitHub Inc.'),
+       ('2025-12-01 23:59:59', 'Amazon', 'aws-support@amazon.com', 'AWS Cloud Service Subscription', 'aws-007', 'Amazon Web Services', 'Amazon Web Services Inc.'),
+       ('2026-07-15 23:59:59', 'Google', 'cloud-support@google.com', 'Google Cloud Platform Subscription', 'gcp-008', 'Google Cloud Platform', 'Google LLC'),
+       ('2025-10-10 23:59:59', 'Oracle', 'support@oracle.com', 'Oracle Database License', 'oracle-009', 'Oracle Database', 'Oracle Corporation'),
+       ('2026-04-25 23:59:59', 'Salesforce', 'contact@salesforce.com', 'Salesforce CRM License', 'sforce-010', 'Salesforce CRM', 'Salesforce Inc.');
 
 INSERT INTO project_resource (project_id, resource_id)
 VALUES (1,1),

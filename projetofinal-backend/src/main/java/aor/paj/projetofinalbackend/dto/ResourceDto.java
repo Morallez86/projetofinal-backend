@@ -16,24 +16,22 @@ public class ResourceDto {
     private String name;
     private String supplier;
     private String description;
-
     private String observation;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime expirationDate;
     private String identifier;
-
     private String contact;
 
     private List<Long> projectIds;
 
+    private List<String> projectNames;
+
     public ResourceDto() {
     }
 
-
     @XmlElement
-
     public Long getId() {
         return id;
     }
@@ -120,5 +118,13 @@ public class ResourceDto {
 
     public void setObservation(String observation) {
         this.observation = observation;
+    }
+
+    public List<String> getProjectNames() {
+        return projectNames;
+    }
+
+    public void setProjectNames(List<String> projectNames) {
+        this.projectNames = projectNames;
     }
 }
