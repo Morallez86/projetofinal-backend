@@ -114,20 +114,32 @@ public class NotificationBean {
     @Transactional
     public void approveOrRejectNotification(NotificationDto notificationDto, UserEntity sender) {
         NotificationEntity notification = notificationDao.find(notificationDto.getId());
-        System.out.println(notification);
         ProjectEntity project = projectDao.findProjectById(notificationDto.getProjectId());
-        System.out.println(project);
         UserEntity receiver = userDao.findUserById(notificationDto.getReceiverId());
-        System.out.println(notificationDto.getReceiverId());
-        System.out.println(receiver);
         boolean approval = notificationDto.isApproval();
-        System.out.println("4");
 
         if (notification != null && project != null && receiver != null) {
             // Update the existing notification's approval status
             notification.setApproval(approval);
             System.out.println("5");
             notificationDao.merge(notification);
+
+            if (approval) {
+                UserProjectEntity confirmIfUserIsOnProject = userProjectDao.findByUserAndProject(receiver.getId(), project.getId());
+
+                if (confirmIfUserIsOnProject == null) {
+                    // Add a new user to a project
+                    UserProjectEntity userProjectEntity = new UserProjectEntity();
+                    userProjectEntity.setUser(receiver);
+                    userProjectEntity.setIsAdmin(false);
+                    userProjectEntity.setProject(project);
+
+                    // Persist the UserProjectEntity
+                    userProjectDao.persist(userProjectEntity);
+                } else {
+                    throw new IllegalArgumentException("User is already on the project.");
+                }
+            }
 
             // Create a new response notification
             NotificationEntity responseNotification = new NotificationEntity();
@@ -159,6 +171,33 @@ public class NotificationBean {
             activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
         } else {
             throw new IllegalArgumentException("Notification, project, or receiver not found.");
+        }
+    }
+
+    public void sendExpirationNotifications(ResourceEntity resource) {
+        List<UserEntity> projectAdmins = userProjectDao.findAdminsByProjectId(resource.getProjects().stream().findFirst().get().getId());
+
+        NotificationEntity notification = new NotificationEntity();
+        notification.setTimestamp(LocalDateTime.now());
+        notification.setSender(null); // Set the sender as the system or any specific user if needed
+        notification.setType(NotificationType.MESSAGE);
+        notification.setDescription("Resource " + resource.getName() + " is expiring in a week.");
+
+        notificationDao.persist(notification);
+
+        for (UserEntity admin : projectAdmins) {
+            UserNotificationEntity userNotification = new UserNotificationEntity();
+            userNotification.setUser(admin);
+            userNotification.setNotification(notification);
+            userNotification.setSeen(false);
+
+            userNotificationDao.persist(userNotification);
+
+            List<TokenEntity> activeTokens = admin.getTokens().stream()
+                    .filter(TokenEntity::isActiveToken)
+                    .collect(Collectors.toList());
+
+            activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
         }
     }
 }

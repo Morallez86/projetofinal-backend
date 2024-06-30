@@ -8,14 +8,21 @@ import java.util.*;
 @Table(name = "component")
 @NamedQueries({
         @NamedQuery(name = "Component.findComponentById", query = "SELECT c FROM ComponentEntity c WHERE c.id = :id"),
+        @NamedQuery(
+                name = "Component.findFirstAvailableComponentByName",
+                query = "SELECT c FROM ComponentEntity c WHERE c.name = :name AND c.availability = true AND c.workplace.id = :workplaceId ORDER BY c.id"
+        ),
         @NamedQuery(name = "Component.getTotalComponentsCount", query = "SELECT COUNT(c) FROM ComponentEntity c"),
         @NamedQuery(name = "Component.findByWorkplaceId", query = "SELECT c FROM ComponentEntity c WHERE c.workplace.id = :workplaceId"),
         @NamedQuery(name = "Component.findAllOrderedByName", query = "SELECT c FROM ComponentEntity c ORDER BY c.name ASC"),
         @NamedQuery(name = "Component.findByKeywordOrderedByName",
                 query = "SELECT c FROM ComponentEntity c WHERE c.name LIKE CONCAT('%', :keyword, '%') OR c.brand LIKE CONCAT('%', :keyword, '%') OR c.supplier LIKE CONCAT('%', :keyword, '%') OR c.identifier LIKE CONCAT('%', :keyword, '%') ORDER BY c.name ASC"
         ),
-        @NamedQuery(name = "Component.countByKeyword", query = "SELECT COUNT(c) FROM ComponentEntity c WHERE c.name LIKE CONCAT('%', :keyword, '%') OR c.brand LIKE CONCAT('%', :keyword, '%') OR c.supplier LIKE CONCAT('%', :keyword, '%') OR c.identifier LIKE CONCAT('%', :keyword, '%')")
-
+        @NamedQuery(name = "Component.countByKeyword", query = "SELECT COUNT(c) FROM ComponentEntity c WHERE c.name LIKE CONCAT('%', :keyword, '%') OR c.brand LIKE CONCAT('%', :keyword, '%') OR c.supplier LIKE CONCAT('%', :keyword, '%') OR c.identifier LIKE CONCAT('%', :keyword, '%')"),
+        @NamedQuery(
+                name = "Component.findAvailableComponentsGroupedByName",
+                query = "SELECT c.name FROM ComponentEntity c WHERE c.availability = true AND c.workplace.id = :workplaceId GROUP BY c.name"
+        )
 })
 public class ComponentEntity implements Serializable {
 
@@ -53,6 +60,10 @@ public class ComponentEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = true)
     private ProjectEntity project;
+
+    @Column(name = "availability")
+    private Boolean availability = true;
+
 
     public ComponentEntity() {
         // Default constructor
@@ -137,5 +148,28 @@ public class ComponentEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Boolean getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Boolean availability) {
+        this.availability = availability;
+    }
+
+    @Override
+    public String toString() {
+        return "ComponentEntity{" +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", name='" + name + '\'' +
+                ", supplier='" + supplier + '\'' +
+                ", description='" + description + '\'' +
+                ", contact='" + contact + '\'' +
+                ", observation='" + observation + '\'' +
+                ", identifier='" + identifier + '\'' +
+                ", availability=" + availability +
+                '}';
     }
 }

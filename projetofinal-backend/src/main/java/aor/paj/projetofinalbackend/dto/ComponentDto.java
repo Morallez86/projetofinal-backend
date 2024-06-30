@@ -18,6 +18,8 @@ public class ComponentDto {
 
     private Long projectId;
 
+    private Boolean availability;
+
 
     public ComponentDto() {
     }
@@ -60,6 +62,11 @@ public class ComponentDto {
         return projectId;
     }
 
+    @XmlElement
+    public Boolean getAvailability() {
+        return availability;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -94,5 +101,9 @@ public class ComponentDto {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public void setAvailability(Boolean availability) {
+        this.availability = availability;
     }
 }

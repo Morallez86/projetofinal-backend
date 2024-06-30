@@ -2,9 +2,12 @@ package aor.paj.projetofinalbackend.service;
 
 import aor.paj.projetofinalbackend.bean.AuthBean;
 import aor.paj.projetofinalbackend.bean.ComponentBean;
+import aor.paj.projetofinalbackend.bean.UserBean;
 import aor.paj.projetofinalbackend.dao.ComponentDao;
 import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.dto.ProjectDto;
+import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.Role;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -20,6 +23,9 @@ public class ComponentService {
 
     @Inject
     ComponentBean componentBean;
+
+    @Inject
+    UserBean userBean;
 
     @Inject
     AuthBean authBean;
@@ -49,8 +55,20 @@ public class ComponentService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateComponent(@HeaderParam("Authorization") String authorizationHeader, ComponentDto componentDto) {
-        if (!authBean.isUserInRole(Role.ADMIN)) {
-            return Response.status(Response.Status.FORBIDDEN).entity("You are not authorized to perform this action").build();
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+        System.out.println("yo");
+
+        Long tokenUserId;
+        try {
+            tokenUserId = JwtUtil.extractUserIdFromToken(token);
+        } catch (Exception e) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token").build();
+        }
+
+        // Check if the current user is an admin
+        UserEntity currentUser = userBean.findUserById(tokenUserId);
+        if (currentUser == null || currentUser.getRole().getValue() != 200) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Only admins can update roles").build();
         }
         try {
             componentBean.updateComponent(componentDto);
@@ -114,6 +132,22 @@ public class ComponentService {
             Throwable cause = e.getCause();
             cause.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(cause.getMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/availableGroupedByName")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAvailableComponentsGroupedByName(@HeaderParam("Authorization") String authorizationHeader, @QueryParam("workplaceId") Long workplaceId) {
+        try {
+            if (workplaceId == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Workplace ID is required").build();
+            }
+            List<String> componentNames = componentBean.findAvailableComponentsGroupedByName(workplaceId);
+            return Response.status(Response.Status.OK).entity(componentNames).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

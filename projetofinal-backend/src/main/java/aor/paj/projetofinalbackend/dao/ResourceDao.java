@@ -4,8 +4,11 @@ import aor.paj.projetofinalbackend.entity.ComponentEntity;
 import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.ResourceEntity;
 import jakarta.ejb.Stateless;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,9 +23,13 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
     }
 
     public ResourceEntity findById(Long id) {
-        TypedQuery<ResourceEntity> query = em.createNamedQuery("ResourceEntity.findById", ResourceEntity.class);
-        query.setParameter("id", id);
-        return query.getSingleResult();
+        try {
+            TypedQuery<ResourceEntity> query = em.createNamedQuery("ResourceEntity.findById", ResourceEntity.class);
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public Set<ProjectEntity> findProjectsByResourceId(Long resourceId) {
@@ -55,6 +62,18 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         return em.createNamedQuery("Resource.countByKeyword", Long.class)
                 .setParameter("keyword", keyword)
                 .getSingleResult();
+    }
+
+    public List<ResourceEntity> findResourcesExpiringWithinWeek(LocalDateTime now, LocalDateTime oneWeekFromNow) {
+        try{
+            TypedQuery<ResourceEntity> query = em.createNamedQuery("ResourceEntity.findResourcesExpiringWithinWeek", ResourceEntity.class);
+            query.setParameter("now", now);
+            query.setParameter("oneWeekFromNow", oneWeekFromNow);
+
+            return query.getResultList();
+        } catch (NoResultException e) {
+            return Collections.emptyList();
+        }
     }
 }
 

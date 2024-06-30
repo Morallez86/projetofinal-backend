@@ -38,7 +38,7 @@ public class ComponentBean {
         componentDao.persist(componentEntity);
     }
 
-@Transactional
+    @Transactional
     public void addComponentInProject( ComponentDto dto, Long projectId) {
         ProjectEntity project = projectDao.findProjectById(projectId);
         ComponentEntity componentEntity = ComponentMapper.toEntity(dto);
@@ -49,9 +49,13 @@ public class ComponentBean {
     }
 
     public void updateComponent(ComponentDto dto) {
+        System.out.println("1");
         ComponentEntity componentEntity = ComponentMapper.toEntity(dto);
+        System.out.println("2");
         ProjectEntity project = projectDao.findProjectById(dto.getProjectId());
+        System.out.println("3");
         componentEntity.setProject(project);
+        System.out.println("4");
         componentDao.merge(componentEntity);
 }
 
@@ -80,6 +84,10 @@ public class ComponentBean {
     public List<ComponentDto> getAllByWorkplaceId(Long workplaceId) {
         List<ComponentEntity> componentEntities = componentDao.findByWorkplaceId(workplaceId);
         return componentEntities.stream().map(ComponentMapper::toDto).collect(Collectors.toList());
+    }
+
+    public List<String> findAvailableComponentsGroupedByName (Long workplace){
+        return componentDao.findAvailableComponentsGroupedByName(workplace);
     }
 }
 
