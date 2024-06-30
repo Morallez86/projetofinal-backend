@@ -14,6 +14,7 @@ import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import aor.paj.projetofinalbackend.utils.JsonUtils;
+import aor.paj.projetofinalbackend.utils.LoggerUtil;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -99,6 +100,7 @@ public class UserService {
         }
 
         String tokenValue = userBean.createAndSaveToken(user);
+        LoggerUtil.logInfo("LOGIN" , "at " + LocalDateTime.now(), user.getEmail() , tokenValue);
         return Response.ok(new TokenResponse(tokenValue)).build();
     }
 

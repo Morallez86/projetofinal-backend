@@ -40,6 +40,7 @@ public class JwtFilter implements ContainerRequestFilter {
         EXCLUDED_PATHS_AND_METHODS.put("/users/emailRecoveryPassword", anyMethods);
         EXCLUDED_PATHS_AND_METHODS.put("/users/forgotPassword", anyMethods);
         EXCLUDED_PATHS_AND_METHODS.put("/users/confirmRegistration", anyMethods);
+        EXCLUDED_PATHS_AND_METHODS.put("/greetings",anyMethods);
     }
 
     @Override
