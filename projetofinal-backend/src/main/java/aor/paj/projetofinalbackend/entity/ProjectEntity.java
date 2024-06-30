@@ -317,7 +317,30 @@ public class ProjectEntity implements Serializable {
     @Override
     public String toString() {
         return "ProjectEntity{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", motivation='" + motivation + '\'' +
+                ", status=" + status +
+                ", maxUsers=" + maxUsers +
+                ", owner=" + (owner != null ? owner.getId() : null) +
+                ", workplace=" + (workplace != null ? workplace.getId() : null) +
+                ", approved=" + approved +
+                ", creationDate=" + creationDate +
+                ", approvedDate=" + approvedDate +
+                ", startingDate=" + startingDate +
+                ", plannedEndDate=" + plannedEndDate +
+                ", endDate=" + endDate +
+                ", userProjects=" + userProjects.size() +
+                ", components=" + components.size() +
+                ", resources=" + resources.size() +
+                ", tasks=" + tasks.size() +
+                ", skills=" + skills.size() +
+                ", interests=" + interests.size() +
+                ", historyRecords=" + historyRecords.size() +
+                ", chatMessages=" + chatMessages.size() +
+                ", notifications=" + notifications.size() +
                 '}';
     }
+
 }

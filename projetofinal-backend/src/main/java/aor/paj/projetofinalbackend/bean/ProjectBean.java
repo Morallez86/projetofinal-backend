@@ -132,14 +132,18 @@ public class ProjectBean {
                     // Use the existing component from the database
                     existingComponent.setAvailability(false);
                     updatedComponents.add(existingComponent);
+                    componentIterator.remove();
+
                 } else {
                     // Component not found in the database, send notification
-                    sendComponentNotification(user, componentEntity.getName());
+                    sendNewComponentResourceNotification(user, componentEntity.getName());
                     // Remove componentEntity to avoid merge issues
                     componentIterator.remove();
                 }
             }
         }
+
+        System.out.println(updatedComponents);
 
         // Add remaining components to updatedComponents set
         for (ComponentEntity componentEntity : projectEntity.getComponents()) {
@@ -147,25 +151,40 @@ public class ProjectBean {
         }
 
         projectEntity.setComponents(updatedComponents);
+        System.out.println(updatedComponents);
 
         // Handle resources
-        Set<ResourceEntity> existingResourceEntity = new HashSet<>();
+        System.out.println("11111111111111");
+        Set<ResourceEntity> updatedResources = new HashSet<>();
         Iterator<ResourceEntity> resourceIterator = projectEntity.getResources().iterator();
         while (resourceIterator.hasNext()) {
             ResourceEntity resourceEntity = resourceIterator.next();
-            if (resourceEntity.getId() != null) {
-                resourceIterator.remove();
-                existingResourceEntity.add(resourceEntity);
-                ResourceEntity resource = resourceDao.findById(resourceEntity.getId());
-                resourceEntity.setBrand(resource.getBrand());
-                resourceEntity.setName(resource.getName());
-                resourceEntity.setDescription(resource.getDescription());
-                resourceEntity.setContact(resource.getContact());
-                resourceEntity.setIdentifier(resource.getIdentifier());
-                resourceEntity.setSupplier(resource.getSupplier());
-                resourceEntity.setExpirationDate(resource.getExpirationDate());
+            System.out.println(resourceEntity.getName());
+            if (resourceEntity.getName() != null) {
+                ResourceEntity existingResource = resourceDao.findById(resourceEntity.getId());
+                System.out.println(existingResource);
+                if (existingResource != null) {
+                    System.out.println("33333333333333");
+                    // Use the existing resource from the database
+                    updatedResources.add(existingResource);
+                    resourceIterator.remove();
+
+                } else {
+                    System.out.println("222222222222222");
+                    // Resource not found in the database, send notification
+                    sendNewComponentResourceNotification(user, resourceEntity.getName());
+                    // Remove resourceEntity to avoid merge issues
+                    resourceIterator.remove();
+                }
             }
         }
+
+        // Add remaining resources to updatedResources set
+        for (ResourceEntity resourceEntity : projectEntity.getResources()) {
+            updatedResources.add(resourceEntity);
+        }
+
+        projectEntity.setResources(updatedResources);
 
         // Handle workplaces
         Set<WorkplaceEntity> existingWorkplaceEntity = new HashSet<>();
@@ -181,7 +200,7 @@ public class ProjectBean {
             projectEntity.setWorkplace(existingWorkplaceEntity.iterator().next());
         }
 
-        System.out.println(projectEntity.getComponents().size() + "aaaaaaaaaaaaa");
+        System.out.println(projectEntity);
         // Persist the project entity
         projectDao.persist(projectEntity);
         System.out.println("dpvosnvdsvpnavckxzvcl");
@@ -227,7 +246,7 @@ public class ProjectBean {
         projectEntity.setComponents(completeComponentSet);
 
         Set<ResourceEntity> completeResourceSet = projectEntity.getResources();
-        completeResourceSet.addAll(existingResourceEntity);
+        completeResourceSet.addAll(updatedResources);
         projectEntity.setResources(completeResourceSet);
         System.out.println("77777777777777777");
         // Handle tasks
@@ -428,7 +447,7 @@ public class ProjectBean {
     }
 
 
-    private void sendComponentNotification(UserEntity user, String componentName) {
+    private void sendNewComponentResourceNotification(UserEntity user, String componentName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setTimestamp(LocalDateTime.now());
         notification.setSender(user);

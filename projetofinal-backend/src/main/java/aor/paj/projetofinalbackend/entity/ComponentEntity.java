@@ -157,4 +157,19 @@ public class ComponentEntity implements Serializable {
     public void setAvailability(Boolean availability) {
         this.availability = availability;
     }
+
+    @Override
+    public String toString() {
+        return "ComponentEntity{" +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", name='" + name + '\'' +
+                ", supplier='" + supplier + '\'' +
+                ", description='" + description + '\'' +
+                ", contact='" + contact + '\'' +
+                ", observation='" + observation + '\'' +
+                ", identifier='" + identifier + '\'' +
+                ", availability=" + availability +
+                '}';
+    }
 }
