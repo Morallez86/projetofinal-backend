@@ -56,6 +56,7 @@ public class ComponentService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateComponent(@HeaderParam("Authorization") String authorizationHeader, ComponentDto componentDto) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        System.out.println("yo");
 
         Long tokenUserId;
         try {
@@ -131,6 +132,22 @@ public class ComponentService {
             Throwable cause = e.getCause();
             cause.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(cause.getMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/availableGroupedByName")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAvailableComponentsGroupedByName(@HeaderParam("Authorization") String authorizationHeader, @QueryParam("workplaceId") Long workplaceId) {
+        try {
+            if (workplaceId == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Workplace ID is required").build();
+            }
+            List<String> componentNames = componentBean.findAvailableComponentsGroupedByName(workplaceId);
+            return Response.status(Response.Status.OK).entity(componentNames).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

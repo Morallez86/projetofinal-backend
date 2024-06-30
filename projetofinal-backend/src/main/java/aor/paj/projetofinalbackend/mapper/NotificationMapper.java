@@ -19,8 +19,11 @@ public class NotificationMapper {
         dto.setReceiverId(entity.getSender().getId());
         dto.setSenderId(entity.getSender().getId());
         dto.setSenderUsername(entity.getSender().getUsername());
-        dto.setProjectId(entity.getProject().getId());
-        dto.setProjectTitle(entity.getProject().getTitle());
+        if(entity.getProject() != null){
+            dto.setProjectId(entity.getProject().getId());
+            dto.setProjectTitle(entity.getProject().getTitle());
+        }
+        System.out.println("666666666666666666");
         dto.setSeen(entity.getUserNotifications().stream()
                 .filter(un -> un.getNotification().getId().equals(entity.getId()))
                 .findFirst()

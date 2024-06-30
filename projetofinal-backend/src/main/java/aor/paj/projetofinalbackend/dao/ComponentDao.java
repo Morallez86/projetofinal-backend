@@ -58,5 +58,22 @@ public class ComponentDao extends AbstractDao<ComponentEntity> {
                 .setParameter("workplaceId", workplaceId)
                 .getResultList();
     }
+
+    public List<String> findAvailableComponentsGroupedByName(Long workplaceId) {
+        TypedQuery<String> query = em.createNamedQuery("Component.findAvailableComponentsGroupedByName", String.class);
+        query.setParameter("workplaceId", workplaceId);
+        return query.getResultList();
+    }
+
+    public ComponentEntity findFirstAvailableComponentByName(String name, Long workplaceId) {
+        try {
+            TypedQuery<ComponentEntity> query = em.createNamedQuery("Component.findFirstAvailableComponentByName", ComponentEntity.class);
+            query.setParameter("name", name);
+            query.setParameter("workplaceId", workplaceId);
+            return query.getResultList().stream().findFirst().orElse(null);
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }
 

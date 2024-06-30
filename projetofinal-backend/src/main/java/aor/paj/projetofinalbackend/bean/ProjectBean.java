@@ -9,9 +9,11 @@ import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.mapper.TaskMapper;
 import aor.paj.projetofinalbackend.mapper.UserProjectMapper;
+import aor.paj.projetofinalbackend.utils.NotificationType;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
 import aor.paj.projetofinalbackend.utils.TaskPriority;
 import aor.paj.projetofinalbackend.utils.TaskStatus;
+import aor.paj.projetofinalbackend.websocket.ApplicationSocket;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -52,6 +54,12 @@ public class ProjectBean {
 
     @EJB
     private WorkplaceDao workplaceDao;
+
+    @EJB
+    private NotificationDao notificationDao;
+
+    @EJB
+    private UserNotificationDao userNotificationDao;
 
 
 
@@ -114,23 +122,31 @@ public class ProjectBean {
         }
 
         // Handle components
-        Set<ComponentEntity> existingComponentEntity = new HashSet<>();
+        Set<ComponentEntity> updatedComponents = new HashSet<>();
         Iterator<ComponentEntity> componentIterator = projectEntity.getComponents().iterator();
         while (componentIterator.hasNext()) {
             ComponentEntity componentEntity = componentIterator.next();
-            if (componentEntity.getId() != null) {
-                componentIterator.remove();
-                existingComponentEntity.add(componentEntity);
-                ComponentEntity component = componentDao.findComponentById(componentEntity.getId());
-                componentEntity.setBrand(component.getBrand());
-                componentEntity.setName(component.getName());
-                componentEntity.setSupplier(component.getSupplier());
-                componentEntity.setContact(component.getContact());
-                componentEntity.setIdentifier(component.getIdentifier());
-                componentEntity.setDescription(component.getDescription());
-                componentEntity.setObservation(component.getObservation());
+            if (componentEntity.getName() != null) {
+                ComponentEntity existingComponent = componentDao.findFirstAvailableComponentByName(componentEntity.getName(), projectDto.getWorkplace().getId());
+                if (existingComponent != null) {
+                    // Use the existing component from the database
+                    existingComponent.setAvailability(false);
+                    updatedComponents.add(existingComponent);
+                } else {
+                    // Component not found in the database, send notification
+                    sendComponentNotification(user, componentEntity.getName());
+                    // Remove componentEntity to avoid merge issues
+                    componentIterator.remove();
+                }
             }
         }
+
+        // Add remaining components to updatedComponents set
+        for (ComponentEntity componentEntity : projectEntity.getComponents()) {
+            updatedComponents.add(componentEntity);
+        }
+
+        projectEntity.setComponents(updatedComponents);
 
         // Handle resources
         Set<ResourceEntity> existingResourceEntity = new HashSet<>();
@@ -165,10 +181,10 @@ public class ProjectBean {
             projectEntity.setWorkplace(existingWorkplaceEntity.iterator().next());
         }
 
-
+        System.out.println(projectEntity.getComponents().size() + "aaaaaaaaaaaaa");
         // Persist the project entity
         projectDao.persist(projectEntity);
-
+        System.out.println("dpvosnvdsvpnavckxzvcl");
 
         // Associate user projects
         Set<UserProjectEntity> userProjectEntities = new HashSet<>();
@@ -189,14 +205,14 @@ public class ProjectBean {
         ownerProjectEntity.setProject(projectEntity);
         ownerProjectEntity.setIsAdmin(true);
         userProjectEntities.add(ownerProjectEntity);
-
+        System.out.println("555555555555555555");
         // Persist user projects
         for (UserProjectEntity userProjectEntity : userProjectEntities) {
             userProjectDao.merge(userProjectEntity);
         }
 
         projectEntity.setUserProjects(userProjectEntities);
-
+        System.out.println("66666666666666666666666");
         // Finalize project associations
         Set<InterestEntity> completeInterestSet = projectEntity.getInterests();
         completeInterestSet.addAll(existingInterestEntity);
@@ -207,13 +223,13 @@ public class ProjectBean {
         projectEntity.setSkills(completeSkillSet);
 
         Set<ComponentEntity> completeComponentSet = projectEntity.getComponents();
-        completeComponentSet.addAll(existingComponentEntity);
+        completeComponentSet.addAll(updatedComponents);
         projectEntity.setComponents(completeComponentSet);
 
         Set<ResourceEntity> completeResourceSet = projectEntity.getResources();
         completeResourceSet.addAll(existingResourceEntity);
         projectEntity.setResources(completeResourceSet);
-
+        System.out.println("77777777777777777");
         // Handle tasks
         List<TaskEntity> taskEntities = new ArrayList<>();
         TaskEntity uniqueTask = new TaskEntity();
@@ -230,7 +246,7 @@ public class ProjectBean {
 
         // Persist additional entities
         projectDao.merge(projectEntity);
-
+        System.out.println("888888888888888");
         for (ComponentEntity componentEntity : projectEntity.getComponents()) {
             componentEntity.setProject(projectEntity);
             componentDao.merge(componentEntity);
@@ -409,6 +425,31 @@ public class ProjectBean {
         return projects.stream()
                 .map(ProjectMapper::toDto)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+
+    private void sendComponentNotification(UserEntity user, String componentName) {
+        NotificationEntity notification = new NotificationEntity();
+        notification.setTimestamp(LocalDateTime.now());
+        notification.setSender(user);
+        notification.setType(NotificationType.PROJECT);
+        notification.setDescription("Component " + componentName + " is required for your new project.");
+
+        notificationDao.persist(notification);
+
+        UserNotificationEntity userNotification = new UserNotificationEntity();
+        userNotification.setUser(user);
+        System.out.println(user.getUsername());
+        userNotification.setNotification(notification);
+        userNotification.setSeen(false);
+
+        userNotificationDao.persist(userNotification);
+
+        List<TokenEntity> activeTokens = user.getTokens().stream()
+                .filter(TokenEntity::isActiveToken)
+                .collect(Collectors.toList());
+
+        activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
     }
 }
 

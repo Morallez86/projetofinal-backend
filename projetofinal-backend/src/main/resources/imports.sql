@@ -69,13 +69,6 @@ VALUES (6, 5);
 INSERT INTO user_skill (user_id, skill_id)
 VALUES (6, 6);
 
-INSERT INTO resource (expiration_date, brand, contact, description, identifier, name, supplier)
-VALUES ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier35', 'name2', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier376', 'name10', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier3767', 'name3', 'supplier2'), ('2024-06-10 17:00:00', 'brand3', 'contact2', 'description2', 'identifier3764', 'name4', 'supplier2');
-
-
-INSERT INTO component(project_id, workplace_id, brand, contact, description, identifier, name, observation, supplier)
-VALUES (NULL, 1, 'brand3', '999-999', 'description2', 'identifier2', 'component2', 'observation2', 'supplier2');
-
 INSERT INTO project(approved, max_users, status, approved_date, creation_date, end_date, owner_id, planned_end_date,
                     starting_date, description, motivation, title, workplace_id)
 VALUES (true, 5, 'IN_PROGRESS', '2024-06-02T10:00:00', '2024-06-02T10:30:00', '2024-06-10T17:00:00', 1,
@@ -143,23 +136,25 @@ VALUES (2, 1),
 
        INSERT INTO task_dependencies (dependency_id, task_id) VALUES (1,2), (3,4);
 
-INSERT INTO component(project_id, workplace_id, brand, contact, description, identifier, name, observation, supplier)
-VALUES (2, 2, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12345', 'Core i5-8600K', 'OEM packaging', 'TechSupply'),
-       (2, 2, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12346', 'Core i5-8600K', 'OEM packaging', 'TechSupply'),
-       (null, 1, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12347', 'Core i5-8600K', 'OEM packaging', 'TechSupply'),
-       (null, 1, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12348', 'Core i5-8600K', 'OEM packaging', 'TechSupply'),
-       (3, 3, 'Samsung', '800-555-5678', '1TB NVMe SSD', 'ST-67890', '970 EVO Plus', 'Retail packaging', 'MemoryWorld'),
-       (null, 3, 'Samsung', '800-555-5678', '1TB NVMe SSD', 'ST-67891', '970 EVO Plus', 'Retail packaging', 'MemoryWorld'),
-       (null, 3, 'Samsung', '800-555-5678', '1TB NVMe SSD', 'ST-67892', '970 EVO Plus', 'Retail packaging', 'MemoryWorld'),
-       (4, 4, 'Corsair', '800-555-2345', '16GB DDR4 RAM', 'RM-11223', 'Vengeance LPX', 'Heat spreader included', 'RAMSource'),
-       (null, 2, 'Corsair', '800-555-2345', '16GB DDR4 RAM', 'RM-11224', 'Vengeance LPX', 'Heat spreader included', 'RAMSource'),
-       (5, 5, 'Asus', '800-555-3456', 'Gaming Motherboard', 'MB-33445', 'ROG Strix Z390-E', 'Includes Wi-Fi adapter', 'BoardMakers'),
-       (null, 5, 'Asus', '800-555-3456', 'Gaming Motherboard', 'MB-33446', 'ROG Strix Z390-E', 'Includes Wi-Fi adapter', 'BoardMakers'),
-       (6, 6, 'Cooler Master', '800-555-4567', '120mm Case Fan', 'CF-55678', 'MasterFan Pro', 'Silent operation', 'FanSupplyCo'),
-       (1, 1, 'NVIDIA', '800-555-6789', 'Graphics Card', 'GC-66789', 'GeForce RTX 2070', 'Ray tracing enabled', 'GraphixDepot'),
-       (2, 2, 'Seagate', '800-555-7890', '4TB External HDD', 'HD-77890', 'Backup Plus', 'USB 3.0 interface', 'StorageCentral'),
-       (3, 3, 'Logitech', '800-555-8901', 'Wireless Mouse', 'MS-88901', 'MX Master 3', 'Ergonomic design', 'PeripheralStore'),
-       (4, 4, 'Dell', '800-555-9012', '27-inch Monitor', 'MN-99012', 'UltraSharp U2719D', 'QHD resolution', 'ScreenSupplier');
+INSERT INTO component(project_id, workplace_id, brand, contact, description, identifier, name, observation, supplier, availability)
+VALUES (2, 2, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12345', 'Core i5-8600K', 'OEM packaging', 'TechSupply', false),
+       (2, 2, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12346', 'Core i5-8600K', 'OEM packaging', 'TechSupply', false),
+       (null, 2, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12347', 'Core i5-8600K', 'OEM packaging', 'TechSupply', true),
+       (null, 1, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12347', 'Core i5-8600K', 'OEM packaging', 'TechSupply', true),
+       (null, 1, 'Intel', '800-555-1234', '8th Gen Core i5 Processor', 'CP-12348', 'Core i5-8600K', 'OEM packaging', 'TechSupply', true),
+       (3, 3, 'Samsung', '800-555-5678', '1TB NVMe SSD', 'ST-67890', '970 EVO Plus', 'Retail packaging', 'MemoryWorld', false),
+       (null, 3, 'Samsung', '800-555-5678', '1TB NVMe SSD', 'ST-67891', '970 EVO Plus', 'Retail packaging', 'MemoryWorld', true),
+       (null, 3, 'Samsung', '800-555-5678', '1TB NVMe SSD', 'ST-67892', '970 EVO Plus', 'Retail packaging', 'MemoryWorld', true),
+       (4, 4, 'Corsair', '800-555-2345', '16GB DDR4 RAM', 'RM-11223', 'Vengeance LPX', 'Heat spreader included', 'RAMSource', false),
+       (null, 2, 'Corsair', '800-555-2345', '16GB DDR4 RAM', 'RM-11224', 'Vengeance LPX', 'Heat spreader included', 'RAMSource', true),
+       (5, 5, 'Asus', '800-555-3456', 'Gaming Motherboard', 'MB-33445', 'ROG Strix Z390-E', 'Includes Wi-Fi adapter', 'BoardMakers', false),
+       (null, 5, 'Asus', '800-555-3456', 'Gaming Motherboard', 'MB-33446', 'ROG Strix Z390-E', 'Includes Wi-Fi adapter', 'BoardMakers', true),
+       (6, 6, 'Cooler Master', '800-555-4567', '120mm Case Fan', 'CF-55678', 'MasterFan Pro', 'Silent operation', 'FanSupplyCo', false),
+       (null, 1, 'Cooler Master', '800-555-4567', '120mm Case Fan', 'CF-55678', 'MasterFan Pro', 'Silent operation', 'FanSupplyCo', true),
+       (1, 1, 'NVIDIA', '800-555-6789', 'Graphics Card', 'GC-66789', 'GeForce RTX 2070', 'Ray tracing enabled', 'GraphixDepot', false),
+       (2, 2, 'Seagate', '800-555-7890', '4TB External HDD', 'HD-77890', 'Backup Plus', 'USB 3.0 interface', 'StorageCentral', false),
+       (3, 3, 'Logitech', '800-555-8901', 'Wireless Mouse', 'MS-88901', 'MX Master 3', 'Ergonomic design', 'PeripheralStore', false),
+       (4, 4, 'Dell', '800-555-9012', '27-inch Monitor', 'MN-99012', 'UltraSharp U2719D', 'QHD resolution', 'ScreenSupplier', false);
 
 INSERT INTO resource (expiration_date, brand, contact, description, identifier, name, supplier)
 VALUES ('2025-12-31 23:59:59', 'Microsoft', 'contact@microsoft.com', 'License for Microsoft Office 365', 'ms365-001', 'Microsoft Office 365', 'Microsoft Inc.'),

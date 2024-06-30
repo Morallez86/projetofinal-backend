@@ -37,7 +37,9 @@ public class NotificationBean {
     public List<NotificationDto> getNotificationsByUserIdAndTypeAndSeen(Long userId, String type, Boolean seen, int page, int limit) {
         int offset = (page - 1) * limit;
         NotificationType notificationType = type != null ? NotificationType.valueOf(type) : null;
+        System.out.println("11111111111111");
         List<NotificationEntity> notifications = notificationDao.findByUserIdAndTypeAndSeen(userId, notificationType, seen, offset, limit);
+        System.out.println("2222222222222222");
         return NotificationMapper.listToDto(notifications);
     }
 
