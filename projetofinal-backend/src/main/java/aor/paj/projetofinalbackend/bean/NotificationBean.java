@@ -12,6 +12,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -163,25 +164,30 @@ public class NotificationBean {
     }
 
     @Transactional
-    public void approveOrRejectNotification(NotificationDto notificationDto, UserEntity sender) {
+    public void approveOrRejectNotification(NotificationDto notificationDto, UserEntity sender, boolean isInvitation) {
         NotificationEntity notification = notificationDao.find(notificationDto.getId());
         ProjectEntity project = projectDao.findProjectById(notificationDto.getProjectId());
         UserEntity receiver = userDao.findUserById(notificationDto.getReceiverId());
         boolean approval = notificationDto.isApproval();
+        UserEntity correctUserToAdd;
 
         if (notification != null && project != null && receiver != null) {
             // Update the existing notification's approval status
             notification.setApproval(approval);
-            System.out.println("5");
             notificationDao.merge(notification);
 
             if (approval) {
-                UserProjectEntity confirmIfUserIsOnProject = userProjectDao.findByUserAndProject(receiver.getId(), project.getId());
-
+                // Check if the user is already in the project
+                if(isInvitation){
+                    correctUserToAdd = sender;
+                }else{
+                    correctUserToAdd = receiver;
+                }
+                UserProjectEntity confirmIfUserIsOnProject = userProjectDao.findByUserAndProject(correctUserToAdd.getId(), project.getId());
                 if (confirmIfUserIsOnProject == null) {
-                    // Add a new user to a project
+                    // Add a new user to the project
                     UserProjectEntity userProjectEntity = new UserProjectEntity();
-                    userProjectEntity.setUser(receiver);
+                    userProjectEntity.setUser(correctUserToAdd);
                     userProjectEntity.setIsAdmin(false);
                     userProjectEntity.setProject(project);
 
@@ -192,29 +198,42 @@ public class NotificationBean {
                 }
             }
 
-            // Create a new response notification
+            // Create response notification based on the type
             NotificationEntity responseNotification = new NotificationEntity();
-            System.out.println("6");
             responseNotification.setTimestamp(LocalDateTime.now());
             responseNotification.setProject(project);
             responseNotification.setSender(sender);
             responseNotification.setType(NotificationType.INVITATION);
-            responseNotification.setDescription(approval
-                    ? "Congratulations, your request was approved for project: " + project.getTitle()
-                    : "We are sorry, but your request was refused for project: " + project.getTitle());
+
+            if (notificationDto.getType().equals("400")) {
+                responseNotification.setDescription(approval
+                        ? notification.getSender().getUsername() + " has accepted your invitation for project: " + project.getTitle()
+                        : notification.getSender().getUsername() + " has refused your invitation for project: " + project.getTitle());
+            } else {
+                responseNotification.setDescription(approval
+                        ? "Congratulations, your request was approved for project: " + project.getTitle()
+                        : "We are sorry, but your request was refused for project: " + project.getTitle());
+            }
 
             notificationDao.persist(responseNotification);
-            System.out.println("7");
 
             // Create and persist the user notification entity for the receiver
             UserNotificationEntity userNotification = new UserNotificationEntity();
-            userNotification.setUser(receiver);
+            if (notificationDto.getType().equals("400")) {
+                userNotification.setUser(sender);
+            }else{
+                userNotification.setUser(receiver);
+            }
             userNotification.setNotification(responseNotification);
             userNotification.setSeen(false);
 
             userNotificationDao.persist(userNotification);
-            System.out.println("1");
 
+            // Find the user notification entity for the receiver and mark it as seen
+            List<Long> notificationIds = Collections.singletonList(notification.getId());
+            notificationDao.updateSeenStatusByUserIdAndIds(sender.getId(), notificationIds, true);
+
+            // Send notifications via sockets or other methods
             List<TokenEntity> activeTokens = receiver.getTokens().stream()
                     .filter(TokenEntity::isActiveToken)
                     .collect(Collectors.toList());
@@ -224,6 +243,7 @@ public class NotificationBean {
             throw new IllegalArgumentException("Notification, project, or receiver not found.");
         }
     }
+
 
     public void sendExpirationNotifications(ResourceEntity resource) {
         List<UserEntity> projectAdmins = userProjectDao.findAdminsByProjectId(resource.getProjects().stream().findFirst().get().getId());

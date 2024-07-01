@@ -158,8 +158,14 @@ public class NotificationService {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("User not authorized").build();
             }
 
+            // Check if the notification type is INVITATION (type 400)
+            boolean isInvitation = "400".equals(notificationDto.getType());
+
+            // Use the senderId if it's an INVITATION, otherwise use the receiverId
+            long userIdToCheck = isInvitation ? notificationDto.getSenderId() : notificationDto.getReceiverId();
+
             // Verify if the user is already in the project
-            if (userProjectBean.isUserInProject(notificationDto.getReceiverId(), notificationDto.getProjectId())) {
+            if (userProjectBean.isUserInProject(userIdToCheck, notificationDto.getProjectId())) {
                 return Response.status(Response.Status.CONFLICT).entity("User is already a member of the project").build();
             }
 
@@ -168,7 +174,7 @@ public class NotificationService {
                 return Response.status(Response.Status.CONFLICT).entity("Project has reached maximum capacity").build();
             }
 
-            notificationBean.approveOrRejectNotification(notificationDto, user);
+            notificationBean.approveOrRejectNotification(notificationDto, user, isInvitation);
             return Response.status(Response.Status.OK).build();
 
         } catch (Exception e) {
@@ -176,5 +182,6 @@ public class NotificationService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
 
 }
