@@ -16,6 +16,7 @@ import aor.paj.projetofinalbackend.utils.TaskStatus;
 import aor.paj.projetofinalbackend.websocket.ApplicationSocket;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,12 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ProjectBean {
+
+    @Inject
+    private ProjectHistoryBean projectHistoryBean;
+
+    @Inject
+    private TokenBean tokenBean;
 
     @EJB
     private UserDao userDao;
@@ -466,18 +473,19 @@ public class ProjectBean {
         activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
     }
 
-    public void changeUserStatus(Long projectId, Long userId, Boolean newStatus) throws Exception {
+    @Transactional
+    public void changeUserStatus(Long projectId, Long userId, Boolean newStatus, String token) throws Exception {
         UserProjectEntity userProject = userProjectDao.findByUserAndProject(userId, projectId);
-        System.out.println(userProject);
+        UserEntity userSending = tokenBean.findUserByToken(token);
 
         if (userProject == null) {
             throw new Exception("User not found in the specified project");
         }
 
         userProject.setIsAdmin(newStatus);
-
         userProjectDao.merge(userProject);
-    }
 
+        projectHistoryBean.logUserStatusChange(userProject, newStatus, userSending);
+    }
 }
 

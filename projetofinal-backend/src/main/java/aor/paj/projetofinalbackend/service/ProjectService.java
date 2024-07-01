@@ -248,7 +248,7 @@ public class ProjectService {
             Boolean newStatus = userProjectDto.isAdmin();
 
             // Change user status in the project
-            projectBean.changeUserStatus(projectId, userId, newStatus);
+            projectBean.changeUserStatus(projectId, userId, newStatus, token);
 
             return Response.status(Response.Status.OK).entity("User status updated successfully").build();
         } catch (Exception e) {
