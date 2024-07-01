@@ -224,5 +224,37 @@ public class ProjectService {
             }
         }
 
+    @PUT
+    @Path("/{projectId}/users/{userId}/status")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeUserStatus(
+            @HeaderParam("Authorization") String authorizationHeader,
+            @PathParam("projectId") Long projectId,
+            @PathParam("userId") Long userId,
+            UserProjectDto userProjectDto) {
+
+        try {
+            System.out.println(projectId);
+            System.out.println(userId);
+            System.out.println(userProjectDto.isAdmin());
+            // Validate token
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            Boolean newStatus = userProjectDto.isAdmin();
+
+            // Change user status in the project
+            projectBean.changeUserStatus(projectId, userId, newStatus);
+
+            return Response.status(Response.Status.OK).entity("User status updated successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
+}
 

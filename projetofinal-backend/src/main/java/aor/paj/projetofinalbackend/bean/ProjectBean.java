@@ -203,7 +203,6 @@ public class ProjectBean {
         System.out.println(projectEntity);
         // Persist the project entity
         projectDao.persist(projectEntity);
-        System.out.println("dpvosnvdsvpnavckxzvcl");
 
         // Associate user projects
         Set<UserProjectEntity> userProjectEntities = new HashSet<>();
@@ -224,14 +223,12 @@ public class ProjectBean {
         ownerProjectEntity.setProject(projectEntity);
         ownerProjectEntity.setIsAdmin(true);
         userProjectEntities.add(ownerProjectEntity);
-        System.out.println("555555555555555555");
         // Persist user projects
         for (UserProjectEntity userProjectEntity : userProjectEntities) {
             userProjectDao.merge(userProjectEntity);
         }
 
         projectEntity.setUserProjects(userProjectEntities);
-        System.out.println("66666666666666666666666");
         // Finalize project associations
         Set<InterestEntity> completeInterestSet = projectEntity.getInterests();
         completeInterestSet.addAll(existingInterestEntity);
@@ -248,7 +245,6 @@ public class ProjectBean {
         Set<ResourceEntity> completeResourceSet = projectEntity.getResources();
         completeResourceSet.addAll(updatedResources);
         projectEntity.setResources(completeResourceSet);
-        System.out.println("77777777777777777");
         // Handle tasks
         List<TaskEntity> taskEntities = new ArrayList<>();
         TaskEntity uniqueTask = new TaskEntity();
@@ -265,7 +261,6 @@ public class ProjectBean {
 
         // Persist additional entities
         projectDao.merge(projectEntity);
-        System.out.println("888888888888888");
         for (ComponentEntity componentEntity : projectEntity.getComponents()) {
             componentEntity.setProject(projectEntity);
             componentDao.merge(componentEntity);
@@ -470,5 +465,19 @@ public class ProjectBean {
 
         activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
     }
+
+    public void changeUserStatus(Long projectId, Long userId, Boolean newStatus) throws Exception {
+        UserProjectEntity userProject = userProjectDao.findByUserAndProject(userId, projectId);
+        System.out.println(userProject);
+
+        if (userProject == null) {
+            throw new Exception("User not found in the specified project");
+        }
+
+        userProject.setIsAdmin(newStatus);
+
+        userProjectDao.merge(userProject);
+    }
+
 }
 
