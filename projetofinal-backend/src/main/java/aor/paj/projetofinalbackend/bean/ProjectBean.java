@@ -487,5 +487,20 @@ public class ProjectBean {
 
         projectHistoryBean.logUserStatusChange(userProject, newStatus, userSending);
     }
+
+    @Transactional
+    public void changeUserToInactive(Long projectId, Long userId, String token) throws Exception {
+        UserProjectEntity userProject = userProjectDao.findByUserAndProject(userId, projectId);
+        UserEntity userSending = tokenBean.findUserByToken(token);
+
+        if (userProject == null) {
+            throw new Exception("User not found in the specified project");
+        }
+
+        userProject.setActive(false);
+        userProjectDao.merge(userProject);
+
+        projectHistoryBean.logUserInactiveChange(userProject, userSending);
+    }
 }
 

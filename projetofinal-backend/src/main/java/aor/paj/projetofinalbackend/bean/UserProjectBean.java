@@ -23,7 +23,7 @@ public class UserProjectBean {
 
     public boolean isProjectAtMaxUsers(Long projectId) {
         ProjectEntity project = projectDao.findProjectById(projectId);
-        Long currentProjectCount = userProjectDao.countProjectsByUserId(projectId);
+        Long currentProjectCount = userProjectDao.countActiveUsersByProjectId(projectId);
         return currentProjectCount >= project.getMaxUsers();
     }
 }
