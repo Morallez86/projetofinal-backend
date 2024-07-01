@@ -84,7 +84,7 @@ public class NotificationService {
             String token = authorizationHeader.substring("Bearer".length()).trim();
             UserEntity sender = tokenBean.findUserByToken(token);
             if (sender != null) {
-                if(Objects.equals(notificationDto.getType(), "300")){
+                if (Objects.equals(notificationDto.getType(), "300") || Objects.equals(notificationDto.getType(), "400")) {
                     notificationBean.sendRequestInvitationProject(sender, notificationDto);
                     return Response.status(Response.Status.OK).build();
                 } else {

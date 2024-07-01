@@ -13,11 +13,15 @@ import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Stateless
 public class NotificationBean {
+
+    @Inject
+    UserProjectBean userProjectBean;
 
     @EJB
     ProjectDao projectDao;
@@ -76,9 +80,32 @@ public class NotificationBean {
                 throw new IllegalArgumentException("Invalid project ID");
             }
 
+            // Check if the project has reached the maximum number of users
+            if (userProjectBean.isProjectAtMaxUsers(notificationDto.getProjectId())) {
+                throw new IllegalArgumentException("The project has reached the maximum number of users");
+            }
+
+            // Check if the user is already in the project based on the notification type
+            if (Objects.equals(notificationDto.getType(), "300")) { // Managing type
+                if (userProjectBean.isUserInProject(notificationDto.getSenderId(), notificationDto.getProjectId())) {
+                    throw new IllegalArgumentException("The user is already in the project");
+                }
+            } else if (Objects.equals(notificationDto.getType(), "400")) { // Invitation type
+                if (userProjectBean.isUserInProject(notificationDto.getReceiverId(), notificationDto.getProjectId())) {
+                    throw new IllegalArgumentException("The user is already in the project");
+                }
+            }
+
             // Create a new NotificationEntity
             NotificationEntity notification = new NotificationEntity();
-            notification.setDescription(sender.getUsername() + " would like to join the project: " + project.getTitle());
+
+            // Set description based on the notification type
+            if (Objects.equals(notificationDto.getType(), "300")) {
+                notification.setDescription(sender.getUsername() + " would like to join the project: " + project.getTitle());
+            } else if (Objects.equals(notificationDto.getType(), "400")) {
+                notification.setDescription(sender.getUsername() + " has invited you to the project: " + project.getTitle());
+            }
+
             notification.setType(NotificationType.fromValue(Integer.parseInt(notificationDto.getType())));
             notification.setTimestamp(LocalDateTime.now());
             notification.setSender(sender);
@@ -87,24 +114,48 @@ public class NotificationBean {
             // Persist the notification first to generate the ID
             notificationDao.persist(notification);
 
-            // Create UserNotificationEntity entries for each user associated with the project
-            List<UserEntity> projectAdmins = userProjectDao.findAdminsByProjectId(notificationDto.getProjectId());
-            for (UserEntity admin : projectAdmins) {
-                UserNotificationEntity userNotification = new UserNotificationEntity();
-                userNotification.setUser(admin);
-                userNotification.setNotification(notification);
-                userNotification.setSeen(false);
+            // Handle user notifications based on the type
+            if (Objects.equals(notificationDto.getType(), "300")) {
+                // Notify project admins for managing type
+                List<UserEntity> projectAdmins = userProjectDao.findAdminsByProjectId(notificationDto.getProjectId());
+                for (UserEntity admin : projectAdmins) {
+                    UserNotificationEntity userNotification = new UserNotificationEntity();
+                    userNotification.setUser(admin);
+                    userNotification.setNotification(notification);
+                    userNotification.setSeen(false);
 
-                // Persist the userNotification
-                userNotificationDao.persist(userNotification);
+                    // Persist the user notification
+                    userNotificationDao.persist(userNotification);
 
-                List<TokenEntity> activeTokens = admin.getTokens().stream()
-                        .filter(TokenEntity::isActiveToken)
-                        .collect(Collectors.toList());
+                    // Send notifications to active tokens
+                    List<TokenEntity> activeTokens = admin.getTokens().stream()
+                            .filter(TokenEntity::isActiveToken)
+                            .collect(Collectors.toList());
 
-                activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
+                    activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
+                }
+            } else if (Objects.equals(notificationDto.getType(), "400")) {
+                // Notify the specific user for invitation type
+                UserEntity receiver = userDao.findUserById(notificationDto.getReceiverId());
+                if (receiver != null) {
+                    UserNotificationEntity userNotification = new UserNotificationEntity();
+                    userNotification.setUser(receiver);
+                    userNotification.setNotification(notification);
+                    userNotification.setSeen(false);
+
+                    // Persist the user notification
+                    userNotificationDao.persist(userNotification);
+
+                    // Send notifications to active tokens
+                    List<TokenEntity> activeTokens = receiver.getTokens().stream()
+                            .filter(TokenEntity::isActiveToken)
+                            .collect(Collectors.toList());
+
+                    activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
+                } else {
+                    throw new IllegalArgumentException("Invalid receiver ID");
+                }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
