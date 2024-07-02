@@ -1,12 +1,12 @@
 package aor.paj.projetofinalbackend.utils;
 
-public enum NotificationType {
-
-    MESSAGE(100), PROJECT(200), MANAGING(300), INVITATION(400);
+// Class that deals with the different types of approval/refusal in notifications managing type class
+public enum NotificationManagingActions {
+    PROJECT(100), INVITATION(200);
 
     private final int value;
 
-    NotificationType(int value) {
+    NotificationManagingActions(int value) {
         this.value = value;
     }
 
