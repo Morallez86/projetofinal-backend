@@ -2,7 +2,8 @@ package aor.paj.projetofinalbackend.utils;
 
 public enum NotificationType {
 
-    MESSAGE(100), PROJECT(200), MANAGING(300), INVITATION(400);
+    MESSAGE(100), PROJECT(200), MANAGING(300),
+    MANAGING_PROJECTS (310), MANAGING_INVITATIONS(320), INVITATION(400);
 
     private final int value;
 

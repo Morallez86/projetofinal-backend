@@ -16,7 +16,7 @@ import java.util.Set;
                         "JOIN UserNotificationEntity un ON un.notification = n " +
                         "WHERE un.user.id = :userId " +
                         "AND (:type IS NULL OR n.type = :type) " +
-                        "AND (:seen IS NULL OR un.seen = :seen)"
+                        "AND (:seen IS NULL OR un.seen = :seen) ORDER BY n.timestamp DESC"
         ),
         @NamedQuery(
                 name = "Notification.countByUserIdAndTypeAndSeen",

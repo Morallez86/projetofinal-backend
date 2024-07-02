@@ -32,6 +32,9 @@ public class ProjectBean {
     @Inject
     private TokenBean tokenBean;
 
+    @Inject
+    private NotificationBean notificationBean;
+
     @EJB
     private UserDao userDao;
 
@@ -366,6 +369,7 @@ public class ProjectBean {
         projectEntity.setMotivation(projectDto.getMotivation());
         projectEntity.setCreationDate(projectDto.getCreationDate());
         projectEntity.setPlannedEndDate(projectDto.getPlannedEndDate());
+        projectEntity.setMaxUsers(projectDto.getMaxUsers());
 
         // Handle workplace
         if (projectDto.getWorkplace() != null) {
@@ -374,27 +378,12 @@ public class ProjectBean {
                 projectEntity.setWorkplace(workplaceEntity);
             }
         }
-        /*
-        // Update UserProject associations
-        Set<UserProjectEntity> userProjectEntities = new HashSet<>();
-        for (UserProjectDto userProjectDto : projectDto.getUserProjectDtos()) {
-            UserEntity projectUser = userDao.findUserById(userProjectDto.getUserId());
-            if (projectUser != null) {
-                UserProjectEntity userProjectEntity = userProjectDao.findByUserAndProject(projectUser.getId(), projectEntity.getId());
-                if (userProjectEntity == null) {
-                    userProjectEntity = new UserProjectEntity();
-                    userProjectEntity.setUser(projectUser);
-                    userProjectEntity.setProject(projectEntity);
-                    userProjectEntity.setIsAdmin(false);
-                }
-                userProjectEntities.add(userProjectEntity);
-            }
-        }
-        projectEntity.setUserProjects(userProjectEntities);
-        */
-
-        // Persist all changes
         projectDao.merge(projectEntity);
+
+        // Check if project status is READY
+        if (ProjectStatus.fromValue(projectDto.getStatus()) == ProjectStatus.READY) {
+            notificationBean.sendProjectAproval(projectEntity);
+        }
     }
 
     public List<UserProjectDto> getUsersByProject (Long projectId) {

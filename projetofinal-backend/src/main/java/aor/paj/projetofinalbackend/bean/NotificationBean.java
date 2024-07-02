@@ -246,7 +246,7 @@ public class NotificationBean {
 
 
     public void sendExpirationNotifications(ResourceEntity resource) {
-        List<UserEntity> projectAdmins = userProjectDao.findAdminsByProjectId(resource.getProjects().stream().findFirst().get().getId());
+        List<UserEntity> admins = userDao.findAdmins();
 
         NotificationEntity notification = new NotificationEntity();
         notification.setTimestamp(LocalDateTime.now());
@@ -256,7 +256,37 @@ public class NotificationBean {
 
         notificationDao.persist(notification);
 
-        for (UserEntity admin : projectAdmins) {
+        for (UserEntity admin : admins) {
+            UserNotificationEntity userNotification = new UserNotificationEntity();
+            userNotification.setUser(admin);
+            userNotification.setNotification(notification);
+            userNotification.setSeen(false);
+
+            userNotificationDao.persist(userNotification);
+
+            List<TokenEntity> activeTokens = admin.getTokens().stream()
+                    .filter(TokenEntity::isActiveToken)
+                    .collect(Collectors.toList());
+
+            activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
+        }
+    }
+
+    @Transactional
+    public void sendProjectAproval(ProjectEntity projectEntity) {
+        List<UserEntity> admins = userDao.findAdmins();
+
+        NotificationEntity notification = new NotificationEntity();
+        notification.setTimestamp(LocalDateTime.now());
+        notification.setSender(projectEntity.getOwner());
+        notification.setType(NotificationType.MANAGING);
+        notification.setDescription("Project: " + projectEntity.getTitle() + " from " +
+                projectEntity.getOwner().getUsername() + " is ready for approval");
+        notification.setProject(projectEntity);
+
+        notificationDao.persist(notification);
+
+        for (UserEntity admin : admins) {
             UserNotificationEntity userNotification = new UserNotificationEntity();
             userNotification.setUser(admin);
             userNotification.setNotification(notification);
