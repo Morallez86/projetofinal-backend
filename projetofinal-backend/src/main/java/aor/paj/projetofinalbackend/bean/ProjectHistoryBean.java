@@ -5,10 +5,7 @@ import aor.paj.projetofinalbackend.dao.ProjectHistoryDao;
 import aor.paj.projetofinalbackend.dao.TaskDao;
 import aor.paj.projetofinalbackend.dao.UserDao;
 import aor.paj.projetofinalbackend.dto.ProjectHistoryDto;
-import aor.paj.projetofinalbackend.entity.ProjectEntity;
-import aor.paj.projetofinalbackend.entity.ProjectHistoryEntity;
-import aor.paj.projetofinalbackend.entity.TaskEntity;
-import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.ChatMessageMapper;
 import aor.paj.projetofinalbackend.mapper.ProjectHistoryMapper;
 import aor.paj.projetofinalbackend.utils.HistoryType;
@@ -71,5 +68,52 @@ public class ProjectHistoryBean {
        return projectHistoryEntitySet.stream().map(ProjectHistoryMapper::toDto).collect(Collectors.toList());
     }
 
+    public void logUserStatusChange(UserProjectEntity userProjectEntity, Boolean newStatus, UserEntity userSending) {
+        String titleLog;
+        if(newStatus){
+            titleLog = userProjectEntity.getUser().getUsername() + " is now ADMIN";
+        }else{
+            titleLog = userProjectEntity.getUser().getUsername() + " is no longer ADMIN";
+        }
 
+        // Create a new ProjectHistoryEntity instance
+        ProjectHistoryEntity projectHistoryEntity = new ProjectHistoryEntity();
+        projectHistoryEntity.setTitle(titleLog);
+        projectHistoryEntity.setProject(userProjectEntity.getProject());
+        projectHistoryEntity.setUser(userSending);
+        projectHistoryEntity.setType(HistoryType.PROJECTSTATE);
+        projectHistoryEntity.setTimestamp(LocalDateTime.now());
+
+        // Persist the history entity
+        projectHistoryDao.persist(projectHistoryEntity);
+
+        // Update project's history records
+        ProjectEntity project = projectHistoryEntity.getProject();
+        Set<ProjectHistoryEntity> projectHistoryEntitySet = project.getHistoryRecords();
+        projectHistoryEntitySet.add(projectHistoryEntity);
+        project.setHistoryRecords(projectHistoryEntitySet);
+        projectDao.merge(project);
+    }
+
+    public void logUserInactiveChange(UserProjectEntity userProjectEntity, UserEntity userSending) {
+        String titleLog = userProjectEntity.getUser().getUsername() + " exited the project";;
+
+        // Create a new ProjectHistoryEntity instance
+        ProjectHistoryEntity projectHistoryEntity = new ProjectHistoryEntity();
+        projectHistoryEntity.setTitle(titleLog);
+        projectHistoryEntity.setProject(userProjectEntity.getProject());
+        projectHistoryEntity.setUser(userSending);
+        projectHistoryEntity.setType(HistoryType.PROJECTSTATE);
+        projectHistoryEntity.setTimestamp(LocalDateTime.now());
+
+        // Persist the history entity
+        projectHistoryDao.persist(projectHistoryEntity);
+
+        // Update project's history records
+        ProjectEntity project = projectHistoryEntity.getProject();
+        Set<ProjectHistoryEntity> projectHistoryEntitySet = project.getHistoryRecords();
+        projectHistoryEntitySet.add(projectHistoryEntity);
+        project.setHistoryRecords(projectHistoryEntitySet);
+        projectDao.merge(project);
+    }
 }

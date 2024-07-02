@@ -224,5 +224,64 @@ public class ProjectService {
             }
         }
 
+    @PUT
+    @Path("/{projectId}/users/{userId}/status")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeUserStatus(
+            @HeaderParam("Authorization") String authorizationHeader,
+            @PathParam("projectId") Long projectId,
+            @PathParam("userId") Long userId,
+            UserProjectDto userProjectDto) {
+
+        try {
+            // Validate token
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            Boolean newStatus = userProjectDto.isAdmin();
+
+            // Change user status in the project
+            projectBean.changeUserStatus(projectId, userId, newStatus, token);
+
+            return Response.status(Response.Status.OK).entity("User status updated successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
+
+    @PUT
+    @Path("/{projectId}/users/{userId}/inactive")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeUserInactive(
+            @HeaderParam("Authorization") String authorizationHeader,
+            @PathParam("projectId") Long projectId,
+            @PathParam("userId") Long userId,
+            UserProjectDto userProjectDto) {
+
+        try {
+            // Validate token
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            Boolean newStatus = userProjectDto.isAdmin();
+
+            // Change user status in the project
+            projectBean.changeUserToInactive(projectId, userId, token);
+
+            return Response.status(Response.Status.OK).entity("User status updated successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+}
 

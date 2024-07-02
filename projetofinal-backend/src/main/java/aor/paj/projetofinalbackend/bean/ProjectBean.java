@@ -16,6 +16,7 @@ import aor.paj.projetofinalbackend.utils.TaskStatus;
 import aor.paj.projetofinalbackend.websocket.ApplicationSocket;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,15 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ProjectBean {
+
+    @Inject
+    private ProjectHistoryBean projectHistoryBean;
+
+    @Inject
+    private TokenBean tokenBean;
+
+    @Inject
+    private NotificationBean notificationBean;
 
     @EJB
     private UserDao userDao;
@@ -203,7 +213,6 @@ public class ProjectBean {
         System.out.println(projectEntity);
         // Persist the project entity
         projectDao.persist(projectEntity);
-        System.out.println("dpvosnvdsvpnavckxzvcl");
 
         // Associate user projects
         Set<UserProjectEntity> userProjectEntities = new HashSet<>();
@@ -224,14 +233,12 @@ public class ProjectBean {
         ownerProjectEntity.setProject(projectEntity);
         ownerProjectEntity.setIsAdmin(true);
         userProjectEntities.add(ownerProjectEntity);
-        System.out.println("555555555555555555");
         // Persist user projects
         for (UserProjectEntity userProjectEntity : userProjectEntities) {
             userProjectDao.merge(userProjectEntity);
         }
 
         projectEntity.setUserProjects(userProjectEntities);
-        System.out.println("66666666666666666666666");
         // Finalize project associations
         Set<InterestEntity> completeInterestSet = projectEntity.getInterests();
         completeInterestSet.addAll(existingInterestEntity);
@@ -248,7 +255,6 @@ public class ProjectBean {
         Set<ResourceEntity> completeResourceSet = projectEntity.getResources();
         completeResourceSet.addAll(updatedResources);
         projectEntity.setResources(completeResourceSet);
-        System.out.println("77777777777777777");
         // Handle tasks
         List<TaskEntity> taskEntities = new ArrayList<>();
         TaskEntity uniqueTask = new TaskEntity();
@@ -265,7 +271,6 @@ public class ProjectBean {
 
         // Persist additional entities
         projectDao.merge(projectEntity);
-        System.out.println("888888888888888");
         for (ComponentEntity componentEntity : projectEntity.getComponents()) {
             componentEntity.setProject(projectEntity);
             componentDao.merge(componentEntity);
@@ -364,6 +369,7 @@ public class ProjectBean {
         projectEntity.setMotivation(projectDto.getMotivation());
         projectEntity.setCreationDate(projectDto.getCreationDate());
         projectEntity.setPlannedEndDate(projectDto.getPlannedEndDate());
+        projectEntity.setMaxUsers(projectDto.getMaxUsers());
 
         // Handle workplace
         if (projectDto.getWorkplace() != null) {
@@ -372,27 +378,12 @@ public class ProjectBean {
                 projectEntity.setWorkplace(workplaceEntity);
             }
         }
-        /*
-        // Update UserProject associations
-        Set<UserProjectEntity> userProjectEntities = new HashSet<>();
-        for (UserProjectDto userProjectDto : projectDto.getUserProjectDtos()) {
-            UserEntity projectUser = userDao.findUserById(userProjectDto.getUserId());
-            if (projectUser != null) {
-                UserProjectEntity userProjectEntity = userProjectDao.findByUserAndProject(projectUser.getId(), projectEntity.getId());
-                if (userProjectEntity == null) {
-                    userProjectEntity = new UserProjectEntity();
-                    userProjectEntity.setUser(projectUser);
-                    userProjectEntity.setProject(projectEntity);
-                    userProjectEntity.setIsAdmin(false);
-                }
-                userProjectEntities.add(userProjectEntity);
-            }
-        }
-        projectEntity.setUserProjects(userProjectEntities);
-        */
-
-        // Persist all changes
         projectDao.merge(projectEntity);
+
+        // Check if project status is READY
+        if (ProjectStatus.fromValue(projectDto.getStatus()) == ProjectStatus.READY) {
+            notificationBean.sendProjectAproval(projectEntity);
+        }
     }
 
     public List<UserProjectDto> getUsersByProject (Long projectId) {
@@ -469,6 +460,36 @@ public class ProjectBean {
                 .collect(Collectors.toList());
 
         activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
+    }
+
+    @Transactional
+    public void changeUserStatus(Long projectId, Long userId, Boolean newStatus, String token) throws Exception {
+        UserProjectEntity userProject = userProjectDao.findByUserAndProject(userId, projectId);
+        UserEntity userSending = tokenBean.findUserByToken(token);
+
+        if (userProject == null) {
+            throw new Exception("User not found in the specified project");
+        }
+
+        userProject.setIsAdmin(newStatus);
+        userProjectDao.merge(userProject);
+
+        projectHistoryBean.logUserStatusChange(userProject, newStatus, userSending);
+    }
+
+    @Transactional
+    public void changeUserToInactive(Long projectId, Long userId, String token) throws Exception {
+        UserProjectEntity userProject = userProjectDao.findByUserAndProject(userId, projectId);
+        UserEntity userSending = tokenBean.findUserByToken(token);
+
+        if (userProject == null) {
+            throw new Exception("User not found in the specified project");
+        }
+
+        userProject.setActive(false);
+        userProjectDao.merge(userProject);
+
+        projectHistoryBean.logUserInactiveChange(userProject, userSending);
     }
 }
 

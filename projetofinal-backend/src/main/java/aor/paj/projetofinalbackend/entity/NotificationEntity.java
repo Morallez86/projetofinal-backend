@@ -1,5 +1,6 @@
 package aor.paj.projetofinalbackend.entity;
 
+import aor.paj.projetofinalbackend.utils.NotificationManagingActions;
 import aor.paj.projetofinalbackend.utils.NotificationType;
 import jakarta.persistence.*;
 import java.io.Serializable;
@@ -16,7 +17,7 @@ import java.util.Set;
                         "JOIN UserNotificationEntity un ON un.notification = n " +
                         "WHERE un.user.id = :userId " +
                         "AND (:type IS NULL OR n.type = :type) " +
-                        "AND (:seen IS NULL OR un.seen = :seen)"
+                        "AND (:seen IS NULL OR un.seen = :seen) ORDER BY n.timestamp DESC"
         ),
         @NamedQuery(
                 name = "Notification.countByUserIdAndTypeAndSeen",
@@ -64,6 +65,10 @@ public class NotificationEntity implements Serializable {
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserNotificationEntity> userNotifications = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "action")
+    private NotificationManagingActions action;
 
     public NotificationEntity() {
     }
@@ -127,5 +132,13 @@ public class NotificationEntity implements Serializable {
 
     public void setApproval(Boolean approval) {
         this.approval = approval;
+    }
+
+    public NotificationManagingActions getAction() {
+        return action;
+    }
+
+    public void setAction(NotificationManagingActions action) {
+        this.action = action;
     }
 }
