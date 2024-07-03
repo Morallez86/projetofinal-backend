@@ -6,17 +6,17 @@ import java.io.Serializable;
 @Entity
 @Table(name = "user_project")
 @NamedQueries({
-        @NamedQuery(name = "UserProjectEntity.findByUserAndProject",
-                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId"),
-        @NamedQuery(name = "UserProjectEntity.findByUserId",
-                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId"),
+        @NamedQuery(name = "UserProjectEntity.findByUserAndProjectActive",
+                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.project.id = :projectId AND up.active = true"),
+        @NamedQuery(name = "UserProjectEntity.findByUserIdActive",
+                query = "SELECT up FROM UserProjectEntity up WHERE up.user.id = :userId AND up.active = true"),
 
-        @NamedQuery(name = "UserProjectEntity.findProjectsByUserId",
-                query = "SELECT up.project FROM UserProjectEntity up WHERE up.user.id = :userId"),
-        @NamedQuery(name = "UserProjectEntity.countProjectsByUserId",
-                query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.user.id = :userId"),
-        @NamedQuery(name = "UserProjectEntity.findAdminsByProjectId",
-                query = "SELECT up.user FROM UserProjectEntity up WHERE up.project.id = :projectId AND up.isAdmin = true"),
+        @NamedQuery(name = "UserProjectEntity.findProjectsByUserIdActive",
+                query = "SELECT up.project FROM UserProjectEntity up WHERE up.user.id = :userId AND up.active = true"),
+        @NamedQuery(name = "UserProjectEntity.countProjectsByUserIdActive",
+                query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.user.id = :userId AND up.active = true"),
+        @NamedQuery(name = "UserProjectEntity.findAdminsByProjectIdActive",
+                query = "SELECT up.user FROM UserProjectEntity up WHERE up.project.id = :projectId AND up.isAdmin = true AND up.active = true"),
         @NamedQuery(name = "UserProjectEntity.countActiveUsersByProjectId",
                 query = "SELECT COUNT(up) FROM UserProjectEntity up WHERE up.project.id = :projectId AND up.active = true")
 })

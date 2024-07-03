@@ -18,6 +18,8 @@ public class NotificationDto {
 
     private boolean seen;
 
+    private String action;
+
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime timestamp;
@@ -133,5 +135,32 @@ public class NotificationDto {
 
     public void setApproval(boolean approval) {
         this.approval = approval;
+    }
+
+    @XmlElement
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    @Override
+    public String toString() {
+        return "NotificationDto{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", type='" + type + '\'' +
+                ", seen=" + seen +
+                ", action='" + action + '\'' +
+                ", timestamp=" + timestamp +
+                ", receiverId=" + receiverId +
+                ", senderId=" + senderId +
+                ", senderUsername='" + senderUsername + '\'' +
+                ", projectId=" + projectId +
+                ", projectTitle='" + projectTitle + '\'' +
+                ", approval=" + approval +
+                '}';
     }
 }

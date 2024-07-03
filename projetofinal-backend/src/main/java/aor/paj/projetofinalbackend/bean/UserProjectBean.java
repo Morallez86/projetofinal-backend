@@ -17,7 +17,7 @@ public class UserProjectBean {
     ProjectDao projectDao;
 
     public boolean isUserInProject(Long userId, Long projectId) {
-        UserProjectEntity userProject = userProjectDao.findByUserAndProject(userId, projectId);
+        UserProjectEntity userProject = userProjectDao.findByUserAndProjectActive(userId, projectId);
         return userProject != null;
     }
 

@@ -1,6 +1,7 @@
 package aor.paj.projetofinalbackend.dao;
 
 import aor.paj.projetofinalbackend.entity.NotificationEntity;
+import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.utils.NotificationType;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
@@ -13,6 +14,16 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
 
     public NotificationDao() {
         super(NotificationEntity.class);
+    }
+
+    public NotificationEntity findNotificationById(Long id) {
+        try {
+            return em.createNamedQuery("NotificationEntity.findNotificationById", NotificationEntity.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public List<NotificationEntity> findByUserIdAndTypeAndSeen(Long userId, NotificationType type, Boolean seen, int offset, int limit) {

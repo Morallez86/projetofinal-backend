@@ -19,9 +19,9 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity> {
         super(UserProjectEntity.class);
     }
 
-    public UserProjectEntity findByUserAndProject(Long userId, Long projectId) {
+    public UserProjectEntity findByUserAndProjectActive(Long userId, Long projectId) {
         try {
-            return em.createNamedQuery("UserProjectEntity.findByUserAndProject", UserProjectEntity.class)
+            return em.createNamedQuery("UserProjectEntity.findByUserAndProjectActive", UserProjectEntity.class)
                     .setParameter("userId", userId)
                     .setParameter("projectId", projectId)
                     .getSingleResult();
@@ -30,9 +30,9 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity> {
         }
     }
 
-    public List<ProjectEntity> findProjectsByUserId(Long userId) {
+    public List<ProjectEntity> findProjectsByUserIdActive(Long userId) {
         try {
-            return em.createNamedQuery("UserProjectEntity.findProjectsByUserId", ProjectEntity.class)
+            return em.createNamedQuery("UserProjectEntity.findProjectsByUserIdActive", ProjectEntity.class)
                     .setParameter("userId", userId)
                     .getResultList();
         } catch (NoResultException e) {
@@ -40,9 +40,9 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity> {
         }
     }
 
-    public Long countProjectsByUserId(Long userId) {
+    public Long countProjectsByUserIdActive(Long userId) {
         try {
-            return em.createNamedQuery("UserProjectEntity.countProjectsByUserId", Long.class)
+            return em.createNamedQuery("UserProjectEntity.countProjectsByUserIdActive", Long.class)
                     .setParameter("userId", userId)
                     .getSingleResult();
         } catch (NoResultException e) {
@@ -50,15 +50,15 @@ public class UserProjectDao extends AbstractDao<UserProjectEntity> {
         }
     }
 
-    public List<UserProjectEntity> findByUserId(Long userId) {
-        return em.createNamedQuery("UserProjectEntity.findByUserId", UserProjectEntity.class)
+    public List<UserProjectEntity> findByUserIdActive(Long userId) {
+        return em.createNamedQuery("UserProjectEntity.findByUserIdActive", UserProjectEntity.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
 
-    public List<UserEntity> findAdminsByProjectId(Long projectId) {
+    public List<UserEntity> findAdminsByProjectIdActive(Long projectId) {
         try {
-            return em.createNamedQuery("UserProjectEntity.findAdminsByProjectId", UserEntity.class)
+            return em.createNamedQuery("UserProjectEntity.findAdminsByProjectIdActive", UserEntity.class)
                     .setParameter("projectId", projectId)
                     .getResultList();
         } catch (NoResultException e) {
