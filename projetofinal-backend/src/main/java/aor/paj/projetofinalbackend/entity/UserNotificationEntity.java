@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "user_notification")
 @NamedQueries({
+        @NamedQuery(name = "UserNotificationEntity.findUserNotificationById", query = "SELECT un FROM UserNotificationEntity un WHERE un.id = :id"),
         @NamedQuery(name = "UserNotificationEntity.findByUserAndNotification",
                 query = "SELECT un FROM UserNotificationEntity un WHERE un.user.id = :userId AND un.notification.id = :notificationId")
 })

@@ -5,7 +5,9 @@ import aor.paj.projetofinalbackend.bean.TokenBean;
 import aor.paj.projetofinalbackend.bean.UserProjectBean;
 import aor.paj.projetofinalbackend.dto.NotificationDto;
 import aor.paj.projetofinalbackend.dto.UpdateSeenStatusDto;
+import aor.paj.projetofinalbackend.entity.NotificationEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.utils.NotificationManagingActions;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -151,30 +153,36 @@ public class NotificationService {
     public Response approveOrRejectNotification(
             @HeaderParam("Authorization") String authorizationHeader, NotificationDto notificationDto) {
         try {
+            System.out.println(notificationDto);
             String token = authorizationHeader.substring("Bearer".length()).trim();
             UserEntity user = tokenBean.findUserByToken(token);
+            NotificationEntity notification = notificationBean.findNotificationById(notificationDto.getId());
 
             if (user == null) {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("User not authorized").build();
             }
+            if(notification.getAction() == NotificationManagingActions.INVITATION) {
+                System.out.println("pvoan");
+                // Check if the notification type is INVITATION (type 400)
+                boolean isInvitation = "400".equals(notificationDto.getType());
 
-            // Check if the notification type is INVITATION (type 400)
-            boolean isInvitation = "400".equals(notificationDto.getType());
+                // Use the senderId if it's an INVITATION, otherwise use the receiverId
+                long userIdToCheck = isInvitation ? notificationDto.getSenderId() : notificationDto.getReceiverId();
 
-            // Use the senderId if it's an INVITATION, otherwise use the receiverId
-            long userIdToCheck = isInvitation ? notificationDto.getSenderId() : notificationDto.getReceiverId();
-
-            // Verify if the user is already in the project
-            if (userProjectBean.isUserInProject(userIdToCheck, notificationDto.getProjectId())) {
-                return Response.status(Response.Status.CONFLICT).entity("User is already a member of the project").build();
+                // Verify if the user is already in the project
+                if (userProjectBean.isUserInProject(userIdToCheck, notificationDto.getProjectId())) {
+                    return Response.status(Response.Status.CONFLICT).entity("User is already a member of the project").build();
+                }
+                // Verify if the project has an available slot
+                if (userProjectBean.isProjectAtMaxUsers(notificationDto.getProjectId())) {
+                    return Response.status(Response.Status.CONFLICT).entity("Project has reached maximum capacity").build();
+                }
+                notificationBean.approveOrRejectNotificationParticipateProject(notificationDto, user, isInvitation);
+            }else{
+                System.out.println("pvsjdvpdsv");
+                notificationBean.approveOrRejectNotificationReadyProject(notificationDto, user);
             }
 
-            // Verify if the project has an available slot
-            if (userProjectBean.isProjectAtMaxUsers(notificationDto.getProjectId())) {
-                return Response.status(Response.Status.CONFLICT).entity("Project has reached maximum capacity").build();
-            }
-
-            notificationBean.approveOrRejectNotification(notificationDto, user, isInvitation);
             return Response.status(Response.Status.OK).build();
 
         } catch (Exception e) {

@@ -464,7 +464,7 @@ public class ProjectBean {
 
     @Transactional
     public void changeUserStatus(Long projectId, Long userId, Boolean newStatus, String token) throws Exception {
-        UserProjectEntity userProject = userProjectDao.findByUserAndProject(userId, projectId);
+        UserProjectEntity userProject = userProjectDao.findByUserAndProjectActive(userId, projectId);
         UserEntity userSending = tokenBean.findUserByToken(token);
 
         if (userProject == null) {
@@ -479,7 +479,7 @@ public class ProjectBean {
 
     @Transactional
     public void changeUserToInactive(Long projectId, Long userId, String token) throws Exception {
-        UserProjectEntity userProject = userProjectDao.findByUserAndProject(userId, projectId);
+        UserProjectEntity userProject = userProjectDao.findByUserAndProjectActive(userId, projectId);
         UserEntity userSending = tokenBean.findUserByToken(token);
 
         if (userProject == null) {

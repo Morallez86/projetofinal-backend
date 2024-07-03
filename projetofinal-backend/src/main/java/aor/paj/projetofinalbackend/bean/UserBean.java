@@ -119,7 +119,7 @@ public class UserBean {
 
         tokenDao.persist(tokenEntity);
 
-        List<UserProjectEntity> userProjectEntities = userProjectDao.findByUserId(user.getId());
+        List<UserProjectEntity> userProjectEntities = userProjectDao.findByUserIdActive(user.getId());
         for (UserProjectEntity userProject : userProjectEntities) {
             UserEntity userEntity = userDao.findUserById(userProject.getUser().getId());
             userEntity.setOnline(true);
@@ -243,7 +243,7 @@ public class UserBean {
 
     @Transactional
     public Set<ProjectDto> getUserProjects(Long userId, int limit) {
-        List<ProjectEntity> projects = userProjectDao.findProjectsByUserId(userId);
+        List<ProjectEntity> projects = userProjectDao.findProjectsByUserIdActive(userId);
         if (projects == null || projects.isEmpty()) {
             return null;
         }
@@ -259,7 +259,7 @@ public class UserBean {
     }
 
     public Long getTotalProjectCount(Long userId) {
-        return userProjectDao.countProjectsByUserId(userId);
+        return userProjectDao.countProjectsByUserIdActive(userId);
     }
 
     public List<UserDto> searchUsersByQuery(String query) {

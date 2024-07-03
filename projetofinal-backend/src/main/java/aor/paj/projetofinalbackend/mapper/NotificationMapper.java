@@ -19,6 +19,9 @@ public class NotificationMapper {
         dto.setReceiverId(entity.getSender().getId());
         dto.setSenderId(entity.getSender().getId());
         dto.setSenderUsername(entity.getSender().getUsername());
+        if(entity.getAction() !=null){
+            dto.setAction(entity.getAction().name());
+        }
         if(entity.getProject() != null){
             dto.setProjectId(entity.getProject().getId());
             dto.setProjectTitle(entity.getProject().getTitle());
