@@ -23,7 +23,7 @@ public class GreetingResource {
     public Response getGreeting() {
         try {
             // Teste com um endereço IP real
-            String ipAddress =   "95.94.55.210";    //"1.1.1.14" // Endereço IP público para teste
+            String ipAddress =   "95.94.55.210"; // request.getRemoteAddr();//"95.94.55.210";    //"1.1.1.14" // Endereço IP público para teste
             System.out.println("IP Address: " + ipAddress);
 
             String countryCode = GeoLocationService.getCountryCode(ipAddress);
