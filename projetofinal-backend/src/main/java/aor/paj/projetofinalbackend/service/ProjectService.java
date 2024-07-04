@@ -63,7 +63,7 @@ public class ProjectService {
                                    @QueryParam("skills") String skills,
                                    @QueryParam("interests") String interests,
                                    @QueryParam("status") String status
-                                   ) {
+    ) {
         try {
             Set<ProjectDto> projectDtos;
             long totalProjects;
@@ -83,7 +83,7 @@ public class ProjectService {
                 // No pagination or search parameters provided, return all projects
                 projectDtos = projectBean.getAllProjectsNoQueries();
                 totalPages = 1; // Since we're returning all projects in a single response
-            } else if (searchTerm != null || skills != null || interests != null || status !=null ) {
+            } else if (searchTerm != null || skills != null || interests != null || status != null) {
                 // Search parameters provided, return filtered projects
                 projectDtos = projectBean.searchProjects(searchTerm, skills, interests, projectStatus);
                 System.out.println(searchTerm);
@@ -188,41 +188,41 @@ public class ProjectService {
     }
 
 
-        @PUT
-        @Path("/{projectId}")
-        @Consumes(MediaType.APPLICATION_JSON)
-        @Produces(MediaType.APPLICATION_JSON)
-        public Response updateProject (@HeaderParam("Authorization") String authorizationHeader,
-                @PathParam("projectId") Long projectId,
-                ProjectDto projectDto){
-            try {
-                String token = authorizationHeader.substring("Bearer".length()).trim();
-                Response validationResponse = authBean.validateUserToken(token);
-                if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-                    return validationResponse;
-                }
-
-                projectBean.updateProject(projectId, projectDto, token);
-                return Response.status(Response.Status.OK).entity("Project updated successfully").build();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+    @PUT
+    @Path("/{projectId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateProject(@HeaderParam("Authorization") String authorizationHeader,
+                                  @PathParam("projectId") Long projectId,
+                                  ProjectDto projectDto) {
+        try {
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
             }
-        }
 
-        @POST
-        @Path("/createChatMsg")
-        @Consumes(MediaType.APPLICATION_JSON)
-        @Produces(MediaType.APPLICATION_JSON)
-        public Response createChatMsg (@HeaderParam("Authorization") String authorizationHeader, ChatMessageDto chatMessageDto) {
-            try {
-                ChatMessageDto chatMessageDtoNew = chatMessageBean.createChatMsg(chatMessageDto);
-                return Response.status(Response.Status.CREATED).entity(chatMessageDtoNew).build();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-            }
+            projectBean.updateProject(projectId, projectDto, token);
+            return Response.status(Response.Status.OK).entity("Project updated successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
+    }
+
+    @POST
+    @Path("/createChatMsg")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createChatMsg(@HeaderParam("Authorization") String authorizationHeader, ChatMessageDto chatMessageDto) {
+        try {
+            ChatMessageDto chatMessageDtoNew = chatMessageBean.createChatMsg(chatMessageDto);
+            return Response.status(Response.Status.CREATED).entity(chatMessageDtoNew).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
 
     @PUT
     @Path("/{projectId}/users/{userId}/status")
@@ -283,5 +283,69 @@ public class ProjectService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
+    @POST
+    @Path("/{projectId}/addSkill")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addSkillToProject(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, AddSkillToProjectDto addSkillToProjectDto) {
+        System.out.println("ocdnsvvnsdo");
+        try {
+            // Validate token
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            // Get project by ID
+            ProjectDto projectDto = projectBean.getProjectById(projectId);
+            if (projectDto == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Project not found").build();
+            }
+
+            // Check if the skill already exists in the project
+            List<SkillDto> existingSkills = projectDto.getSkills();
+            for (SkillDto skill : existingSkills) {
+                if (skill.getName().equals(addSkillToProjectDto.getSkill().getName())) {
+                    return Response.status(Response.Status.CONFLICT).entity("Skill already exists in the project").build();
+                }
+            }
+
+            // Add skill to the project
+            projectBean.addSkillToProject(projectId, addSkillToProjectDto.getSkill(), token);
+
+            return Response.status(Response.Status.OK).entity("Skill added to project successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @DELETE
+    @Path("/{projectId}/removeSkills")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeSkillsFromProject(
+            @HeaderParam("Authorization") String authorizationHeader,
+            @PathParam("projectId") Long projectId,
+            List<Long> skillsToRemove) {
+        try {
+            // Validate token
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            projectBean.removeSKillsProject( skillsToRemove, projectId);
+
+            return Response.status(Response.Status.OK).entity("Skills removed from project successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
 }
 

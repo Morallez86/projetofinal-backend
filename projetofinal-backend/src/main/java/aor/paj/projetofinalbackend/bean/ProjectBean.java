@@ -1,23 +1,18 @@
 package aor.paj.projetofinalbackend.bean;
 
 import aor.paj.projetofinalbackend.dao.*;
-import aor.paj.projetofinalbackend.dto.ProjectDto;
-import aor.paj.projetofinalbackend.dto.TaskDto;
-import aor.paj.projetofinalbackend.dto.TaskEndDateDto;
-import aor.paj.projetofinalbackend.dto.UserProjectDto;
+import aor.paj.projetofinalbackend.dto.*;
 import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.mapper.TaskMapper;
 import aor.paj.projetofinalbackend.mapper.UserProjectMapper;
-import aor.paj.projetofinalbackend.utils.NotificationType;
-import aor.paj.projetofinalbackend.utils.ProjectStatus;
-import aor.paj.projetofinalbackend.utils.TaskPriority;
-import aor.paj.projetofinalbackend.utils.TaskStatus;
+import aor.paj.projetofinalbackend.utils.*;
 import aor.paj.projetofinalbackend.websocket.ApplicationSocket;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -34,6 +29,9 @@ public class ProjectBean {
 
     @Inject
     private NotificationBean notificationBean;
+
+    @Inject
+    private UserProjectBean userProjectBean;
 
     @EJB
     private UserDao userDao;
@@ -491,5 +489,68 @@ public class ProjectBean {
 
         projectHistoryBean.logUserInactiveChange(userProject, userSending);
     }
+
+    @Transactional
+    public void addSkillToProject(Long projectId, SkillDto skillDto, String token) {
+        // Find the project by ID
+        ProjectEntity projectEntity = projectDao.findProjectById(projectId);
+        if (projectEntity == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        // Find the user by token
+        UserEntity userEntity = tokenBean.findUserByToken(token);
+        if (userEntity == null) {
+            throw new SecurityException("User not found or token invalid");
+        }
+        // This could involve checking if the user is an admin or owner of the project
+        if (!userProjectBean.isUserAdminAndActiveInProject(userEntity, projectEntity.getId())) {
+            throw new SecurityException("User does not have permission to add skills to this project");
+        }
+
+        // Find the skill by name
+        SkillEntity skillEntity = skillDao.findByName(skillDto.getName());
+
+        // If skill does not exist, create a new one
+        if (skillEntity == null) {
+            skillEntity = new SkillEntity();
+            skillEntity.setName(skillDto.getName());
+            skillEntity.setType(SkillType.fromValue(skillDto.getType()));
+            skillEntity.setCreator(userEntity);
+
+            // Persist the new skill
+            skillDao.persist(skillEntity);
+        }
+
+        // Add the skill to the project
+        projectEntity.getSkills().add(skillEntity);
+
+        // Merge the project entity to save changes
+        projectDao.merge(projectEntity);
+    }
+
+    @Transactional
+    public void removeSKillsProject(List<Long> skillsToRemove, Long projectId) {
+        // Get project by ID
+        ProjectDto projectDto = getProjectById(projectId);
+        if (projectDto == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        // Get the corresponding ProjectEntity
+        ProjectEntity projectEntity = projectDao.findProjectById(projectId);
+        if (projectEntity == null) {
+            throw new IllegalArgumentException("Project entity not found");
+        }
+
+        List<SkillEntity> skillEntitiesToRemove = skillDao.findAllById(skillsToRemove);
+
+        // Remove these skills from the project
+        projectEntity.getSkills().removeAll(skillEntitiesToRemove);
+
+        // Save the updated project entity
+        projectDao.merge(projectEntity);
+    }
+
 }
 

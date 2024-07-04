@@ -25,4 +25,10 @@ public class SkillDao extends TagDao<SkillEntity> {
     public SkillEntity findById(Long id) {
         return super.findById("Skill.findSkillById", id);
     }
+
+    public List<SkillEntity> findAllById(List<Long> ids) {
+        return em.createNamedQuery("Skill.findAllById", SkillEntity.class)
+                .setParameter("ids", ids)
+                .getResultList();
+    }
 }

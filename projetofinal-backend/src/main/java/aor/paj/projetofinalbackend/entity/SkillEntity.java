@@ -11,7 +11,8 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = "Skill.findAllSkills", query = "SELECT s FROM SkillEntity s"),
         @NamedQuery(name = "Skill.findSkillById", query = "SELECT s FROM SkillEntity s WHERE s.id = :id"),
-        @NamedQuery(name = "Skill.findByName", query = "SELECT s FROM SkillEntity s WHERE s.name = :name")
+        @NamedQuery(name = "Skill.findByName", query = "SELECT s FROM SkillEntity s WHERE s.name = :name"),
+        @NamedQuery(name = "Skill.findAllById", query = "SELECT s FROM SkillEntity s WHERE s.id IN :ids"),
 })
 public class SkillEntity extends TagEntity {
 
