@@ -15,6 +15,9 @@ import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import aor.paj.projetofinalbackend.utils.JsonUtils;
 import aor.paj.projetofinalbackend.utils.LoggerUtil;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -107,9 +110,36 @@ public class UserService {
     @POST
     @Path("/logout")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response logout(@HeaderParam("Authorization") String authHeader, HashMap<Long, LocalDateTime> mapTimersChat) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response logout(@HeaderParam("Authorization") String authHeader, String jsonBody) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        HashMap<String, LocalDateTime> mapTimersChatString;
+        try {
+            
+            mapTimersChatString = objectMapper.readValue(jsonBody, objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, LocalDateTime.class));
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ResponseMessage("Invalid request body"))
+                    .build();
+        }
 
         String token = authHeader.substring("Bearer".length()).trim();
+
+
+        HashMap<Long, LocalDateTime> mapTimersChat = new HashMap<>();
+        for (Map.Entry<String, LocalDateTime> entry : mapTimersChatString.entrySet()) {
+            try {
+                Long key = Long.parseLong(entry.getKey());
+                mapTimersChat.put(key, entry.getValue());
+            } catch (NumberFormatException e) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(new ResponseMessage("Invalid key format in request body"))
+                        .build();
+            }
+        }
 
         userBean.updateTimersChat(token, mapTimersChat);
 

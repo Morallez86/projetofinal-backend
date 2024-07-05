@@ -89,24 +89,24 @@ VALUES (true, 5, 'IN_PROGRESS', '2024-06-02T10:00:00', '2024-06-02T10:30:00', '2
         '2024-06-20T17:00:00', '2024-06-08T09:00:00', 'Cancelled test project.', 'To halt progress.',
         'Project Epsilon', 6);
 
-INSERT INTO user_project (is_admin, project_id, user_id,active)
-VALUES (false, 1, 2,true),
-       (true, 1, 1,true),
-       (false, 1, 3,true),
-       (false, 2, 1,true),
-       (true, 2, 2,true),
-       (false, 2, 3,true),
-       (false, 3, 4,false),
-       (true, 3, 3,false),
-       (false, 4, 5,false),
-       (true, 4, 4,false),
-       (false, 5, 2,false),
-       (true, 5, 5,false),
-       (false, 5, 3,false),
-       (false, 5, 1,false),
-       (false, 6, 4,false),
-       (true, 6, 1,false),
-       (false, 6, 5,false);
+INSERT INTO user_project (is_admin, project_id, user_id,active, online)
+VALUES (false, 1, 2,true, false),
+       (true, 1, 1,true, false),
+       (false, 1, 3,false, false),
+       (false, 2, 1,true, false),
+       (true, 2, 2,true, false),
+       (false, 2, 3,false, false),
+       (false, 3, 4,false, false),
+       (true, 3, 3,false, false),
+       (false, 4, 5,false, false),
+       (true, 4, 4,false, false),
+       (false, 5, 2,true, false),
+       (true, 5, 5,false, false),
+       (false, 5, 3,false, false),
+       (false, 5, 1,true, false),
+       (false, 6, 4,false, false),
+       (true, 6, 1,true, false),
+       (false, 6, 5,false, false);
 
 INSERT INTO task (title, description, planned_starting_date, starting_date, planned_ending_date, ending_date, status,
                   priority, contributors, project_id, user_id)
