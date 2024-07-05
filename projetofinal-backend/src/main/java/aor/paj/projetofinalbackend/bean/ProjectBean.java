@@ -598,6 +598,46 @@ public class ProjectBean {
     }
 
     @Transactional
+    public void addResourceToProject(Long projectId, ResourceDto resourceDto, String token) {
+        // Find the project by ID
+        ProjectEntity projectEntity = projectDao.findProjectById(projectId);
+        if (projectEntity == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        // Find the user by token
+        UserEntity userEntity = tokenBean.findUserByToken(token);
+        if (userEntity == null) {
+            throw new SecurityException("User not found or token invalid");
+        }
+
+        // Check if the user is an admin or active in the project
+        if (!userProjectBean.isUserAdminAndActiveInProject(userEntity, projectEntity.getId())) {
+            throw new SecurityException("User does not have permission to add resources to this project");
+        }
+
+        // Find the resource by name
+        ResourceEntity resourceEntity = resourceDao.findByName(resourceDto.getName());
+        if (resourceEntity == null) {
+            throw new IllegalArgumentException("Resource not found");
+        }
+
+        // Add the resource to the project
+        if (projectEntity.getResources() == null) {
+            projectEntity.setResources(new HashSet<>());
+        }
+        projectEntity.getResources().add(resourceEntity);
+
+        // Merge the project entity to save changes
+        projectDao.merge(projectEntity);
+
+        // Merge the resource entity to save changes
+        resourceEntity.getProjects().add(projectEntity);
+        resourceDao.merge(resourceEntity);
+    }
+
+
+    @Transactional
     public void removeSKillsProject(List<Long> skillsToRemove, Long projectId) {
         // Get project by ID
         ProjectDto projectDto = getProjectById(projectId);

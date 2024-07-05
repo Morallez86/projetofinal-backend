@@ -10,6 +10,7 @@ import java.util.*;
 @NamedQueries({
         @NamedQuery(name = "ResourceEntity.findById",
                 query = "SELECT r FROM ResourceEntity r WHERE r.id = :id"),
+        @NamedQuery(name = "Resource.findByName", query = "SELECT r FROM ResourceEntity r WHERE r.name = :name"),
         @NamedQuery(name = "ResourceEntity.findProjectsByResourceId",
                 query = "SELECT p FROM ResourceEntity r JOIN r.projects p WHERE r.id = :id"),
         @NamedQuery(name = "Resource.findAllOrderedByName", query = "SELECT r FROM ResourceEntity r ORDER BY r.name ASC"),

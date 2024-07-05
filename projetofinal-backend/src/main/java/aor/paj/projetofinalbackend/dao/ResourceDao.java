@@ -32,6 +32,16 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         }
     }
 
+    public ResourceEntity findByName(String name) {
+        try {
+            TypedQuery<ResourceEntity> query = em.createNamedQuery("Resource.findByName", ResourceEntity.class);
+            query.setParameter("name", name);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null; // Returns null if no component is found with the specified name
+        }
+    }
+
     public Set<ProjectEntity> findProjectsByResourceId(Long resourceId) {
         TypedQuery<ProjectEntity> query = em.createNamedQuery("ResourceEntity.findProjectsByResourceId", ProjectEntity.class);
         query.setParameter("id", resourceId);

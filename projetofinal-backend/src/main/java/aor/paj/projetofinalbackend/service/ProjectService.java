@@ -378,14 +378,6 @@ public class ProjectService {
                 return Response.status(Response.Status.NOT_FOUND).entity("Project not found").build();
             }
 
-            // Check if the component already exists in the project
-            List<ComponentDto> existingComponents = projectDto.getComponents();
-            for (ComponentDto component : existingComponents) {
-                if (component.getName().equals(addComponentToProjectDto.getComponent().getName())) {
-                    return Response.status(Response.Status.CONFLICT).entity("Component already exists in the project").build();
-                }
-            }
-
             // Add component to the project
             projectBean.addComponentToProject(projectId, addComponentToProjectDto.getComponent(), token);
 
@@ -395,6 +387,44 @@ public class ProjectService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
+    @POST
+    @Path("/{projectId}/addResource")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addResourceToProject(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, AddResourceToProjectDto addResourceToProjectDto) {
+        try {
+            // Validate token
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            // Get project by ID
+            ProjectDto projectDto = projectBean.getProjectById(projectId);
+            if (projectDto == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Project not found").build();
+            }
+
+            // Check if the resource already exists in the project
+            List<ResourceDto> existingResources = projectDto.getResources();
+            for (ResourceDto resource : existingResources) {
+                if (resource.getName().equals(addResourceToProjectDto.getResource().getName())) {
+                    return Response.status(Response.Status.CONFLICT).entity("Resource already exists in the project").build();
+                }
+            }
+
+            // Add resource to the project
+            projectBean.addResourceToProject(projectId, addResourceToProjectDto.getResource(), token);
+
+            return Response.status(Response.Status.OK).entity("Resource added to project successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
 
 
     @DELETE
