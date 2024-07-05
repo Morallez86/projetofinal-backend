@@ -90,12 +90,12 @@ VALUES (true, 5, 'IN_PROGRESS', '2024-06-02T10:00:00', '2024-06-02T10:30:00', '2
         'Project Epsilon', 6);
 
 INSERT INTO user_project (is_admin, project_id, user_id,active)
-VALUES (false, 1, 2,false),
-       (true, 1, 1,false),
-       (false, 1, 3,false),
-       (false, 2, 1,false),
-       (true, 2, 2,false),
-       (false, 2, 3,false),
+VALUES (false, 1, 2,true),
+       (true, 1, 1,true),
+       (false, 1, 3,true),
+       (false, 2, 1,true),
+       (true, 2, 2,true),
+       (false, 2, 3,true),
        (false, 3, 4,false),
        (true, 3, 3,false),
        (false, 4, 5,false),

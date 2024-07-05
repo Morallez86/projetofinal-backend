@@ -698,5 +698,25 @@ public class ProjectBean {
             }
         }
     }
+
+    @Transactional
+    public void removeResourcesFromProject(List<Long> resourcesToRemove, Long projectId) {
+        ProjectEntity projectEntity = projectDao.findProjectById(projectId);
+        if (projectEntity == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        for (Long resourceId : resourcesToRemove) {
+            ResourceEntity resourceEntity = resourceDao.findById(resourceId);
+            if (resourceEntity != null) {
+                resourceEntity.getProjects().remove(projectEntity);
+                resourceDao.merge(resourceEntity);
+
+                projectEntity.getResources().remove(resourceEntity);
+                projectDao.merge(projectEntity);
+            }
+        }
+    }
+
 }
 
