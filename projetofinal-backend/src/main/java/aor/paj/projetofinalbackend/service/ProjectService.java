@@ -385,5 +385,30 @@ public class ProjectService {
         }
     }
 
+    @DELETE
+    @Path("/{projectId}/removeInterests")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeInterestsFromProject(
+            @HeaderParam("Authorization") String authorizationHeader,
+            @PathParam("projectId") Long projectId,
+            List<Long> interestsToRemove) {
+        try {
+            // Validate token
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            projectBean.removeInterestsProject(interestsToRemove, projectId);
+
+            return Response.status(Response.Status.OK).entity("Interests removed from project successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
 }
 

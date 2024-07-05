@@ -590,5 +590,28 @@ public class ProjectBean {
         projectDao.merge(projectEntity);
     }
 
+    @Transactional
+    public void removeInterestsProject(List<Long> interestsToRemove, Long projectId) {
+        // Get project by ID
+        ProjectDto projectDto = getProjectById(projectId);
+        if (projectDto == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        // Get the corresponding ProjectEntity
+        ProjectEntity projectEntity = projectDao.findProjectById(projectId);
+        if (projectEntity == null) {
+            throw new IllegalArgumentException("Project entity not found");
+        }
+
+        List<InterestEntity> interestEntitiesToRemove = interestDao.findAllById(interestsToRemove);
+
+        // Remove these interests from the project
+        projectEntity.getInterests().removeAll(interestEntitiesToRemove);
+
+        // Save the updated project entity
+        projectDao.merge(projectEntity);
+    }
+
 }
 

@@ -25,4 +25,10 @@ public class InterestDao extends TagDao<InterestEntity> {
     public InterestEntity findById(Long id) {
         return super.findById("Interest.findInterestById", id);
     }
+
+    public List<InterestEntity> findAllById(List<Long> ids) {
+        return em.createNamedQuery("Interest.findAllById", InterestEntity.class)
+                .setParameter("ids", ids)
+                .getResultList();
+    }
 }

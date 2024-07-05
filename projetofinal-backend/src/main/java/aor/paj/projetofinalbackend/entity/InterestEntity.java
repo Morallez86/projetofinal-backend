@@ -10,7 +10,9 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = "Interest.findAllInterests", query = "SELECT i FROM InterestEntity i"),
         @NamedQuery(name = "Interest.findInterestById", query = "SELECT i FROM InterestEntity i WHERE i.id = :id"),
-        @NamedQuery(name = "Interest.findByName", query = "SELECT i FROM InterestEntity i WHERE i.name = :name")
+        @NamedQuery(name = "Interest.findByName", query = "SELECT i FROM InterestEntity i WHERE i.name = :name"),
+        @NamedQuery(name = "Interest.findAllById", query = "SELECT i FROM InterestEntity i WHERE i.id IN :ids"),
+
 })
 public class InterestEntity extends TagEntity {
 
