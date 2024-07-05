@@ -89,6 +89,16 @@ public class ComponentBean {
     public List<String> findAvailableComponentsGroupedByName (Long workplace){
         return componentDao.findAvailableComponentsGroupedByName(workplace);
     }
+
+    public double getTotalPercentageOfComponentsByWorkplace(String workplaceName) {
+        long totalComponents = componentDao.countTotalComponentsByWorkplace(workplaceName);
+        long availableComponents = componentDao.countAvailableComponentsByWorkplace(workplaceName);
+
+        if (totalComponents == 0) {
+            return 0;
+        }
+        return (double) availableComponents / totalComponents * 100;
+    }
 }
 
 

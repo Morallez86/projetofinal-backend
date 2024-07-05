@@ -89,4 +89,11 @@ public class ResourceBean {
         LocalDateTime oneWeekFromNow = now.plusWeeks(1);
         return resourceDao.findResourcesExpiringWithinWeek(now, oneWeekFromNow);
     }
+
+    public String getUnusedResourcesNames() {
+        List<ResourceEntity> unusedResources = resourceDao.findUnusedResources();
+        return unusedResources.stream()
+                .map(ResourceEntity::getName)
+                .collect(Collectors.joining(", "));
+    }
 }

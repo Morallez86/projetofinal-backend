@@ -23,7 +23,9 @@ import java.util.*;
         @NamedQuery(
                 name = "Component.findAvailableComponentsGroupedByName",
                 query = "SELECT c.name FROM ComponentEntity c WHERE c.availability = true AND c.workplace.id = :workplaceId GROUP BY c.name"
-        )
+        ),
+        @NamedQuery(name = "Component.countTotalComponentsByWorkplace", query = "SELECT COUNT(c) FROM ComponentEntity c WHERE c.workplace.name = :workplaceName"),
+        @NamedQuery(name = "Component.countAvailableComponentsByWorkplace", query = "SELECT COUNT(c) FROM ComponentEntity c WHERE c.workplace.name = :workplaceName AND c.availability = true")
 })
 public class ComponentEntity implements Serializable {
 

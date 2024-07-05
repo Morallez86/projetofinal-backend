@@ -86,5 +86,25 @@ public class ComponentDao extends AbstractDao<ComponentEntity> {
             return null;
         }
     }
+
+    public long countTotalComponentsByWorkplace(String workplaceName) {
+        try{
+            TypedQuery<Long> query = em.createNamedQuery("Component.countTotalComponentsByWorkplace", Long.class);
+            query.setParameter("workplaceName", workplaceName);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
+
+    public long countAvailableComponentsByWorkplace(String workplaceName) {
+        try{
+            TypedQuery<Long> query = em.createNamedQuery("Component.countAvailableComponentsByWorkplace", Long.class);
+            query.setParameter("workplaceName", workplaceName);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
 }
 

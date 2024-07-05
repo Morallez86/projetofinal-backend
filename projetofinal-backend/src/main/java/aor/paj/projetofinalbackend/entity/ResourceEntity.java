@@ -20,7 +20,9 @@ import java.util.*;
         ),
         @NamedQuery(name = "Resource.countByKeyword", query = "SELECT COUNT(r) FROM ResourceEntity r WHERE r.name LIKE CONCAT('%', :keyword, '%') OR r.brand LIKE CONCAT('%', :keyword, '%') OR r.supplier LIKE CONCAT('%', :keyword, '%') OR r.identifier LIKE CONCAT('%', :keyword, '%')"),
         @NamedQuery(name = "ResourceEntity.findResourcesExpiringWithinWeek",
-                query = "SELECT r FROM ResourceEntity r WHERE r.expirationDate BETWEEN :now AND :oneWeekFromNow")
+                query = "SELECT r FROM ResourceEntity r WHERE r.expirationDate BETWEEN :now AND :oneWeekFromNow"),
+        @NamedQuery(name = "ResourceEntity.findUnusedResources",
+                query = "SELECT r FROM ResourceEntity r WHERE r.projects IS EMPTY")
 })
 public class ResourceEntity implements Serializable {
 

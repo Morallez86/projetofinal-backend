@@ -85,5 +85,14 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
             return Collections.emptyList();
         }
     }
+
+    public List<ResourceEntity> findUnusedResources() {
+        try {
+            TypedQuery<ResourceEntity> query = em.createNamedQuery("ResourceEntity.findUnusedResources", ResourceEntity.class);
+            return query.getResultList();
+        } catch (NoResultException e) {
+            return Collections.emptyList();
+        }
+    }
 }
 
