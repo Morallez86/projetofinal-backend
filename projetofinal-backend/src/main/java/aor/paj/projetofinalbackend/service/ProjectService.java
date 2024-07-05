@@ -322,6 +322,44 @@ public class ProjectService {
         }
     }
 
+    @POST
+    @Path("/{projectId}/addInterest")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addInterestToProject(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, AddInterestToProjectDto addInterestToProjectDto) {
+        System.out.println("ocdnsvvnsdo");
+        try {
+            // Validate token
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            // Get project by ID
+            ProjectDto projectDto = projectBean.getProjectById(projectId);
+            if (projectDto == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Project not found").build();
+            }
+
+            // Check if the skill already exists in the project
+            List<InterestDto> existingInterests = projectDto.getInterests();
+            for (InterestDto interest : existingInterests) {
+                if (interest.getName().equals(addInterestToProjectDto.getInterest().getName())) {
+                    return Response.status(Response.Status.CONFLICT).entity("Interest already exists in the project").build();
+                }
+            }
+
+            // Add skill to the project
+            projectBean.addInterestToProject(projectId, addInterestToProjectDto.getInterest(), token);
+
+            return Response.status(Response.Status.OK).entity("Skill added to project successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
     @DELETE
     @Path("/{projectId}/removeSkills")
     @Consumes(MediaType.APPLICATION_JSON)

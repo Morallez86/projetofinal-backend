@@ -530,6 +530,44 @@ public class ProjectBean {
     }
 
     @Transactional
+    public void addInterestToProject(Long projectId, InterestDto interestDto, String token) {
+        // Find the project by ID
+        ProjectEntity projectEntity = projectDao.findProjectById(projectId);
+        if (projectEntity == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        // Find the user by token
+        UserEntity userEntity = tokenBean.findUserByToken(token);
+        if (userEntity == null) {
+            throw new SecurityException("User not found or token invalid");
+        }
+        // This could involve checking if the user is an admin or owner of the project
+        if (!userProjectBean.isUserAdminAndActiveInProject(userEntity, projectEntity.getId())) {
+            throw new SecurityException("User does not have permission to add interests to this project");
+        }
+
+        // Find the interest with name
+        InterestEntity interestEntity = interestDao.findByName(interestDto.getName());
+
+        // If interest does not exist, create a new one
+        if (interestEntity == null) {
+            interestEntity = new InterestEntity();
+            interestEntity.setName(interestDto.getName());
+            interestEntity.setCreator(userEntity);
+
+            // Persist the new interest
+            interestDao.persist(interestEntity);
+        }
+
+        // Add the interest to the project
+        projectEntity.getInterests().add(interestEntity);
+
+        // Merge the project entity to save changes
+        projectDao.merge(projectEntity);
+    }
+
+    @Transactional
     public void removeSKillsProject(List<Long> skillsToRemove, Long projectId) {
         // Get project by ID
         ProjectDto projectDto = getProjectById(projectId);
