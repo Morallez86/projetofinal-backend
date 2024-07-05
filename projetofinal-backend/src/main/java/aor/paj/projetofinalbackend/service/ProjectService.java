@@ -289,7 +289,6 @@ public class ProjectService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addSkillToProject(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, AddSkillToProjectDto addSkillToProjectDto) {
-        System.out.println("ocdnsvvnsdo");
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
@@ -359,6 +358,44 @@ public class ProjectService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
+    @POST
+    @Path("/{projectId}/addComponent")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addComponentToProject(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, AddComponentToProjectDto addComponentToProjectDto) {
+        try {
+            // Validate token
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            // Get project by ID
+            ProjectDto projectDto = projectBean.getProjectById(projectId);
+            if (projectDto == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Project not found").build();
+            }
+
+            // Check if the component already exists in the project
+            List<ComponentDto> existingComponents = projectDto.getComponents();
+            for (ComponentDto component : existingComponents) {
+                if (component.getName().equals(addComponentToProjectDto.getComponent().getName())) {
+                    return Response.status(Response.Status.CONFLICT).entity("Component already exists in the project").build();
+                }
+            }
+
+            // Add component to the project
+            projectBean.addComponentToProject(projectId, addComponentToProjectDto.getComponent(), token);
+
+            return Response.status(Response.Status.OK).entity("Component added to project successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
 
     @DELETE
     @Path("/{projectId}/removeSkills")

@@ -2,6 +2,7 @@ package aor.paj.projetofinalbackend.dao;
 
 import aor.paj.projetofinalbackend.entity.ComponentEntity;
 import aor.paj.projetofinalbackend.entity.ProjectEntity;
+import aor.paj.projetofinalbackend.entity.SkillEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
@@ -24,6 +25,16 @@ public class ComponentDao extends AbstractDao<ComponentEntity> {
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null; // Retorna null se nenhum componente for encontrado com o ID especificado
+        }
+    }
+
+    public ComponentEntity findByName(String name) {
+        try {
+            TypedQuery<ComponentEntity> query = em.createNamedQuery("Component.findByName", ComponentEntity.class);
+            query.setParameter("name", name);
+            return query.getResultList().stream().findFirst().orElse(null);
+        } catch (NoResultException e) {
+            return null; // Returns null if no component is found with the specified name
         }
     }
 

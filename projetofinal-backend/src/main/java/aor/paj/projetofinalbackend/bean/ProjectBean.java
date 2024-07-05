@@ -568,6 +568,36 @@ public class ProjectBean {
     }
 
     @Transactional
+    public void addComponentToProject(Long projectId, ComponentDto componentDto, String token) {
+        // Find the project by ID
+        ProjectEntity projectEntity = projectDao.findProjectById(projectId);
+        if (projectEntity == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        // Find the user by token
+        UserEntity userEntity = tokenBean.findUserByToken(token);
+        if (userEntity == null) {
+            throw new SecurityException("User not found or token invalid");
+        }
+
+        // Check if the user is an admin or active in the project
+        if (!userProjectBean.isUserAdminAndActiveInProject(userEntity, projectEntity.getId())) {
+            throw new SecurityException("User does not have permission to add components to this project");
+        }
+
+        // Find the component by name
+        ComponentEntity componentEntity = componentDao.findByName(componentDto.getName());
+        if (componentEntity == null) {
+            throw new IllegalArgumentException("Component not found");
+        }
+
+        componentEntity.setProject(projectEntity);
+        componentEntity.setAvailability(false);
+        componentDao.merge(componentEntity);
+    }
+
+    @Transactional
     public void removeSKillsProject(List<Long> skillsToRemove, Long projectId) {
         // Get project by ID
         ProjectDto projectDto = getProjectById(projectId);

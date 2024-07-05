@@ -8,6 +8,7 @@ import java.util.*;
 @Table(name = "component")
 @NamedQueries({
         @NamedQuery(name = "Component.findComponentById", query = "SELECT c FROM ComponentEntity c WHERE c.id = :id"),
+        @NamedQuery(name = "Component.findByName", query = "SELECT c FROM ComponentEntity c WHERE c.availability = true AND c.name = :name"),
         @NamedQuery(
                 name = "Component.findFirstAvailableComponentByName",
                 query = "SELECT c FROM ComponentEntity c WHERE c.name = :name AND c.availability = true AND c.workplace.id = :workplaceId ORDER BY c.id"
