@@ -643,5 +643,20 @@ public class ProjectBean {
         projectDao.merge(projectEntity);
     }
 
+    public void removeComponentsFromProject(List<Long> componentsToRemove, Long projectId) {
+        ProjectEntity projectEntity = projectDao.findProjectById(projectId);
+        if (projectEntity == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+
+        for (Long componentId : componentsToRemove) {
+            ComponentEntity componentEntity = componentDao.findComponentById(componentId);
+            if (componentEntity != null) {
+                componentEntity.setProject(null);
+                componentEntity.setAvailability(true);
+                componentDao.merge(componentEntity);
+            }
+        }
+    }
 }
 

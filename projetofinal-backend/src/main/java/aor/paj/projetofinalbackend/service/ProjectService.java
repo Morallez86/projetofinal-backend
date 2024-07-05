@@ -447,5 +447,31 @@ public class ProjectService {
         }
     }
 
+    @DELETE
+    @Path("/{projectId}/removeComponents")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeComponentsFromProject(
+            @HeaderParam("Authorization") String authorizationHeader,
+            @PathParam("projectId") Long projectId,
+            List<Long> componentsToRemove) {
+        try {
+            // Validate token
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            Response validationResponse = authBean.validateUserToken(token);
+            if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                return validationResponse;
+            }
+
+            projectBean.removeComponentsFromProject(componentsToRemove, projectId);
+
+            return Response.status(Response.Status.OK).entity("Components removed from project successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+
 }
 
