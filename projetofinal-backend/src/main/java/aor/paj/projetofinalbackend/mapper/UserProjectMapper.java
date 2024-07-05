@@ -13,6 +13,7 @@ public class UserProjectMapper {
         dto.setProjectId(entity.getProject().getId());
         dto.setUsername(entity.getUser().getUsername());
         dto.setActive(entity.isActive());
+        dto.setOnline(entity.isOnline());
         return dto;
     }
 

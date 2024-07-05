@@ -15,6 +15,8 @@ public class UserProjectDto {
 
     private boolean active;
 
+    private boolean online;
+
 
     public UserProjectDto() {
     }
@@ -43,6 +45,15 @@ public class UserProjectDto {
     @XmlElement
     public Long getProjectId() {
         return projectId;
+    }
+
+    @XmlElement
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
     public void setUserId(Long userId) {

@@ -123,7 +123,7 @@ public class UserBean {
         for (UserProjectEntity userProject : userProjectEntities) {
             UserEntity userEntity = userDao.findUserById(userProject.getUser().getId());
             userEntity.setOnline(true);
-            userProject.setActive(true);
+            userProject.setOnline(true);
             userProjectDao.merge(userProject);
             userDao.merge(userEntity);
         }
