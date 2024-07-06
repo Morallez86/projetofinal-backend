@@ -193,6 +193,7 @@ public class UserService {
         try {
             userBean.validateUserDto(userDto);
             userBean.registerUser(userDto);
+            LoggerUtil.logInfo("REGISTERED" , "at " + LocalDateTime.now(), userDto.getEmail(), "not token");
             return Response.status(Response.Status.CREATED).entity("User registered successfully").build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -212,6 +213,8 @@ public class UserService {
             if (user != null) {
                 String token = userBean.emailTokenCreationForLink(user);
                 emailSender.sendRecoveryPassword(email, token);
+                LoggerUtil.logInfo("Email SENT TO RECOVERY PASSWORD:" , "at " + LocalDateTime.now(), email, "not token");
+
                 return Response.status(200).entity("Email sent").build();
             } else {
                 return Response.status(400).entity("User not found").build();
@@ -233,6 +236,7 @@ public class UserService {
         if (user != null) {
             try {
                 userBean.forgotPassword(user, password);
+                LoggerUtil.logInfo("PASSWORD UPDATED" , "at " + LocalDateTime.now(), user.getEmail(), "not token");
                 return Response.status(200).entity("New Password updated").build();
             } catch (Exception e) {
                 return Response.status(500).entity("Failed to update Password").build();
@@ -249,6 +253,8 @@ public class UserService {
         if (user != null) {
             try {
                 userBean.confirmRegistration(user);
+                LoggerUtil.logInfo("REGISTRATION CONFIRMED" , "at " + LocalDateTime.now(), user.getEmail(), "not token");
+
                 return Response.status(200).entity("Registration confirmed").build();
             } catch (Exception e) {
                 return Response.status(500).entity("Failed to confirm registration").build();
@@ -269,6 +275,8 @@ public class UserService {
             } catch (IOException ex) {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+        LoggerUtil.logInfo("USER PROFILE IMAGE UPDATED" , "at " + LocalDateTime.now(), email, "not token");
+
         return Response.ok().build();
     }
 
@@ -352,6 +360,7 @@ public class UserService {
 
         // Extract the token
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
 
         // Validate the token
         Response validationResponse = authBean.validateUserToken(token);
@@ -375,6 +384,7 @@ public class UserService {
             if (profileDto == null) {
                 return Response.status(Response.Status.NOT_FOUND).entity("Profile not found").build();
             }
+            LoggerUtil.logInfo("CHECK PROFILE USER: " + profileDto.getEmail()  , "at " + LocalDateTime.now(), user.getEmail(), token);
             return Response.ok(profileDto).build();
         } else {
             System.out.println("2 " + userId);
@@ -386,6 +396,8 @@ public class UserService {
             if (!profileDto.getVisibility()) {
                 return Response.status(Response.Status.FORBIDDEN).entity("Profile not visible").build();
             }
+            LoggerUtil.logInfo("CHECK PROFILE USER: " + profileDto.getEmail()  , "at " + LocalDateTime.now(), user.getEmail(), token);
+
             return Response.ok(profileDto).build();
         }
     }
@@ -401,6 +413,7 @@ public class UserService {
 
         // Extract the token
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
 
         // Validate the token
         Response validationResponse = authBean.validateUserToken(token);
@@ -410,6 +423,8 @@ public class UserService {
 
         try {
             userBean.updateUserProfile(userId, profileDto);
+            LoggerUtil.logInfo("UPDATE PROFILE " + profileDto.getEmail()  , "at " + LocalDateTime.now(), user.getEmail(), token);
+
             return Response.ok().entity("Profile updated successfully").build();
         } catch (RuntimeException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
@@ -424,9 +439,11 @@ public class UserService {
         try {
             // Extract the token from the Authorization header
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenBean.findUserByToken(token);
 
             // Check if the old password and new password are the same
             if (u.getOldPassword().equals(u.getNewPassword())) {
+                LoggerUtil.logError("ERROR - UPDATE PASSWORD: new password needs to be different from actual password " , "at " + LocalDateTime.now(), user.getEmail(), token);
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(JsonUtils.convertObjectToJson(new ResponseMessage("New password must be different from the old password")))
                         .build();
@@ -436,10 +453,14 @@ public class UserService {
             boolean updateSuccessful = userBean.updatePassword(u, token);
 
             if (updateSuccessful) {
+                LoggerUtil.logInfo("PASSWORD UPDATED ", "at " + LocalDateTime.now(), user.getEmail(), token);
+
                 return Response.status(Response.Status.OK)
                         .entity(JsonUtils.convertObjectToJson(new ResponseMessage("Password is updated")))
                         .build();
             } else {
+                LoggerUtil.logError("ERROR - UPDATE PASSWORD: actual password is incorrect " , "at " + LocalDateTime.now(), user.getEmail(), token);
+
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(JsonUtils.convertObjectToJson(new ResponseMessage("Old password is incorrect")))
                         .build();
@@ -460,6 +481,7 @@ public class UserService {
                                   @PathParam("userId") Long userId,
                                   @QueryParam("limit") int limit) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
         Response validationResponse = authBean.validateUserToken(token);
         if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
             return validationResponse;
@@ -478,6 +500,8 @@ public class UserService {
         responseMap.put("projects", projectDtos);
         responseMap.put("totalPages", totalPages);
 
+        LoggerUtil.logInfo("CHECK OWN PROJECTS", "at " + LocalDateTime.now(), user.getEmail(), token);
+
         return Response.ok(responseMap).build();
     }
 
@@ -486,6 +510,7 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchUsers(@QueryParam("query") String query, @HeaderParam("Authorization") String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
 
         // Validate the token
         Response validationResponse = authBean.validateUserToken(token);
@@ -499,6 +524,7 @@ public class UserService {
             return Response.status(Response.Status.NOT_FOUND).entity("Users not found").build();
         }
 
+        LoggerUtil.logInfo("SEARCH FOR USERS WITH QUERY: " + query, "at " + LocalDateTime.now(), user.getEmail(), token);
         return Response.ok(users).build();
     }
 
@@ -509,10 +535,13 @@ public class UserService {
     public Response updateUserRole(@HeaderParam("Authorization") String authorizationHeader, @PathParam("userId") Long userId, UserDto userDto) {
         // Extract the token
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
 
         // Validate the token
         Response validationResponse = authBean.validateUserToken(token);
         if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+            LoggerUtil.logInfo("ROLE UPDATED TO USER:" + userDto.getEmail(), "at " + LocalDateTime.now(), user.getEmail(), token);
+
             return validationResponse;
         }
 
