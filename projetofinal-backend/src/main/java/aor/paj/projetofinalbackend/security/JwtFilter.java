@@ -1,6 +1,8 @@
 package aor.paj.projetofinalbackend.security;
 
 import aor.paj.projetofinalbackend.bean.TokenBean;
+import aor.paj.projetofinalbackend.pojo.ResponseMessage;
+import aor.paj.projetofinalbackend.utils.JsonUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
@@ -40,7 +42,7 @@ public class JwtFilter implements ContainerRequestFilter {
         EXCLUDED_PATHS_AND_METHODS.put("/users/emailRecoveryPassword", anyMethods);
         EXCLUDED_PATHS_AND_METHODS.put("/users/forgotPassword", anyMethods);
         EXCLUDED_PATHS_AND_METHODS.put("/users/confirmRegistration", anyMethods);
-        EXCLUDED_PATHS_AND_METHODS.put("/greetings",anyMethods);
+        EXCLUDED_PATHS_AND_METHODS.put("/greetings", anyMethods);
     }
 
     @Override
@@ -84,12 +86,17 @@ public class JwtFilter implements ContainerRequestFilter {
         } catch (Exception e) {
             if (e.getMessage().equals("Token has expired")) {
                 tokenBean.deactivateToken(token);
+                requestContext.abortWith(
+                        Response.status(401)
+                                .entity(JsonUtils.convertObjectToJson(new ResponseMessage("Unauthorized")))
+                                .build());
+                return;
             }
 
             LOGGER.warning("Invalid token: " + e.getMessage());
             requestContext.abortWith(
-                    Response.status(Response.Status.UNAUTHORIZED)
-                            .entity("Invalid token")
+                    Response.status(401)
+                            .entity(JsonUtils.convertObjectToJson(new ResponseMessage("Invalid token")))
                             .build());
         }
     }
