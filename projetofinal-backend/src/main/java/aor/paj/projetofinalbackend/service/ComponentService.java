@@ -4,16 +4,19 @@ import aor.paj.projetofinalbackend.bean.AuthBean;
 import aor.paj.projetofinalbackend.bean.ComponentBean;
 import aor.paj.projetofinalbackend.bean.UserBean;
 import aor.paj.projetofinalbackend.dao.ComponentDao;
+import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.dto.ProjectDto;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.security.JwtUtil;
+import aor.paj.projetofinalbackend.utils.LoggerUtil;
 import aor.paj.projetofinalbackend.utils.Role;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,16 +33,23 @@ public class ComponentService {
     @Inject
     AuthBean authBean;
 
+    @Inject
+    TokenDao tokenDao;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createComponent(@HeaderParam("Authorization") String authorizationHeader, ComponentDto componentDto) {
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenDao.findUserByTokenValue(token);
         try {
             if (componentDto.getProjectId()== null) {
                 componentBean.addComponentDefault(componentDto);
             } else {
                 componentBean.addComponentInProject(componentDto, componentDto.getProjectId());
             }
+            LoggerUtil.logInfo("COMPONENT CREATED WITH THIS NAME: " + componentDto.getName(), "at " + LocalDateTime.now(), user.getEmail(), token );
+
             return Response.status(Response.Status.CREATED).entity("component created").build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
@@ -56,6 +66,8 @@ public class ComponentService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateComponent(@HeaderParam("Authorization") String authorizationHeader, ComponentDto componentDto) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenDao.findUserByTokenValue(token);
+
         System.out.println("yo");
 
         Long tokenUserId;
@@ -72,6 +84,8 @@ public class ComponentService {
         }
         try {
             componentBean.updateComponent(componentDto);
+            LoggerUtil.logInfo("RESOURCE UPDATED THIS THIS ID: " + componentDto.getId(), "at " + LocalDateTime.now(), user.getEmail(), token );
+
             return Response.status(Response.Status.OK).entity("Component updated").build();
         } catch (Exception e) {
             e.printStackTrace();

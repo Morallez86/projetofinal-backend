@@ -83,7 +83,7 @@ public class ResourceService {
             } else {
                 resourceBean.addResourceInProject(resourceDto, resourceDto.getProjectIds());
             }
-            LoggerUtil.logInfo("RESOURCE CREATED", "at " + LocalDateTime.now(), user.getEmail(), token );
+            LoggerUtil.logInfo("RESOURCE CREATED WITH THIS NAME: " + resourceDto.getName(), "at " + LocalDateTime.now(), user.getEmail(), token );
 
             return Response.status(Response.Status.CREATED).entity("component created").build();
         } catch (ExceptionInInitializerError e) {
