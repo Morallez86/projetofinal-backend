@@ -1,20 +1,20 @@
 package aor.paj.projetofinalbackend.bean;
 
 import aor.paj.projetofinalbackend.dao.ProjectDao;
+import aor.paj.projetofinalbackend.dao.ProjectHistoryDao;
 import aor.paj.projetofinalbackend.dao.TaskDao;
 import aor.paj.projetofinalbackend.dao.UserDao;
 import aor.paj.projetofinalbackend.dto.EditTaskResult;
 import aor.paj.projetofinalbackend.dto.TaskDto;
-import aor.paj.projetofinalbackend.entity.InterestEntity;
-import aor.paj.projetofinalbackend.entity.ProjectEntity;
-import aor.paj.projetofinalbackend.entity.TaskEntity;
-import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.TaskMapper;
+import aor.paj.projetofinalbackend.utils.HistoryType;
 import aor.paj.projetofinalbackend.utils.TaskStatus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,6 +32,9 @@ public class TaskBean {
 
     @Inject
     ProjectDao projectDao;
+
+    @Inject
+    ProjectHistoryDao projectHistoryDao;
 
     @Transactional
     public List<TaskDto> getAllTasks() {
@@ -75,5 +78,15 @@ public class TaskBean {
         taskEntity.setUser(userDao.findUserById(dto.getUserId()));
         taskEntity.setDependencies(taskEntityList);
         taskDao.persist(taskEntity);
+
+        ProjectHistoryEntity log = new ProjectHistoryEntity();
+        log.setTitle( taskEntity.getTitle() + " was created");
+        log.setTask(taskEntity);
+        log.setTimestamp(LocalDateTime.now());
+        log.setType(HistoryType.TASKS);
+        log.setUser(userDao.findUserById(dto.getUserId()));
+        log.setProject(taskEntity.getProject());
+        projectHistoryDao.persist(log);
+
     }
 }
