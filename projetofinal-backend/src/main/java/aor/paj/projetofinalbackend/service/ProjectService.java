@@ -18,6 +18,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,20 +187,41 @@ public class ProjectService {
     @Path("/{projectId}/possibleDependentTasks")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTasksDependentByProjectId(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, @QueryParam("plannedStartingDate") String plannedStartingDate) {
+    public Response getTasksDependentByProjectId(
+            @HeaderParam("Authorization") String authorizationHeader,
+            @PathParam("projectId") Long projectId,
+            @QueryParam("plannedStartingDate") String plannedStartingDate) {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            // Verificação se plannedStartingDate é nulo ou vazio
+            if (plannedStartingDate == null || plannedStartingDate.trim().isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("plannedStartingDate query parameter is required")
+                        .build();
+            }
 
-            LocalDateTime plannedStartingDateLocal = LocalDateTime.parse(plannedStartingDate, formatter);
+            // Formatação da data
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime plannedStartingDateLocal;
+
+            try {
+                plannedStartingDateLocal = LocalDateTime.parse(plannedStartingDate, formatter);
+            } catch (DateTimeParseException e) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Invalid date format for plannedStartingDate. Expected format: yyyy-MM-dd HH:mm:ss")
+                        .build();
+            }
+
+            // Criação do DTO e obtenção das tarefas
             TaskEndDateDto plannedStartingDateDto = new TaskEndDateDto(plannedStartingDateLocal);
             List<TaskDto> taskDtos = projectBean.getPossibleDependentTasks(projectId, plannedStartingDateDto);
+
             return Response.status(Response.Status.OK).entity(taskDtos).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-
         }
     }
+
 
 
     @PUT
