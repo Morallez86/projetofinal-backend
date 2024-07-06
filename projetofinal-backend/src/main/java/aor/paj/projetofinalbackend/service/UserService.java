@@ -15,6 +15,7 @@ import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import aor.paj.projetofinalbackend.utils.JsonUtils;
 import aor.paj.projetofinalbackend.utils.LoggerUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -25,11 +26,14 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.hibernate.Hibernate;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,6 +65,9 @@ public class UserService {
         // Validate the token
         String token = authorizationHeader.substring("Bearer".length()).trim();
         Response validationResponse = authBean.validateUserToken(token);
+
+        UserEntity user = tokenBean.findUserByToken(token);
+
         if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
             return validationResponse;
         }
@@ -80,6 +87,7 @@ public class UserService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to search User").build();
         }
 
+        LoggerUtil.logInfo("SEARCH FOR USERS", "at " + LocalDateTime.now(), user.getEmail(), token);
         return Response.ok(users).build();
     }
 
@@ -111,39 +119,61 @@ public class UserService {
     @Path("/logout")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response logout(@HeaderParam("Authorization") String authHeader, String jsonBody) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        HashMap<String, LocalDateTime> mapTimersChatString;
+        HashMap<String, HashMap<String, String>> outerMap;
         try {
-            
-            mapTimersChatString = objectMapper.readValue(jsonBody, objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, LocalDateTime.class));
+            outerMap = objectMapper.readValue(jsonBody, new TypeReference<HashMap<String, HashMap<String, String>>>() {});
         } catch (Exception e) {
+            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ResponseMessage("Invalid request body"))
                     .build();
         }
 
         String token = authHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
 
+       /* if (user != null) {
+            Hibernate.initialize(user.getUserProjects());
+        }*/
+
+
+        if (user != null) {
+            System.out.println("User email: " + user.getEmail());
+        } else {
+            System.out.println("User not found for token: " + token);
+        }
 
         HashMap<Long, LocalDateTime> mapTimersChat = new HashMap<>();
-        for (Map.Entry<String, LocalDateTime> entry : mapTimersChatString.entrySet()) {
-            try {
-                Long key = Long.parseLong(entry.getKey());
-                mapTimersChat.put(key, entry.getValue());
-            } catch (NumberFormatException e) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(new ResponseMessage("Invalid key format in request body"))
-                        .build();
+        if (outerMap.containsKey("projectTimestamps")) {
+            HashMap<String, String> innerMap = outerMap.get("projectTimestamps");
+            for (Map.Entry<String, String> entry : innerMap.entrySet()) {
+                try {
+                    Long key = Long.parseLong(entry.getKey());
+                    LocalDateTime value = LocalDateTime.parse(entry.getValue(), DateTimeFormatter.ISO_DATE_TIME);
+                    mapTimersChat.put(key, value);
+                } catch (NumberFormatException | DateTimeParseException e) {
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity(new ResponseMessage("Invalid key or date format in request body"))
+                            .build();
+                }
             }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ResponseMessage("Missing projectTimestamps in request body"))
+                    .build();
         }
 
         userBean.updateTimersChat(token, mapTimersChat);
 
         if (tokenBean.deactivateToken(token)) {
+            LoggerUtil.logInfo("LOGOUT", "at " + LocalDateTime.now(), user.getEmail(), token);
+
             return Response.status(Response.Status.OK)
                     .entity(new ResponseMessage("User successfully logged out"))
                     .build();
@@ -153,6 +183,7 @@ public class UserService {
                     .build();
         }
     }
+
 
     @POST
     @Path("/register")
