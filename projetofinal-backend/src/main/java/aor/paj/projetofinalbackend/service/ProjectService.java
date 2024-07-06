@@ -5,8 +5,11 @@ import aor.paj.projetofinalbackend.bean.ChatMesssageBean;
 import aor.paj.projetofinalbackend.bean.ProjectBean;
 import aor.paj.projetofinalbackend.bean.ProjectHistoryBean;
 import aor.paj.projetofinalbackend.dao.TaskDao;
+import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dto.*;
 import aor.paj.projetofinalbackend.entity.ProjectEntity;
+import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.utils.LoggerUtil;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -35,6 +38,9 @@ public class ProjectService {
     @Inject
     ChatMesssageBean chatMessageBean;
 
+    @Inject
+    TokenDao tokenDao;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -42,7 +48,9 @@ public class ProjectService {
         try {
             System.out.println(projectDto.getUserProjectDtos().get(0).getId());
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
             projectBean.addProject(projectDto, token);
+            LoggerUtil.logInfo("PROJECT CREATED WITH THIS NAME" + projectDto.getTitle(), "at " + LocalDateTime.now(), user.getEmail(),token);
             return Response.status(Response.Status.CREATED).entity("project created").build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
@@ -64,6 +72,8 @@ public class ProjectService {
                                    @QueryParam("interests") String interests,
                                    @QueryParam("status") String status
     ) {
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenDao.findUserByTokenValue(token);
         try {
             Set<ProjectDto> projectDtos;
             long totalProjects;
@@ -108,6 +118,8 @@ public class ProjectService {
             responseMap.put("projects", projectDtos);
             responseMap.put("totalPages", totalPages);
 
+            LoggerUtil.logInfo("SEE ALL PROJECTS", "at " + LocalDateTime.now(), user.getEmail(),token);
+
             return Response.ok(responseMap).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,6 +134,7 @@ public class ProjectService {
                                       @PathParam("projectId") Long projectId) {
         try {
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
@@ -131,6 +144,7 @@ public class ProjectService {
             if (projectDto == null) {
                 return Response.status(Response.Status.NOT_FOUND).entity("Project not found").build();
             }
+            LoggerUtil.logInfo("CHECK PROJECT WITH THIS ID: " + projectId, "at " + LocalDateTime.now(), user.getEmail(),token);
 
             return Response.ok(projectDto).build();
         } catch (Exception e) {
@@ -197,12 +211,13 @@ public class ProjectService {
                                   ProjectDto projectDto) {
         try {
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
             }
-
             projectBean.updateProject(projectId, projectDto, token);
+            LoggerUtil.logInfo("UPDATE PROJECT WITH THIS ID: " + projectDto, "at " + LocalDateTime.now(), user.getEmail(),token);
             return Response.status(Response.Status.OK).entity("Project updated successfully").build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -215,8 +230,12 @@ public class ProjectService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createChatMsg(@HeaderParam("Authorization") String authorizationHeader, ChatMessageDto chatMessageDto) {
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenDao.findUserByTokenValue(token);
         try {
             ChatMessageDto chatMessageDtoNew = chatMessageBean.createChatMsg(chatMessageDto);
+            LoggerUtil.logInfo("MSG SENT TO PROJECT CHAT: " + chatMessageDto.getContent(), "at " + LocalDateTime.now(), user.getEmail(),token);
+
             return Response.status(Response.Status.CREATED).entity(chatMessageDtoNew).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -237,6 +256,7 @@ public class ProjectService {
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
@@ -246,6 +266,7 @@ public class ProjectService {
 
             // Change user status in the project
             projectBean.changeUserStatus(projectId, userId, newStatus, token);
+            LoggerUtil.logInfo("USER STATUS CHANGED TO ADMIN? " + newStatus , "at " + LocalDateTime.now(), user.getEmail(),token);
 
             return Response.status(Response.Status.OK).entity("User status updated successfully").build();
         } catch (Exception e) {
@@ -267,6 +288,7 @@ public class ProjectService {
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
@@ -276,6 +298,9 @@ public class ProjectService {
 
             // Change user status in the project
             projectBean.changeUserToInactive(projectId, userId, token);
+
+            LoggerUtil.logInfo("USER STATUS CHANGED TO INATIVE" , "at " + LocalDateTime.now(), user.getEmail(),token);
+
 
             return Response.status(Response.Status.OK).entity("User status updated successfully").build();
         } catch (Exception e) {
@@ -292,6 +317,7 @@ public class ProjectService {
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
@@ -313,6 +339,7 @@ public class ProjectService {
 
             // Add skill to the project
             projectBean.addSkillToProject(projectId, addSkillToProjectDto.getSkill(), token);
+            LoggerUtil.logInfo("SKILLS ADDED TO PROJECT. PROJECT ID: " + projectId + " Skills Id's: " + addSkillToProjectDto.getSkill().getId() , "at " + LocalDateTime.now(), user.getEmail(),token);
 
             return Response.status(Response.Status.OK).entity("Skill added to project successfully").build();
         } catch (Exception e) {
@@ -330,6 +357,7 @@ public class ProjectService {
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
@@ -351,8 +379,9 @@ public class ProjectService {
 
             // Add skill to the project
             projectBean.addInterestToProject(projectId, addInterestToProjectDto.getInterest(), token);
+            LoggerUtil.logInfo("INTEREST ADDED TO PROJECT. PROJECT ID: " + projectId + " Interests Id's: " + addInterestToProjectDto.getInterest().getId() , "at " + LocalDateTime.now(), user.getEmail(),token);
 
-            return Response.status(Response.Status.OK).entity("Skill added to project successfully").build();
+            return Response.status(Response.Status.OK).entity("Interest added to project successfully").build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -367,6 +396,8 @@ public class ProjectService {
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
+
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
@@ -380,6 +411,7 @@ public class ProjectService {
 
             // Add component to the project
             projectBean.addComponentToProject(projectId, addComponentToProjectDto.getComponent(), token);
+            LoggerUtil.logInfo("COMPONENT ADDED TO PROJECT. PROJECT ID: " + projectId + " Components Id's: " + addComponentToProjectDto.getComponent().getId() , "at " + LocalDateTime.now(), user.getEmail(),token);
 
             return Response.status(Response.Status.OK).entity("Component added to project successfully").build();
         } catch (Exception e) {
@@ -396,6 +428,8 @@ public class ProjectService {
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
+
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
@@ -417,6 +451,7 @@ public class ProjectService {
 
             // Add resource to the project
             projectBean.addResourceToProject(projectId, addResourceToProjectDto.getResource(), token);
+            LoggerUtil.logInfo("RESOURCE ADDED TO PROJECT. PROJECT ID: " + projectId + " Components Id's: " + addResourceToProjectDto.getResource().getId() , "at " + LocalDateTime.now(), user.getEmail(),token);
 
             return Response.status(Response.Status.OK).entity("Resource added to project successfully").build();
         } catch (Exception e) {
@@ -438,12 +473,14 @@ public class ProjectService {
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
             }
 
             projectBean.removeSKillsProject( skillsToRemove, projectId);
+            LoggerUtil.logInfo("SKILLS REMOVED FROM PROJECT. PROJECT ID: " + projectId + " Skills Id's: " + skillsToRemove , "at " + LocalDateTime.now(), user.getEmail(),token);
 
             return Response.status(Response.Status.OK).entity("Skills removed from project successfully").build();
         } catch (Exception e) {
@@ -463,12 +500,15 @@ public class ProjectService {
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
+
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
             }
 
             projectBean.removeInterestsProject(interestsToRemove, projectId);
+            LoggerUtil.logInfo("INTERESTS REMOVED FROM PROJECT. PROJECT ID: " + projectId + " Interests Id's: " + interestsToRemove , "at " + LocalDateTime.now(), user.getEmail(),token);
 
             return Response.status(Response.Status.OK).entity("Interests removed from project successfully").build();
         } catch (Exception e) {
@@ -488,12 +528,15 @@ public class ProjectService {
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
+
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
             }
 
             projectBean.removeComponentsFromProject(componentsToRemove, projectId);
+            LoggerUtil.logInfo("COMPONENTS REMOVED FROM PROJECT. PROJECT ID: " + projectId + " Componentes Id's: " + componentsToRemove , "at " + LocalDateTime.now(), user.getEmail(),token);
 
             return Response.status(Response.Status.OK).entity("Components removed from project successfully").build();
         } catch (Exception e) {
@@ -513,12 +556,14 @@ public class ProjectService {
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
             Response validationResponse = authBean.validateUserToken(token);
             if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 return validationResponse;
             }
 
             projectBean.removeResourcesFromProject(resourcesToRemove, projectId);
+            LoggerUtil.logInfo("RESOURCES REMOVED FROM PROJECT. PROJECT ID: " + projectId + " RESOURCES Id's: " + resourcesToRemove , "at " + LocalDateTime.now(), user.getEmail(),token);
 
             return Response.status(Response.Status.OK).entity("Resources removed from project successfully").build();
         } catch (Exception e) {
