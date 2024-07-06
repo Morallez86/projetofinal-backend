@@ -83,7 +83,7 @@ public class TaskBean {
         log.setTitle( taskEntity.getTitle() + " was created");
         log.setTask(taskEntity);
         log.setTimestamp(LocalDateTime.now());
-        log.setType(HistoryType.TASKS);
+        log.setType(HistoryType.ADD);
         log.setUser(userDao.findUserById(dto.getUserId()));
         log.setProject(taskEntity.getProject());
         projectHistoryDao.persist(log);
