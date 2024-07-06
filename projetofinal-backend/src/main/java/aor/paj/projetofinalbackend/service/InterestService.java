@@ -9,6 +9,7 @@ import aor.paj.projetofinalbackend.entity.InterestEntity;
 import aor.paj.projetofinalbackend.entity.SkillEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.InterestMapper;
+import aor.paj.projetofinalbackend.utils.LoggerUtil;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -16,6 +17,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.hibernate.Hibernate;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,6 +56,7 @@ public class InterestService {
         try {
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
 
             // Add the interests
             interestBean.addAttributes(interestDtos, token);
@@ -61,6 +65,7 @@ public class InterestService {
             Hibernate.initialize(userEntity.getInterests());
             Set<InterestEntity> listInterestEntity = userEntity.getInterests();
             Set < InterestEntity> listNewInterests = new HashSet<>();
+            List<Long> idsToLog = new ArrayList<>();
 
             int counterOfTotal  = 0;
 
@@ -69,6 +74,7 @@ public class InterestService {
                 for (InterestEntity list : listInterestEntity) {
                         if (list.getName().equals(dtoList.getName())) {
                             listNewInterests.add(list);
+                            idsToLog.add(list.getId());
                             counterOfTotal++;
                         }
                     }
@@ -76,7 +82,10 @@ public class InterestService {
             } while (counterOfTotal < interestDtos.size());
 
 
+
+
             Set <InterestDto> listNewInterestsConvertedDto = InterestMapper.listToDto(listNewInterests);
+            LoggerUtil.logInfo("INTEREST WITH THIS ID'S: " + idsToLog + " CREATED" , "at" + LocalDateTime.now(), user.getEmail(), token);
 
             return Response.status(Response.Status.CREATED).entity(listNewInterestsConvertedDto).build();
         } catch (Exception e) {
@@ -91,9 +100,12 @@ public class InterestService {
         try {
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
 
             // Remove the skills
             interestBean.removeAttributes(interestIds, token);
+
+            LoggerUtil.logInfo("INTEREST WITH THIS ID'S: " + interestIds + " REMOVED"  , "at" + LocalDateTime.now(), user.getEmail(), token);
 
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (Exception e) {
