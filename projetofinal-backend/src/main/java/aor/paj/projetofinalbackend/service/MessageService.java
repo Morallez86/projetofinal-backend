@@ -7,12 +7,14 @@ import aor.paj.projetofinalbackend.dto.UpdateSeenStatusDto;
 import aor.paj.projetofinalbackend.entity.MessageEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.MessageMapper;
+import aor.paj.projetofinalbackend.utils.LoggerUtil;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +71,7 @@ public class MessageService {
                 response.put("messages", messages);
                 response.put("totalPages", totalPages);
 
+                LoggerUtil.logInfo("OPEN MESSAGES" , "at" + LocalDateTime.now(), user.getEmail(), token);
                 return Response.ok(response).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).entity("Messages not found").build();
@@ -101,6 +104,8 @@ public class MessageService {
             // Convert the saved entity back to a DTO
             MessageDto savedMessageDto = MessageMapper.entityToDto(savedMessage);
 
+            LoggerUtil.logInfo("SEND MESSAGE TO " + messageDto.getReceiverUsername() , "at" + LocalDateTime.now(), sender.getEmail(), token);
+
             return Response.status(Response.Status.CREATED).entity(savedMessageDto).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,6 +124,7 @@ public class MessageService {
             UserEntity sender = tokenDao.findUserByTokenValue(token);
             // Update the seen status for the messages
             messageBean.updateSeenStatus(updateSeenStatusDto.getMessageOrNotificationIds(), updateSeenStatusDto.isSeen(), sender);
+            LoggerUtil.logInfo("UPDATE MESSAGES: SEEN STATUS From this ids: " + updateSeenStatusDto.getMessageOrNotificationIds() + " to " + updateSeenStatusDto.isSeen() , "at" + LocalDateTime.now(), sender.getEmail(), token);
 
             return Response.status(Response.Status.OK).build();
         } catch (Exception e) {

@@ -3,16 +3,19 @@ package aor.paj.projetofinalbackend.service;
 import aor.paj.projetofinalbackend.bean.ComponentBean;
 import aor.paj.projetofinalbackend.bean.ResourceBean;
 import aor.paj.projetofinalbackend.bean.UserBean;
+import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.dto.ResourceDto;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.security.JwtUtil;
+import aor.paj.projetofinalbackend.utils.LoggerUtil;
 import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +29,17 @@ public class ResourceService {
     @Inject
     UserBean userBean;
 
+    @Inject
+    TokenDao tokenDao;
+
     @GET
     @Path(("/toTables"))
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response allResources(@HeaderParam("Authorization") String authorizationHeader, @QueryParam("page") @DefaultValue("1") int page,
                                  @QueryParam("limit") @DefaultValue("10") int limit, @QueryParam("filter") @DefaultValue("") String keyWord) {
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenDao.findUserByTokenValue(token);
         try {
             if (keyWord!=null) {
                 List<ResourceDto> resourceDtoListWithSearch = resourceBean.allResourcesSearch(page, limit, keyWord);
@@ -50,6 +58,7 @@ public class ResourceService {
                 Map<String, Object> responseMap = new HashMap<>();
                 responseMap.put("resources", resourceDtoList);
                 responseMap.put("totalPages", totalPages);
+                LoggerUtil.logInfo("CHECK RESOURCES WITH FILTERS", "at " + LocalDateTime.now(), user.getEmail(), token );
                 return Response.status(Response.Status.OK).entity(responseMap).build();
             }
         } catch (ExceptionInInitializerError e) {
@@ -66,12 +75,16 @@ public class ResourceService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createResource(@HeaderParam("Authorization") String authorizationHeader, ResourceDto resourceDto) {
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenDao.findUserByTokenValue(token);
         try {
             if (resourceDto.getProjectIds()== null) {
                 resourceBean.addResourceDefault(resourceDto);
             } else {
                 resourceBean.addResourceInProject(resourceDto, resourceDto.getProjectIds());
             }
+            LoggerUtil.logInfo("RESOURCE CREATED WITH THIS NAME: " + resourceDto.getName(), "at " + LocalDateTime.now(), user.getEmail(), token );
+
             return Response.status(Response.Status.CREATED).entity("component created").build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
@@ -88,6 +101,7 @@ public class ResourceService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateResource(@HeaderParam("Authorization") String authorizationHeader, ResourceDto resourceDto) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenDao.findUserByTokenValue(token);
 
         Long tokenUserId;
         try {
@@ -103,6 +117,8 @@ public class ResourceService {
         }
         try {
             resourceBean.updateResource(resourceDto);
+            LoggerUtil.logInfo("RESOURCE UPDATED THIS THIS ID: " + resourceDto.getId(), "at " + LocalDateTime.now(), user.getEmail(), token );
+
             return Response.status(Response.Status.OK).entity("component updated").build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
@@ -117,8 +133,12 @@ public class ResourceService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response allResourcesWithoutFilters(@HeaderParam("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenDao.findUserByTokenValue(token);
         try {
             List <ResourceDto> resourceDtoList = resourceBean.getAllWithoutFilters();
+            LoggerUtil.logInfo("CHECK RESOURCES WITHOUT FILTERS", "at " + LocalDateTime.now(), user.getEmail(), token );
+
             return Response.status(Response.Status.OK).entity(resourceDtoList).build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();

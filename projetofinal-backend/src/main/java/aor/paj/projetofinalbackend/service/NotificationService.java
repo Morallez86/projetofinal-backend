@@ -7,6 +7,7 @@ import aor.paj.projetofinalbackend.dto.NotificationDto;
 import aor.paj.projetofinalbackend.dto.UpdateSeenStatusDto;
 import aor.paj.projetofinalbackend.entity.NotificationEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
+import aor.paj.projetofinalbackend.utils.LoggerUtil;
 import aor.paj.projetofinalbackend.utils.NotificationManagingActions;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -14,6 +15,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +64,8 @@ public class NotificationService {
                         Map<String, Object> response = new HashMap<>();
                         response.put("notifications", notifications);
                         response.put("totalPages", totalPages);
+                        LoggerUtil.logInfo("OPEN NOTIFICATIONS" , "at" + LocalDateTime.now(), user.getEmail(), token);
+
                         return Response.ok(response).build();
                     } else {
                         return Response.status(Response.Status.NOT_FOUND).entity("Notifications not found").build();
@@ -88,6 +92,8 @@ public class NotificationService {
             if (sender != null) {
                 if (Objects.equals(notificationDto.getType(), "300") || Objects.equals(notificationDto.getType(), "400")) {
                     notificationBean.sendRequestInvitationProject(sender, notificationDto);
+                    LoggerUtil.logInfo("NOTIFICATION SENT TO USER WHITH THIS ID :" + notificationDto.getReceiverId() , "at" + LocalDateTime.now(), sender.getEmail(), token);
+
                     return Response.status(Response.Status.OK).build();
                 } else {
                     return Response.status(Response.Status.BAD_REQUEST).entity("Invalid notification type").build();
@@ -113,6 +119,7 @@ public class NotificationService {
 
             if (user != null) {
                 notificationBean.updateSeenStatus(user.getId(), updateSeenStatusDto.getMessageOrNotificationIds(), updateSeenStatusDto.isSeen(), user);
+                LoggerUtil.logInfo("UPDATE NOTIFICATIONS: SEEN STATUS From this ids: " + updateSeenStatusDto.getMessageOrNotificationIds() + " to " + updateSeenStatusDto.isSeen() , "at" + LocalDateTime.now(), user.getEmail(), token);
                 return Response.status(Response.Status.OK).build();
             } else {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("User not authorized").build();
@@ -177,6 +184,7 @@ public class NotificationService {
                 if (userProjectBean.isProjectAtMaxUsers(notificationDto.getProjectId())) {
                     return Response.status(Response.Status.CONFLICT).entity("Project has reached maximum capacity").build();
                 }
+
                 notificationBean.approveOrRejectNotificationParticipateProject(notificationDto, user, isInvitation);
             }else{
                 System.out.println("pvsjdvpdsv");

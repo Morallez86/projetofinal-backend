@@ -6,6 +6,7 @@ import aor.paj.projetofinalbackend.dto.SkillDto;
 import aor.paj.projetofinalbackend.entity.SkillEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.SkillMapper;
+import aor.paj.projetofinalbackend.utils.LoggerUtil;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -13,6 +14,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.hibernate.Hibernate;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,6 +53,7 @@ public class SkillService {
             String token = authorizationHeader.substring("Bearer".length()).trim();
 
 
+
             // Add the skills
             skillBean.addAttributes(skillDtos, token);
 
@@ -74,7 +77,7 @@ public class SkillService {
 
 
             Set<SkillDto> listNewSkillsConvertedDto = SkillMapper.listToDto(listNewSkills);
-
+            LoggerUtil.logInfo("ADD SKILLS", "at " + LocalDateTime.now(), userEntity.getEmail(), token);
             return Response.status(Response.Status.CREATED).entity(listNewSkillsConvertedDto).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,10 +91,12 @@ public class SkillService {
         try {
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenDao.findUserByTokenValue(token);
             System.out.println(skillIds);
 
             // Remove the skills
             skillBean.removeAttributes(skillIds, token);
+            LoggerUtil.logInfo("SKILLS REMOVE WITH THIS ID'S " + skillIds, "at " + LocalDateTime.now(), user.getEmail(), token);
 
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (Exception e) {

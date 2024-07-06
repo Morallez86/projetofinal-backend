@@ -15,6 +15,7 @@ import aor.paj.projetofinalbackend.utils.EmailSender;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import aor.paj.projetofinalbackend.utils.JsonUtils;
 import aor.paj.projetofinalbackend.utils.LoggerUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -25,11 +26,14 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.hibernate.Hibernate;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,6 +65,9 @@ public class UserService {
         // Validate the token
         String token = authorizationHeader.substring("Bearer".length()).trim();
         Response validationResponse = authBean.validateUserToken(token);
+
+        UserEntity user = tokenBean.findUserByToken(token);
+
         if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
             return validationResponse;
         }
@@ -80,6 +87,7 @@ public class UserService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to search User").build();
         }
 
+        LoggerUtil.logInfo("SEARCH FOR USERS", "at " + LocalDateTime.now(), user.getEmail(), token);
         return Response.ok(users).build();
     }
 
@@ -111,39 +119,61 @@ public class UserService {
     @Path("/logout")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response logout(@HeaderParam("Authorization") String authHeader, String jsonBody) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        HashMap<String, LocalDateTime> mapTimersChatString;
+        HashMap<String, HashMap<String, String>> outerMap;
         try {
-            
-            mapTimersChatString = objectMapper.readValue(jsonBody, objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, LocalDateTime.class));
+            outerMap = objectMapper.readValue(jsonBody, new TypeReference<HashMap<String, HashMap<String, String>>>() {});
         } catch (Exception e) {
+            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ResponseMessage("Invalid request body"))
                     .build();
         }
 
         String token = authHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
 
+       /* if (user != null) {
+            Hibernate.initialize(user.getUserProjects());
+        }*/
+
+
+        if (user != null) {
+            System.out.println("User email: " + user.getEmail());
+        } else {
+            System.out.println("User not found for token: " + token);
+        }
 
         HashMap<Long, LocalDateTime> mapTimersChat = new HashMap<>();
-        for (Map.Entry<String, LocalDateTime> entry : mapTimersChatString.entrySet()) {
-            try {
-                Long key = Long.parseLong(entry.getKey());
-                mapTimersChat.put(key, entry.getValue());
-            } catch (NumberFormatException e) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(new ResponseMessage("Invalid key format in request body"))
-                        .build();
+        if (outerMap.containsKey("projectTimestamps")) {
+            HashMap<String, String> innerMap = outerMap.get("projectTimestamps");
+            for (Map.Entry<String, String> entry : innerMap.entrySet()) {
+                try {
+                    Long key = Long.parseLong(entry.getKey());
+                    LocalDateTime value = LocalDateTime.parse(entry.getValue(), DateTimeFormatter.ISO_DATE_TIME);
+                    mapTimersChat.put(key, value);
+                } catch (NumberFormatException | DateTimeParseException e) {
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity(new ResponseMessage("Invalid key or date format in request body"))
+                            .build();
+                }
             }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ResponseMessage("Missing projectTimestamps in request body"))
+                    .build();
         }
 
         userBean.updateTimersChat(token, mapTimersChat);
 
         if (tokenBean.deactivateToken(token)) {
+            LoggerUtil.logInfo("LOGOUT", "at " + LocalDateTime.now(), user.getEmail(), token);
+
             return Response.status(Response.Status.OK)
                     .entity(new ResponseMessage("User successfully logged out"))
                     .build();
@@ -154,6 +184,7 @@ public class UserService {
         }
     }
 
+
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -162,6 +193,7 @@ public class UserService {
         try {
             userBean.validateUserDto(userDto);
             userBean.registerUser(userDto);
+            LoggerUtil.logInfo("REGISTERED" , "at " + LocalDateTime.now(), userDto.getEmail(), "not token");
             return Response.status(Response.Status.CREATED).entity("User registered successfully").build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -181,6 +213,8 @@ public class UserService {
             if (user != null) {
                 String token = userBean.emailTokenCreationForLink(user);
                 emailSender.sendRecoveryPassword(email, token);
+                LoggerUtil.logInfo("Email SENT TO RECOVERY PASSWORD:" , "at " + LocalDateTime.now(), email, "not token");
+
                 return Response.status(200).entity("Email sent").build();
             } else {
                 return Response.status(400).entity("User not found").build();
@@ -202,6 +236,7 @@ public class UserService {
         if (user != null) {
             try {
                 userBean.forgotPassword(user, password);
+                LoggerUtil.logInfo("PASSWORD UPDATED" , "at " + LocalDateTime.now(), user.getEmail(), "not token");
                 return Response.status(200).entity("New Password updated").build();
             } catch (Exception e) {
                 return Response.status(500).entity("Failed to update Password").build();
@@ -218,6 +253,8 @@ public class UserService {
         if (user != null) {
             try {
                 userBean.confirmRegistration(user);
+                LoggerUtil.logInfo("REGISTRATION CONFIRMED" , "at " + LocalDateTime.now(), user.getEmail(), "not token");
+
                 return Response.status(200).entity("Registration confirmed").build();
             } catch (Exception e) {
                 return Response.status(500).entity("Failed to confirm registration").build();
@@ -238,6 +275,8 @@ public class UserService {
             } catch (IOException ex) {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+        LoggerUtil.logInfo("USER PROFILE IMAGE UPDATED" , "at " + LocalDateTime.now(), email, "not token");
+
         return Response.ok().build();
     }
 
@@ -321,6 +360,7 @@ public class UserService {
 
         // Extract the token
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
 
         // Validate the token
         Response validationResponse = authBean.validateUserToken(token);
@@ -344,6 +384,7 @@ public class UserService {
             if (profileDto == null) {
                 return Response.status(Response.Status.NOT_FOUND).entity("Profile not found").build();
             }
+            LoggerUtil.logInfo("CHECK PROFILE USER: " + profileDto.getEmail()  , "at " + LocalDateTime.now(), user.getEmail(), token);
             return Response.ok(profileDto).build();
         } else {
             System.out.println("2 " + userId);
@@ -355,6 +396,8 @@ public class UserService {
             if (!profileDto.getVisibility()) {
                 return Response.status(Response.Status.FORBIDDEN).entity("Profile not visible").build();
             }
+            LoggerUtil.logInfo("CHECK PROFILE USER: " + profileDto.getEmail()  , "at " + LocalDateTime.now(), user.getEmail(), token);
+
             return Response.ok(profileDto).build();
         }
     }
@@ -370,6 +413,7 @@ public class UserService {
 
         // Extract the token
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
 
         // Validate the token
         Response validationResponse = authBean.validateUserToken(token);
@@ -379,6 +423,8 @@ public class UserService {
 
         try {
             userBean.updateUserProfile(userId, profileDto);
+            LoggerUtil.logInfo("UPDATE PROFILE " + profileDto.getEmail()  , "at " + LocalDateTime.now(), user.getEmail(), token);
+
             return Response.ok().entity("Profile updated successfully").build();
         } catch (RuntimeException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
@@ -393,9 +439,11 @@ public class UserService {
         try {
             // Extract the token from the Authorization header
             String token = authorizationHeader.substring("Bearer".length()).trim();
+            UserEntity user = tokenBean.findUserByToken(token);
 
             // Check if the old password and new password are the same
             if (u.getOldPassword().equals(u.getNewPassword())) {
+                LoggerUtil.logError("ERROR - UPDATE PASSWORD: new password needs to be different from actual password " , "at " + LocalDateTime.now(), user.getEmail(), token);
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(JsonUtils.convertObjectToJson(new ResponseMessage("New password must be different from the old password")))
                         .build();
@@ -405,10 +453,14 @@ public class UserService {
             boolean updateSuccessful = userBean.updatePassword(u, token);
 
             if (updateSuccessful) {
+                LoggerUtil.logInfo("PASSWORD UPDATED ", "at " + LocalDateTime.now(), user.getEmail(), token);
+
                 return Response.status(Response.Status.OK)
                         .entity(JsonUtils.convertObjectToJson(new ResponseMessage("Password is updated")))
                         .build();
             } else {
+                LoggerUtil.logError("ERROR - UPDATE PASSWORD: actual password is incorrect " , "at " + LocalDateTime.now(), user.getEmail(), token);
+
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(JsonUtils.convertObjectToJson(new ResponseMessage("Old password is incorrect")))
                         .build();
@@ -429,6 +481,7 @@ public class UserService {
                                   @PathParam("userId") Long userId,
                                   @QueryParam("limit") int limit) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
         Response validationResponse = authBean.validateUserToken(token);
         if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
             return validationResponse;
@@ -447,6 +500,8 @@ public class UserService {
         responseMap.put("projects", projectDtos);
         responseMap.put("totalPages", totalPages);
 
+        LoggerUtil.logInfo("CHECK OWN PROJECTS", "at " + LocalDateTime.now(), user.getEmail(), token);
+
         return Response.ok(responseMap).build();
     }
 
@@ -455,6 +510,7 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchUsers(@QueryParam("query") String query, @HeaderParam("Authorization") String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
 
         // Validate the token
         Response validationResponse = authBean.validateUserToken(token);
@@ -468,6 +524,7 @@ public class UserService {
             return Response.status(Response.Status.NOT_FOUND).entity("Users not found").build();
         }
 
+        LoggerUtil.logInfo("SEARCH FOR USERS WITH QUERY: " + query, "at " + LocalDateTime.now(), user.getEmail(), token);
         return Response.ok(users).build();
     }
 
@@ -478,10 +535,13 @@ public class UserService {
     public Response updateUserRole(@HeaderParam("Authorization") String authorizationHeader, @PathParam("userId") Long userId, UserDto userDto) {
         // Extract the token
         String token = authorizationHeader.substring("Bearer".length()).trim();
+        UserEntity user = tokenBean.findUserByToken(token);
 
         // Validate the token
         Response validationResponse = authBean.validateUserToken(token);
         if (validationResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+            LoggerUtil.logInfo("ROLE UPDATED TO USER:" + userDto.getEmail(), "at " + LocalDateTime.now(), user.getEmail(), token);
+
             return validationResponse;
         }
 
