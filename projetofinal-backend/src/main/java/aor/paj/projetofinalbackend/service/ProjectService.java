@@ -73,7 +73,7 @@ public class ProjectService {
                                    @QueryParam("status") String status
     ) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
-        UserEntity user = tokenDao.findUserByTokenValue(token);
+
         try {
             Set<ProjectDto> projectDtos;
             long totalProjects;
@@ -118,7 +118,7 @@ public class ProjectService {
             responseMap.put("projects", projectDtos);
             responseMap.put("totalPages", totalPages);
 
-            LoggerUtil.logInfo("SEE ALL PROJECTS", "at " + LocalDateTime.now(), user.getEmail(),token);
+            LoggerUtil.logInfo("SEE ALL PROJECTS", "at " + LocalDateTime.now(), "not user",token);
 
             return Response.ok(responseMap).build();
         } catch (Exception e) {

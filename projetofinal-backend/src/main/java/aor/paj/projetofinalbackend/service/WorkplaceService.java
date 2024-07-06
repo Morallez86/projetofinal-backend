@@ -16,6 +16,7 @@ public class WorkplaceService {
     @EJB
     WorkplaceBean workplaceBean;
 
+
     @POST
     @Path("/createWorkplace")
     @Consumes(MediaType.APPLICATION_JSON)
