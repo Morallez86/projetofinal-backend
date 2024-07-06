@@ -162,7 +162,6 @@ public class ProjectBean {
         System.out.println(updatedComponents);
 
         // Handle resources
-        System.out.println("11111111111111");
         Set<ResourceEntity> updatedResources = new HashSet<>();
         Iterator<ResourceEntity> resourceIterator = projectEntity.getResources().iterator();
         while (resourceIterator.hasNext()) {
@@ -172,13 +171,11 @@ public class ProjectBean {
                 ResourceEntity existingResource = resourceDao.findById(resourceEntity.getId());
                 System.out.println(existingResource);
                 if (existingResource != null) {
-                    System.out.println("33333333333333");
                     // Use the existing resource from the database
                     updatedResources.add(existingResource);
                     resourceIterator.remove();
 
                 } else {
-                    System.out.println("222222222222222");
                     // Resource not found in the database, send notification
                     sendNewComponentResourceNotification(user, resourceEntity.getName());
                     // Remove resourceEntity to avoid merge issues
