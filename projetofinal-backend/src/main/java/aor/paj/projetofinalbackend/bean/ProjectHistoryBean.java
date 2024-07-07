@@ -96,14 +96,14 @@ public class ProjectHistoryBean {
     }
 
     public void logUserInactiveChange(UserProjectEntity userProjectEntity, UserEntity userSending) {
-        String titleLog = userProjectEntity.getUser().getUsername() + " exited the project";;
+        String titleLog = userProjectEntity.getUser().getUsername() + " was removed/exited";;
 
         // Create a new ProjectHistoryEntity instance
         ProjectHistoryEntity projectHistoryEntity = new ProjectHistoryEntity();
         projectHistoryEntity.setTitle(titleLog);
         projectHistoryEntity.setProject(userProjectEntity.getProject());
         projectHistoryEntity.setUser(userSending);
-        projectHistoryEntity.setType(HistoryType.PROJECTSTATE);
+        projectHistoryEntity.setType(HistoryType.REMOVE);
         projectHistoryEntity.setTimestamp(LocalDateTime.now());
 
         // Persist the history entity

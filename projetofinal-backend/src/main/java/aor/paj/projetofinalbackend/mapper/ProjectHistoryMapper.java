@@ -16,15 +16,19 @@ public class ProjectHistoryMapper {
         }
         dto.setType(entity.getType().getValue());
         dto.setTimestamp(entity.getTimestamp());
-        dto.setUserId(entity.getUser().getId());
+        if (entity.getUser()!=null) {
+            dto.setUserId(entity.getUser().getId());
+        }
         dto.setProjectId(entity.getProject().getId());
         if (entity.getTask()!=null) {
         dto.setTaskId(entity.getTask().getId());
         dto.setTaskName(entity.getTask().getTitle());}
-        if (entity.getUser().getUsername() != null) {
-            dto.setUserName(entity.getUser().getUsername());
-        } else {
-            dto.setUserName(entity.getUser().getEmail());
+        if (entity.getUser()!=null) {
+            if (entity.getUser().getUsername() != null) {
+                dto.setUserName(entity.getUser().getUsername());
+            } else {
+                dto.setUserName(entity.getUser().getEmail());
+            }
         }
         if (entity.getTitle()!=null) {
             dto.setTitle(entity.getTitle());

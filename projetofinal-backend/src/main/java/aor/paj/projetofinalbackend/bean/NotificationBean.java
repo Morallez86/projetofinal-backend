@@ -4,6 +4,7 @@ import aor.paj.projetofinalbackend.dao.*;
 import aor.paj.projetofinalbackend.dto.NotificationDto;
 import aor.paj.projetofinalbackend.entity.*;
 import aor.paj.projetofinalbackend.mapper.NotificationMapper;
+import aor.paj.projetofinalbackend.utils.HistoryType;
 import aor.paj.projetofinalbackend.utils.NotificationManagingActions;
 import aor.paj.projetofinalbackend.utils.NotificationType;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
@@ -40,6 +41,9 @@ public class NotificationBean {
 
     @EJB
     UserDao userDao;
+
+    @EJB
+    ProjectHistoryDao projectHistoryDao;
 
     public NotificationEntity findNotificationById(Long userId) {
         return notificationDao.findNotificationById(userId);
@@ -202,6 +206,13 @@ public class NotificationBean {
 
                     // Persist the UserProjectEntity
                     userProjectDao.persist(userProjectEntity);
+
+                    ProjectHistoryEntity log = new ProjectHistoryEntity();
+                    log.setTitle(correctUserToAdd.getUsername() + " is a new member");
+                    log.setTimestamp(LocalDateTime.now());
+                    log.setType(HistoryType.ADD);
+                    log.setProject(project);
+                    projectHistoryDao.persist(log);
                 } else {
                     throw new IllegalArgumentException("User is already on the project.");
                 }
