@@ -142,4 +142,8 @@ public class NotificationEntity implements Serializable {
     public void setAction(NotificationManagingActions action) {
         this.action = action;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
