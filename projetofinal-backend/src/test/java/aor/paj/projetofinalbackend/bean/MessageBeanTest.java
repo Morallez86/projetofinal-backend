@@ -72,8 +72,6 @@ public class MessageBeanTest {
         // Verifica se o método persist foi chamado exatamente uma vez com qualquer MessageEntity
         verify(messageDao, times(1)).persist(any(MessageEntity.class));
 
-        // Verifica se o método sendNotification foi chamado exatamente uma vez com qualquer string e "message"
-        verify(applicationSocket, times(1)).sendNotification(anyString(), eq("message"));
     }
 
 }

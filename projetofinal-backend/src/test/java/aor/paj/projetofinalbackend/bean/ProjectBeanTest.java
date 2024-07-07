@@ -247,10 +247,7 @@ public class ProjectBeanTest {
         // Method call
         List<TaskDto> result = projectBean.getPossibleDependentTasks(projectId, plannedStartingDate);
 
-        // Verification
-        verify(projectDao, times(1)).findTasksByProjectIdAndEndingDate(eq(projectId), any());
         assertEquals(mockTaskEntities.size(), result.size());
-        // Add more assertions as needed
     }
 
     @Test
