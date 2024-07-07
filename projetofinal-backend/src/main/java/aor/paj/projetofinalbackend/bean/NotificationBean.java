@@ -228,11 +228,7 @@ public class NotificationBean {
 
             // Create and persist the user notification entity for the receiver
             UserNotificationEntity userNotification = new UserNotificationEntity();
-            if (notificationDto.getType().equals("400")) {
-                userNotification.setUser(sender);
-            } else {
-                userNotification.setUser(receiver);
-            }
+            userNotification.setUser(receiver);
             userNotification.setNotification(responseNotification);
             userNotification.setSeen(false);
 
