@@ -46,9 +46,13 @@ public class TaskBean {
 
     @Transactional
     public EditTaskResult editTask (TaskDto dto) {
+        int compare = 0;
         TaskEntity task = TaskMapper.toEntity(dto);
         TaskEntity taskDataBase = taskDao.find(dto.getId());
         taskDataBase.setTitle(task.getTitle());
+        if (taskDataBase.getStatus() != task.getStatus()) {
+            compare = 1;
+        }
         taskDataBase.setDescription(task.getDescription());
         taskDataBase.setPriority(task.getPriority());
         taskDataBase.setStatus(task.getStatus());
@@ -57,6 +61,19 @@ public class TaskBean {
         taskDataBase.setUser(user);
 
         taskDao.merge(taskDataBase);
+
+        ProjectHistoryEntity log = new ProjectHistoryEntity();
+        if (compare!=1) {
+            log.setTitle(taskDataBase.getTitle() + " was edited");
+        } else {
+                log.setTitle(taskDataBase.getTitle() + ": " + taskDataBase.getStatus());
+            }
+        log.setType(HistoryType.TASKS);
+        log.setTimestamp(LocalDateTime.now());
+        log.setProject(taskDataBase.getProject());
+        log.setUser(user);
+        projectHistoryDao.persist(log);
+
 
 
         List<TaskEntity> orderedTasks = taskDao.findTasksByProjectId(dto.getProjectId());
