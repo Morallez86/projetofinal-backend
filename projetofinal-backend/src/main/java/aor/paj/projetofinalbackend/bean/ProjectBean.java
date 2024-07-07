@@ -217,6 +217,7 @@ public class ProjectBean {
                 UserProjectEntity userProjectEntity = new UserProjectEntity();
                 userProjectEntity.setUser(projectUser);
                 userProjectEntity.setProject(projectEntity);
+                userProjectEntity.setActive(true);
                 userProjectEntity.setIsAdmin(false);
                 userProjectEntities.add(userProjectEntity);
             }
@@ -227,6 +228,7 @@ public class ProjectBean {
         ownerProjectEntity.setUser(user);
         ownerProjectEntity.setProject(projectEntity);
         ownerProjectEntity.setIsAdmin(true);
+        ownerProjectEntity.setActive(true);
         userProjectEntities.add(ownerProjectEntity);
         // Persist user projects
         for (UserProjectEntity userProjectEntity : userProjectEntities) {
