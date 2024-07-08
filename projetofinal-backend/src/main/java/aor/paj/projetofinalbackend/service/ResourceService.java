@@ -85,7 +85,7 @@ public class ResourceService {
             }
             LoggerUtil.logInfo("RESOURCE CREATED WITH THIS NAME: " + resourceDto.getName(), "at " + LocalDateTime.now(), user.getEmail(), token );
 
-            return Response.status(Response.Status.CREATED).entity("component created").build();
+            return Response.status(Response.Status.CREATED).entity("resource created").build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
             cause.printStackTrace();
@@ -119,7 +119,7 @@ public class ResourceService {
             resourceBean.updateResource(resourceDto);
             LoggerUtil.logInfo("RESOURCE UPDATED THIS THIS ID: " + resourceDto.getId(), "at " + LocalDateTime.now(), user.getEmail(), token );
 
-            return Response.status(Response.Status.OK).entity("component updated").build();
+            return Response.status(Response.Status.OK).entity("resource updated").build();
         } catch (ExceptionInInitializerError e) {
             Throwable cause = e.getCause();
             cause.printStackTrace();

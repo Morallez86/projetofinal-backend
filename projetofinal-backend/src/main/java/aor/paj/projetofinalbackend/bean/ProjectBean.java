@@ -204,10 +204,15 @@ public class ProjectBean {
         if (existingWorkplaceEntity != null && !existingWorkplaceEntity.isEmpty()) {
             projectEntity.setWorkplace(existingWorkplaceEntity.iterator().next());
         }
+        System.out.println(projectEntity.getWorkplace().getName());
+
+        System.out.println("1111111111111");
 
         System.out.println(projectEntity);
         // Persist the project entity
         projectDao.persist(projectEntity);
+
+        System.out.println("4444444444444444444");
 
         // Associate user projects
         Set<UserProjectEntity> userProjectEntities = new HashSet<>();
@@ -234,6 +239,7 @@ public class ProjectBean {
         for (UserProjectEntity userProjectEntity : userProjectEntities) {
             userProjectDao.merge(userProjectEntity);
         }
+        System.out.println("222222222222222");
 
         projectEntity.setUserProjects(userProjectEntities);
         // Finalize project associations
@@ -266,6 +272,7 @@ public class ProjectBean {
         taskEntities.add(uniqueTask);
         projectEntity.setTasks(taskEntities);
 
+        System.out.println("3333333333333333333");
         // Persist additional entities
         projectDao.merge(projectEntity);
         for (ComponentEntity componentEntity : projectEntity.getComponents()) {
