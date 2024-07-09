@@ -1,9 +1,6 @@
 package aor.paj.projetofinalbackend.bean;
 
-import aor.paj.projetofinalbackend.dao.ProjectDao;
-import aor.paj.projetofinalbackend.dao.ProjectHistoryDao;
-import aor.paj.projetofinalbackend.dao.TaskDao;
-import aor.paj.projetofinalbackend.dao.UserDao;
+import aor.paj.projetofinalbackend.dao.*;
 import aor.paj.projetofinalbackend.dto.EditTaskResult;
 import aor.paj.projetofinalbackend.dto.TaskDto;
 import aor.paj.projetofinalbackend.entity.*;
@@ -16,11 +13,19 @@ import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Application-scoped bean responsible for managing tasks within projects.
+ * @see TaskDao
+ * @see UserDao
+ * @see ProjectDao
+ * @see ProjectHistoryDao
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @ApplicationScoped
 public class TaskBean {
 
@@ -36,6 +41,11 @@ public class TaskBean {
     @Inject
     ProjectHistoryDao projectHistoryDao;
 
+    /**
+     * Retrieves all tasks from the database.
+     *
+     * @return List of TaskDto objects representing all tasks.
+     */
     @Transactional
     public List<TaskDto> getAllTasks() {
         List<TaskEntity> taskEntities = taskDao.findAll();
@@ -44,6 +54,12 @@ public class TaskBean {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Edits a task based on the provided TaskDto.
+     *
+     * @param dto The TaskDto containing updated task information.
+     * @return EditTaskResult object containing the edited TaskDto and its index.
+     */
     @Transactional
     public EditTaskResult editTask (TaskDto dto) {
         int compare = 0;
@@ -84,6 +100,11 @@ public class TaskBean {
         return new EditTaskResult(TaskMapper.toDto(taskDataBase),index);
     }
 
+    /**
+     * Creates a new task based on the provided TaskDto.
+     *
+     * @param dto The TaskDto containing task information to be created.
+     */
     public void createTask (TaskDto dto) {
         TaskEntity taskEntity = TaskMapper.toEntity(dto);
         List<TaskEntity> taskEntityList=new ArrayList<>();

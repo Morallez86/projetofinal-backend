@@ -18,14 +18,23 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Stateless bean for handling notifications.
+ * @see UserProjectBean
+ * @see ProjectDao
+ * @see UserNotificationDao
+ * @see UserProjectDao
+ * @see NotificationDao
+ * @see UserDao
+ * @see ProjectHistoryDao
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Stateless
 public class NotificationBean {
-
-    @Inject
-    UserProjectBean userProjectBean;
 
     @EJB
     ProjectDao projectDao;
@@ -45,10 +54,29 @@ public class NotificationBean {
     @EJB
     ProjectHistoryDao projectHistoryDao;
 
-    public NotificationEntity findNotificationById(Long userId) {
-        return notificationDao.findNotificationById(userId);
+    @Inject
+    private UserProjectBean userProjectBean;
+
+    /**
+     * Finds a notification by its ID.
+     *
+     * @param notificationId the ID of the notification
+     * @return the notification entity
+     */
+    public NotificationEntity findNotificationById(Long notificationId) {
+        return notificationDao.findNotificationById(notificationId);
     }
 
+    /**
+     * Retrieves notifications by user ID, type, and seen status with pagination.
+     *
+     * @param userId the user ID
+     * @param type the notification type
+     * @param seen the seen status
+     * @param page the page number
+     * @param limit the number of notifications per page
+     * @return a list of notification DTOs
+     */
     public List<NotificationDto> getNotificationsByUserIdAndTypeAndSeen(Long userId, String type, Boolean seen, int page, int limit) {
         int offset = (page - 1) * limit;
         NotificationType notificationType = type != null ? NotificationType.valueOf(type) : null;
@@ -56,22 +84,53 @@ public class NotificationBean {
         return NotificationMapper.listToDto(notifications);
     }
 
+    /**
+     * Retrieves the total number of notifications by user ID, type, and seen status.
+     *
+     * @param userId the user ID
+     * @param type the notification type
+     * @param seen the seen status
+     * @return the total number of notifications
+     */
     public int getTotalNotificationsByUserIdAndTypeAndSeen(Long userId, String type, Boolean seen) {
         NotificationType notificationType = type != null ? NotificationType.valueOf(type) : null;
         return notificationDao.countByUserIdAndTypeAndSeen(userId, notificationType, seen);
     }
 
+    /**
+     * Retrieves notifications by user ID and seen status with pagination.
+     *
+     * @param userId the user ID
+     * @param seen the seen status
+     * @param page the page number
+     * @param limit the number of notifications per page
+     * @return a list of notification DTOs
+     */
     public List<NotificationDto> getNotificationsByUserIdAndSeen(Long userId, Boolean seen, int page, int limit) {
         int offset = (page - 1) * limit;
         List<NotificationEntity> notifications = notificationDao.findByUserIdAndTypeAndSeen(userId, null, seen, offset, limit);
         return NotificationMapper.listToDto(notifications);
     }
 
+    /**
+     * Retrieves the total number of notifications by user ID and seen status.
+     *
+     * @param userId the user ID
+     * @param seen the seen status
+     * @return the total number of notifications
+     */
     public int getTotalNotificationsByUserIdAndSeen(Long userId, Boolean seen) {
         return notificationDao.countByUserIdAndTypeAndSeen(userId, null, seen);
     }
 
-
+    /**
+     * Updates the seen status of notifications and sends a refresh signal via websocket.
+     *
+     * @param userId the user ID
+     * @param notificationIds the list of notification IDs
+     * @param seen the seen status
+     * @param sender the sender user entity
+     */
     public void updateSeenStatus(Long userId, List<Long> notificationIds, boolean seen, UserEntity sender) {
         notificationDao.updateSeenStatusByUserIdAndIds(userId, notificationIds, seen);
 
@@ -82,6 +141,12 @@ public class NotificationBean {
         activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "refresh"));
     }
 
+    /**
+     * Sends a request or invitation to join a project.
+     *
+     * @param sender the sender user entity
+     * @param notificationDto the notification DTO
+     */
     @Transactional
     public void sendRequestInvitationProject(UserEntity sender, NotificationDto notificationDto) {
         try {
@@ -175,6 +240,13 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Approves or rejects a notification to participate in a project.
+     *
+     * @param notificationDto the notification DTO
+     * @param sender the sender user entity
+     * @param isInvitation whether the notification is an invitation
+     */
     @Transactional
     public void approveOrRejectNotificationParticipateProject(NotificationDto notificationDto, UserEntity sender, boolean isInvitation) {
         NotificationEntity notification = notificationDao.find(notificationDto.getId());
@@ -260,7 +332,11 @@ public class NotificationBean {
         }
     }
 
-
+    /**
+     * Sends expiration notifications for a resource to all admins.
+     *
+     * @param resource the resource entity
+     */
     public void sendExpirationNotifications(ResourceEntity resource) {
         List<UserEntity> admins = userDao.findAdmins();
 
@@ -288,6 +364,11 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Sends a project approval notification to all admins.
+     *
+     * @param projectEntity the project entity
+     */
     @Transactional
     public void sendProjectAproval(ProjectEntity projectEntity) {
         List<UserEntity> admins = userDao.findAdmins();
@@ -300,8 +381,6 @@ public class NotificationBean {
                 projectEntity.getOwner().getUsername() + " is ready for approval");
         notification.setProject(projectEntity);
         notification.setAction(NotificationManagingActions.PROJECT);
-        System.out.println("vfudjbi");
-        System.out.println(notification.getAction());
 
         notificationDao.persist(notification);
 
@@ -321,6 +400,12 @@ public class NotificationBean {
         }
     }
 
+    /**
+     * Approves or rejects a project ready notification.
+     *
+     * @param notificationDto the notification DTO
+     * @param sender the sender user entity
+     */
     @Transactional
     public void approveOrRejectNotificationReadyProject(NotificationDto notificationDto, UserEntity sender) {
         NotificationEntity notification = notificationDao.find(notificationDto.getId());

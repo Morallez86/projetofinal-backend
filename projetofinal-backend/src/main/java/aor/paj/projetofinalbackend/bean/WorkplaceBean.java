@@ -1,5 +1,7 @@
 package aor.paj.projetofinalbackend.bean;
 
+import aor.paj.projetofinalbackend.dao.ProjectDao;
+import aor.paj.projetofinalbackend.dao.UserProjectDao;
 import aor.paj.projetofinalbackend.dao.WorkplaceDao;
 import aor.paj.projetofinalbackend.dto.WorkplaceDto;
 import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
@@ -11,12 +13,25 @@ import jakarta.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Stateless bean for managing workplace-related operations.
+ * @see WorkplaceDao
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Stateless
 public class WorkplaceBean {
 
     @EJB
     WorkplaceDao workplaceDao;
 
+    /**
+     * Creates a new workplace entity with the specified name if it does not already exist.
+     *
+     * @param name The name of the workplace to create.
+     * @return The created WorkplaceEntity, or null if a workplace with the same name already exists.
+     */
     public WorkplaceEntity createWorkplace(String name) {
         // Check if a workplace with the same name already exists
         WorkplaceEntity existingWorkplace = workplaceDao.findWorkplaceByName(name);
@@ -32,6 +47,11 @@ public class WorkplaceBean {
         }
     }
 
+    /**
+     * Retrieves all workplaces and maps them to WorkplaceDto objects.
+     *
+     * @return A list of WorkplaceDto objects representing all workplaces.
+     */
     public List<WorkplaceDto> getAllWorkplaces() {
         List<WorkplaceEntity> workplaces = workplaceDao.findAllWorkplaces();
         List<WorkplaceDto> workplaceDtos = new ArrayList<>();
@@ -41,6 +61,11 @@ public class WorkplaceBean {
         return workplaceDtos;
     }
 
+    /**
+     * Retrieves the count of projects per workplace along with the percentage of each workplace's contribution.
+     *
+     * @return A list of WorkplaceProjectCount objects containing workplace names, project counts, and percentages.
+     */
     public List<WorkplaceProjectCount> getProjectCountPerWorkplace() {
         List<Object[]> results = workplaceDao.getProjectCountPerWorkplace();
         List<WorkplaceProjectCount> workplaceProjectCount = new ArrayList<>();
@@ -53,8 +78,6 @@ public class WorkplaceBean {
             double percentage = ((double) projectCount / totalProjects) * 100;
             workplaceProjectCount.add(new WorkplaceProjectCount(workplaceName, projectCount, percentage));
         }
-
         return workplaceProjectCount;
     }
-
 }

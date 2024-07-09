@@ -1,6 +1,6 @@
 package aor.paj.projetofinalbackend.bean;
 
-import aor.paj.projetofinalbackend.dao.WorkplaceDao;
+import aor.paj.projetofinalbackend.dao.*;
 import aor.paj.projetofinalbackend.entity.WorkplaceEntity;
 import aor.paj.projetofinalbackend.utils.Role;
 import jakarta.annotation.PostConstruct;
@@ -9,11 +9,19 @@ import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
 import aor.paj.projetofinalbackend.utils.EncryptHelper;
 import aor.paj.projetofinalbackend.entity.UserEntity;
-import aor.paj.projetofinalbackend.dao.UserDao;
 import org.apache.logging.log4j.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Singleton bean responsible for initializing essential data during application startup.
+ * This includes creating a default admin user and predefined workplace entities.
+ * @see UserDao
+ * @see WorkplaceDao
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Singleton
 @Startup
 public class StartupBean {
@@ -25,7 +33,11 @@ public class StartupBean {
     @Inject
     private WorkplaceDao workplaceDao;
 
-
+    /**
+     * Initializes the application during startup.
+     * Creates a default admin user if no users exist in the database.
+     * Creates predefined workplace entities.
+     */
     @PostConstruct
     public void init() {
         try {

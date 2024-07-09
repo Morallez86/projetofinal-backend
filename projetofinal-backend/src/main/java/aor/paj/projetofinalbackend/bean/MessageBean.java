@@ -15,16 +15,40 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Bean class that handles operations related to user messages.
+ *
+ * @see MessageDao
+ * @see UserDao
+ * @see MessageDto
+ * @see MessageEntity
+ * @see UserEntity
+ * @see TokenEntity
+ * @see MessageMapper
+ * @see ApplicationSocket
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Stateless
 public class MessageBean {
 
     @Inject
-    MessageDao messageDao;
+    private MessageDao messageDao;
 
     @Inject
-    UserDao userDao;
+    private UserDao userDao;
 
-
+    /**
+     * Retrieves the received messages for a user with optional filtering by sender username and content.
+     *
+     * @param userId the ID of the user
+     * @param page the page number for pagination
+     * @param limit the number of messages per page
+     * @param username the username of the sender to filter by
+     * @param content the content to filter by
+     * @return a list of MessageDto representing the received messages
+     */
     public List<MessageDto> getReceivedMessagesForUser(Long userId, int page, int limit, String username, String content) {
         int offset = (page - 1) * limit;
         List<MessageEntity> messages;
@@ -38,6 +62,16 @@ public class MessageBean {
         return MessageMapper.listToDto(messages);
     }
 
+    /**
+     * Retrieves the sent messages for a user with optional filtering by receiver username and content.
+     *
+     * @param userId the ID of the user
+     * @param page the page number for pagination
+     * @param limit the number of messages per page
+     * @param username the username of the receiver to filter by
+     * @param content the content to filter by
+     * @return a list of MessageDto representing the sent messages
+     */
     public List<MessageDto> getSentMessagesForUser(Long userId, int page, int limit, String username, String content) {
         int offset = (page - 1) * limit;
         List<MessageEntity> messages;
@@ -51,6 +85,16 @@ public class MessageBean {
         return MessageMapper.listToDto(messages);
     }
 
+    /**
+     * Retrieves the unread messages for a user with optional filtering by sender username and content.
+     *
+     * @param userId the ID of the user
+     * @param page the page number for pagination
+     * @param limit the number of messages per page
+     * @param username the username of the sender to filter by
+     * @param content the content to filter by
+     * @return a list of MessageDto representing the unread messages
+     */
     public List<MessageDto> getUnreadMessagesForUser(Long userId, int page, int limit, String username, String content) {
         int offset = (page - 1) * limit;
         List<MessageEntity> messages;
@@ -64,6 +108,14 @@ public class MessageBean {
         return MessageMapper.listToDto(messages);
     }
 
+    /**
+     * Gets the total count of received messages for a user with optional filtering by sender username and content.
+     *
+     * @param userId the ID of the user
+     * @param username the username of the sender to filter by
+     * @param content the content to filter by
+     * @return the total count of received messages
+     */
     public int getTotalReceivedMessagesForUser(Long userId, String username, String content) {
         if ((username != null && !username.isEmpty()) || (content != null && !content.isEmpty())) {
             return messageDao.countReceivedMessagesByUserIdAndUsernameAndContent(userId, username, content);
@@ -72,6 +124,14 @@ public class MessageBean {
         }
     }
 
+    /**
+     * Gets the total count of sent messages for a user with optional filtering by receiver username and content.
+     *
+     * @param userId the ID of the user
+     * @param username the username of the receiver to filter by
+     * @param content the content to filter by
+     * @return the total count of sent messages
+     */
     public int getTotalSentMessagesForUser(Long userId, String username, String content) {
         if ((username != null && !username.isEmpty()) || (content != null && !content.isEmpty())) {
             return messageDao.countSentMessagesByUserIdAndUsernameAndContent(userId, username, content);
@@ -80,6 +140,14 @@ public class MessageBean {
         }
     }
 
+    /**
+     * Gets the total count of unread messages for a user with optional filtering by sender username and content.
+     *
+     * @param userId the ID of the user
+     * @param username the username of the sender to filter by
+     * @param content the content to filter by
+     * @return the total count of unread messages
+     */
     public int getTotalUnreadMessagesForUser(Long userId, String username, String content) {
         if ((username != null && !username.isEmpty()) || (content != null && !content.isEmpty())) {
             return messageDao.countUnreadMessagesByUserIdAndUsernameAndContent(userId, username, content);
@@ -88,6 +156,12 @@ public class MessageBean {
         }
     }
 
+    /**
+     * Adds a new message to the system.
+     *
+     * @param messageDto the MessageDto representing the message to add
+     * @return the added MessageEntity
+     */
     public MessageEntity addMessage(MessageDto messageDto) {
         try {
             // Fetch sender and recipient from database
@@ -119,7 +193,13 @@ public class MessageBean {
         }
     }
 
-    //Updates the seen status on messages and returns a signal in websocket that will render the counter on the frontend
+    /**
+     * Updates the seen status of the specified messages and sends a notification to the sender.
+     *
+     * @param messageIds the list of message IDs to update
+     * @param seen the new seen status
+     * @param sender the UserEntity representing the sender
+     */
     public void updateSeenStatus(List<Long> messageIds, boolean seen, UserEntity sender) {
 
         messageDao.updateSeenStatus(messageIds, seen);

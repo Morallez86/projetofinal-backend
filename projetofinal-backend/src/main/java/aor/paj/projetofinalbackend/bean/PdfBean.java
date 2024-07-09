@@ -1,7 +1,6 @@
 package aor.paj.projetofinalbackend.bean;
 
-import aor.paj.projetofinalbackend.dao.ProjectDao;
-import aor.paj.projetofinalbackend.dao.ResourceDao;
+import aor.paj.projetofinalbackend.dao.*;
 import aor.paj.projetofinalbackend.pojo.WorkplaceProjectCount;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -15,11 +14,22 @@ import jakarta.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+/**
+ * Stateless session bean responsible for generating PDF reports containing project statistics.
+ * @see ProjectDao
+ * @see ProjectBean
+ * @see WorkplaceBean
+ * @see ComponentBean
+ * @see ResourceBean
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Stateless
 public class PdfBean {
 
     @EJB
-    private ProjectDao projectDao;
+    ProjectDao projectDao;
 
     @Inject
     private ProjectBean projectBean;
@@ -33,6 +43,12 @@ public class PdfBean {
     @Inject
     private ResourceBean resourceBean;
 
+    /**
+     * Generates a PDF report containing various project statistics.
+     *
+     * @return A byte array representing the PDF document.
+     * @throws DocumentException if there is an error creating the PDF document.
+     */
     public byte[] generatePdf() throws DocumentException {
 
         String projectName = "Projeto Final AOR";

@@ -19,35 +19,86 @@ import jakarta.inject.Inject;
 import javax.naming.NamingException;
 import java.time.LocalDateTime;
 
+/**
+ * Stateless bean responsible for managing chat messages.
+ * It handles the creation of chat messages.
+ *
+ * @see ChatMessageDao
+ * @see UserDao
+ * @see ProjectDao
+ * @see ChatMessageDto
+ * @see ChatMessageEntity
+ * @see ProjectEntity
+ * @see UserEntity
+ * @see ChatMessageMapper
+ * @see LocalDateTimeAdapter
+ * @see ProjectChatSocket
+ * @see Gson
+ * @see GsonBuilder
+ * @see LocalDateTime
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Stateless
 public class ChatMesssageBean {
 
-   @EJB
+    @EJB
     ChatMessageDao chatMessageDao;
 
-   @EJB
+    @EJB
     UserDao userDao;
 
-   @EJB
+    @EJB
     ProjectDao projectDao;
 
-   @Inject
-    ProjectChatSocket projectChatSocket;
+    @Inject
+    private ProjectChatSocket projectChatSocket;
 
-    public ChatMessageDto createChatMsg (ChatMessageDto chatMessageDto) throws NamingException {
+    /**
+     * Creates a new chat message.
+     * This method converts the provided DTO to an entity, sets the sender and project,
+     * persists the message, and sends the message through the WebSocket.
+     *
+     * @param chatMessageDto the DTO containing chat message details
+     * @return the saved chat message as a DTO
+     * @throws NamingException if there is an error with JNDI naming
+     */
+    public ChatMessageDto createChatMsg(ChatMessageDto chatMessageDto) throws NamingException {
+        // Map DTO to entity
         ChatMessageEntity chatMessageEntity = ChatMessageMapper.toEntity(chatMessageDto);
+
+        // Find and set the sender
         UserEntity user = userDao.findUserById(chatMessageDto.getSenderId());
         chatMessageEntity.setSender(user);
+
+        // Find and set the project
         ProjectEntity project = projectDao.findProjectById(chatMessageDto.getProjectId());
         chatMessageEntity.setProject(project);
+
+        // Set the current timestamp
         chatMessageEntity.setTimestamp(LocalDateTime.now());
+
+        // Persist the chat message entity
         chatMessageDao.persist(chatMessageEntity);
-        ChatMessageEntity chatMessageSaved = chatMessageDao.findChatMessage(chatMessageEntity.getProject().getId(),chatMessageEntity.getTimestamp(),chatMessageEntity.getSender().getId());
+
+        // Retrieve the saved chat message entity
+        ChatMessageEntity chatMessageSaved = chatMessageDao.findChatMessage(
+                chatMessageEntity.getProject().getId(),
+                chatMessageEntity.getTimestamp(),
+                chatMessageEntity.getSender().getId()
+        );
+
+        // Convert the saved entity to JSON
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
         String jsonMsg = gson.toJson(ChatMessageMapper.toDto(chatMessageSaved));
+
+        // Send the message through the WebSocket
         projectChatSocket.onMessage(jsonMsg);
+
+        // Return the saved chat message as a DTO
         return ChatMessageMapper.toDto(chatMessageSaved);
     }
 }

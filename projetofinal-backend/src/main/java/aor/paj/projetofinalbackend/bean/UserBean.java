@@ -19,7 +19,6 @@ import aor.paj.projetofinalbackend.utils.Role;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import org.hibernate.Hibernate;
 import org.mindrot.jbcrypt.BCrypt;
@@ -29,6 +28,17 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Application-scoped bean responsible for managing user-related operations.
+ * @see UserDao
+ * @see WorkplaceDao
+ * @see TokenDao
+ * @see UserProjectDao
+ * @see EmailSender
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @ApplicationScoped
 public class UserBean {
 
@@ -47,7 +57,11 @@ public class UserBean {
     @Inject
     EmailSender emailSender;
 
-
+    /**
+     * Generates a random token for emailToken.
+     *
+     * @return A randomly generated token.
+     */
     public String generateToken() {
         String token = "";
         for (int i = 0; i < 10; i++) {
@@ -56,14 +70,32 @@ public class UserBean {
         return token;
     }
 
+    /**
+     * Retrieves a user entity based on their email.
+     *
+     * @param email The email of the user to find.
+     * @return The UserEntity corresponding to the provided email.
+     */
     public UserEntity findUserByEmail(String email) {
         return userDao.findUserByEmail(email);
     }
 
+    /**
+     * Retrieves a user entity based on their ID.
+     *
+     * @param userId The ID of the user to find.
+     * @return The UserEntity corresponding to the provided ID.
+     */
     public UserEntity findUserById(Long userId) {
         return userDao.findUserById(userId);
     }
 
+    /**
+     * Retrieves the user associated with a token.
+     *
+     * @param tokenValue The token value to search for.
+     * @return The UserEntity associated with the provided token value.
+     */
     public UserEntity findUserByToken(String tokenValue) {
         TokenEntity tokenEntity = tokenDao.findTokenByValue(tokenValue);
         if (tokenEntity == null) {
@@ -72,6 +104,12 @@ public class UserBean {
         return tokenEntity.getUser();
     }
 
+    /**
+     * Retrieves a profile DTO for a user based on their ID.
+     *
+     * @param userId The ID of the user.
+     * @return The ProfileDto for the user.
+     */
     @Transactional
     public ProfileDto getProfileDtoById(Long userId) {
         UserEntity userEntity = findUserById(userId);
@@ -84,6 +122,12 @@ public class UserBean {
         return ProfileMapper.toDto(userEntity);
     }
 
+    /**
+     * Creates and saves a token for a user.
+     *
+     * @param user The user entity for which to create the token.
+     * @return The generated token value.
+     */
     @Transactional
     public String createAndSaveToken(UserEntity user) {
 
@@ -131,6 +175,12 @@ public class UserBean {
         return tokenValue;
     }
 
+    /**
+     * Validates a user DTO to ensure all required fields are present.
+     *
+     * @param userDto The UserDto to validate.
+     * @throws IllegalArgumentException if any required field is missing.
+     */
     public void validateUserDto(UserDto userDto) {
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email is required");
@@ -149,6 +199,12 @@ public class UserBean {
         }
     }
 
+    /**
+     * Registers a new user based on the provided UserDto.
+     *
+     * @param userDto The UserDto containing user information for registration.
+     * @throws IllegalArgumentException if the email or username is already in use.
+     */
     public void registerUser(UserDto userDto) {
         if (userDao.findUserByEmail(userDto.getEmail()) != null) {
             throw new IllegalArgumentException("Email is already in use");
@@ -157,7 +213,6 @@ public class UserBean {
         if (userDao.findUserByUsername(userDto.getUsername()) != null) {
             throw new IllegalArgumentException("Username is already in use");
         }
-        System.out.println(userDto);
         UserEntity user = UserMapper.toEntity(userDto);
         String emailToken = generateToken();
         user.setPassword(EncryptHelper.encryptPassword(userDto.getPassword()));
@@ -173,6 +228,12 @@ public class UserBean {
         emailSender.sendConfirmationEmail("testeAor@hotmail.com", user.getEmailToken());
     }
 
+    /**
+     * Updates the password for a user who has forgotten their password.
+     *
+     * @param user     The UserEntity whose password is being updated.
+     * @param password The new password.
+     */
     public void forgotPassword (UserEntity user, String password){
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         user.setEmailToken(null);
@@ -180,6 +241,13 @@ public class UserBean {
         userDao.merge(user);
     }
 
+    /**
+     * Updates the password for a user based on the provided UserPasswordUpdateDto.
+     *
+     * @param userPasswordUpdateDto The UserPasswordUpdateDto containing old and new passwords.
+     * @param token The token associated with the user for authentication.
+     * @return true if the password update was successful, false otherwise.
+     */
     public boolean updatePassword(UserPasswordUpdateDto userPasswordUpdateDto, String token) {
         // Find the user associated with the token
         UserEntity userEntity = tokenDao.findUserByTokenValue(token);
@@ -203,6 +271,12 @@ public class UserBean {
         return false;
     }
 
+    /**
+     * Updates the profile information for a user.
+     *
+     * @param userId The ID of the user whose profile is being updated.
+     * @param profileDto The ProfileDto containing updated profile information.
+     */
     public void updateUserProfile(Long userId, ProfileDto profileDto) {
         UserEntity userEntity = userDao.find(userId);
         String workplaceName = profileDto.getWorkplace();
@@ -217,6 +291,13 @@ public class UserBean {
         userDao.merge(userEntity);
     }
 
+    /**
+     * Creates an email validation token for a user.
+     *
+     * @param user The UserEntity for which to create the email validation token.
+     * @return The generated email validation token.
+     * @throws RuntimeException if failed to create the email token for the user.
+     */
     public String emailTokenCreationForLink (UserEntity user) {
         try {
             String token = generateToken();
@@ -229,10 +310,21 @@ public class UserBean {
         }
     }
 
+    /**
+     * Retrieves a user entity based on their email validation token.
+     *
+     * @param emailValidationToken The email validation token to search for.
+     * @return The UserEntity associated with the provided email validation token.
+     */
     public UserEntity getUserByEmailToken(String emailValidationToken) {
         return userDao.findByEmailValidationToken(emailValidationToken);
     }
 
+    /**
+     * Confirms the registration of a user.
+     *
+     * @param user The UserEntity whose registration is being confirmed.
+     */
     public void confirmRegistration (UserEntity user){
         user.setPending(false);
         user.setActive(true);
@@ -241,6 +333,13 @@ public class UserBean {
         userDao.merge(user);
     }
 
+    /**
+     * Retrieves projects associated with a user.
+     *
+     * @param userId The ID of the user.
+     * @param limit  The maximum number of projects to retrieve.
+     * @return A set of ProjectDto representing the user's projects.
+     */
     @Transactional
     public Set<ProjectDto> getUserProjects(Long userId, int limit) {
         List<ProjectEntity> projects = userProjectDao.findProjectsByUserIdActive(userId);
@@ -258,10 +357,22 @@ public class UserBean {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+    /**
+     * Retrieves the total count of projects associated with a user.
+     *
+     * @param userId The ID of the user.
+     * @return The total number of projects associated with the user.
+     */
     public Long getTotalProjectCount(Long userId) {
         return userProjectDao.countProjectsByUserIdActive(userId);
     }
 
+    /**
+     * Searches for users based on a query string.
+     *
+     * @param query The search query.
+     * @return A list of UserDto matching the search query.
+     */
     public List<UserDto> searchUsersByQuery(String query) {
         List<UserEntity> userEntities = userDao.findUsersByQuery(query);
         if (userEntities == null || userEntities.isEmpty()) {
@@ -270,12 +381,25 @@ public class UserBean {
         return userEntities.stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
 
-    // Return the list of users in the json format
+    /**
+     * Retrieves all users.
+     *
+     * @return A list of all UserDto representing all users.
+     */
     public List<UserDto> getAllUsers() {
         List<UserEntity> users = userDao.findAllUsers();
         return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
 
+    /**
+     * Searches for users based on search criteria.
+     *
+     * @param searchTerm The search term.
+     * @param workplace  The workplace filter.
+     * @param skills     The skills filter.
+     * @param interests  The interests filter.
+     * @return A list of UserDto matching the search criteria.
+     */
     public List<UserDto> searchUsers(String searchTerm, String workplace, String skills, String interests) {
 
         List<UserEntity> users = userDao.searchUsers(searchTerm, workplace, skills, interests);
@@ -285,6 +409,10 @@ public class UserBean {
         return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
 
+    /**
+     * Removes email tokens that are no longer needed.
+     * Email tokens are removed for users whose password stamps are older than an hour.
+     */
     public void removeEmailToken () {
         List<UserEntity> expiredEmailTokens = userDao.findAllUsersWithNonNullPasswordStamps(LocalDateTime.now().minusHours(1));
         if(!expiredEmailTokens.isEmpty()){
@@ -295,6 +423,12 @@ public class UserBean {
         }
     }
 
+    /**
+     * Updates timers and chats associated with projects for a user.
+     *
+     * @param token The token associated with the user for authentication.
+     * @param mapTimersChat The map of project IDs to their updated timestamps.
+     */
     public void updateTimersChat (String token, HashMap<Long, LocalDateTime>mapTimersChat) {
         UserEntity user = tokenDao.findUserByTokenValue(token);
         Set<UserProjectEntity> userProjectEntities = user.getUserProjects();
@@ -320,6 +454,12 @@ public class UserBean {
         }
     }
 
+    /**
+     * Updates the role of a user.
+     *
+     * @param userId  The ID of the user whose role is being updated.
+     * @param userDto The UserDto containing updated user information including the role.
+     */
     public void updateUserRole(Long userId, UserDto userDto) {
         UserEntity user = userDao.findUserById(userId);
         if (user == null) {
@@ -329,9 +469,3 @@ public class UserBean {
         userDao.merge(user);
     }
 }
-
-
-
-
-
-

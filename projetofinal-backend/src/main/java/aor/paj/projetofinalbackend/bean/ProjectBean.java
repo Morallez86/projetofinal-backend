@@ -12,14 +12,71 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * ProjectBean class responsible for handling project-related operations.
+ * @see UserDao
+ * @see ProjectDao
+ * @see ComponentDao
+ * @see ResourceDao
+ * @see InterestDao
+ * @see UserProjectDao
+ * @see SkillDao
+ * @see TaskDao
+ * @see WorkplaceDao
+ * @see NotificationDao
+ * @see UserNotificationDao
+ * @see ServiceBean
+ * @see ProjectHistoryBean
+ * @see TokenBean
+ * @see NotificationBean
+ * @see UserProjectBean
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @ApplicationScoped
 public class ProjectBean {
+
+    @EJB
+    UserDao userDao;
+
+    @EJB
+    ProjectDao projectDao;
+
+    @EJB
+    ComponentDao componentDao;
+
+    @EJB
+    ResourceDao resourceDao;
+
+    @EJB
+    InterestDao interestDao;
+
+    @EJB
+    UserProjectDao userProjectDao;
+
+    @EJB
+    SkillDao skillDao;
+
+    @EJB
+    TaskDao taskDao;
+
+    @EJB
+    WorkplaceDao workplaceDao;
+
+    @EJB
+    NotificationDao notificationDao;
+
+    @EJB
+    UserNotificationDao userNotificationDao;
+
+    @Inject
+    private ServiceBean serviceBean;
 
     @Inject
     private ProjectHistoryBean projectHistoryBean;
@@ -33,49 +90,16 @@ public class ProjectBean {
     @Inject
     private UserProjectBean userProjectBean;
 
-    @EJB
-    private UserDao userDao;
-
-    @EJB
-    private ServiceBean serviceBean;
-
-    @EJB
-    private ProjectDao projectDao;
-
-    @EJB
-    private ComponentDao componentDao;
-
-    @EJB
-    private ResourceDao resourceDao;
-
-    @EJB
-    private InterestDao interestDao;
-
-    @EJB
-    private UserProjectDao userProjectDao;
-
-    @EJB
-    private SkillDao skillDao;
-
-    @EJB
-    private TaskDao taskDao;
-
-    @EJB
-    private WorkplaceDao workplaceDao;
-
-    @EJB
-    private NotificationDao notificationDao;
-
-    @EJB
-    private UserNotificationDao userNotificationDao;
-
-
-
+    /**
+     * Adds a new project.
+     *
+     * @param projectDto the project DTO containing project details
+     * @param token the user token
+     */
     @Transactional
     public void addProject(ProjectDto projectDto, String token) {
         // Extract user ID from the token
         Long userId = serviceBean.getUserIdFromToken(token);
-        System.out.println(projectDto.getWorkplace().getName());
 
         // Find the user by ID
         UserEntity user = userDao.findUserById(userId);
@@ -151,25 +175,20 @@ public class ProjectBean {
             }
         }
 
-        System.out.println(updatedComponents);
-
         // Add remaining components to updatedComponents set
         for (ComponentEntity componentEntity : projectEntity.getComponents()) {
             updatedComponents.add(componentEntity);
         }
 
         projectEntity.setComponents(updatedComponents);
-        System.out.println(updatedComponents);
 
         // Handle resources
         Set<ResourceEntity> updatedResources = new HashSet<>();
         Iterator<ResourceEntity> resourceIterator = projectEntity.getResources().iterator();
         while (resourceIterator.hasNext()) {
             ResourceEntity resourceEntity = resourceIterator.next();
-            System.out.println(resourceEntity.getName());
             if (resourceEntity.getName() != null) {
                 ResourceEntity existingResource = resourceDao.findById(resourceEntity.getId());
-                System.out.println(existingResource);
                 if (existingResource != null) {
                     // Use the existing resource from the database
                     updatedResources.add(existingResource);
@@ -204,15 +223,9 @@ public class ProjectBean {
         if (existingWorkplaceEntity != null && !existingWorkplaceEntity.isEmpty()) {
             projectEntity.setWorkplace(existingWorkplaceEntity.iterator().next());
         }
-        System.out.println(projectEntity.getWorkplace().getName());
 
-        System.out.println("1111111111111");
-
-        System.out.println(projectEntity);
         // Persist the project entity
         projectDao.persist(projectEntity);
-
-        System.out.println("4444444444444444444");
 
         // Associate user projects
         Set<UserProjectEntity> userProjectEntities = new HashSet<>();
@@ -239,7 +252,6 @@ public class ProjectBean {
         for (UserProjectEntity userProjectEntity : userProjectEntities) {
             userProjectDao.merge(userProjectEntity);
         }
-        System.out.println("222222222222222");
 
         projectEntity.setUserProjects(userProjectEntities);
         // Finalize project associations
@@ -272,7 +284,6 @@ public class ProjectBean {
         taskEntities.add(uniqueTask);
         projectEntity.setTasks(taskEntities);
 
-        System.out.println("3333333333333333333");
         // Persist additional entities
         projectDao.merge(projectEntity);
         for (ComponentEntity componentEntity : projectEntity.getComponents()) {
@@ -296,6 +307,13 @@ public class ProjectBean {
         projectDao.merge(projectEntity);
     }
 
+    /**
+     * Retrieves all projects with pagination.
+     *
+     * @param page the page number
+     * @param limit the page size limit
+     * @return a set of ProjectDto
+     */
     @Transactional
     public Set<ProjectDto> getAllProjects(int page, int limit) {
         List<ProjectEntity> projects = projectDao.findAllProjects(page, limit);
@@ -305,11 +323,15 @@ public class ProjectBean {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+    /**
+     * Retrieves all projects without pagination.
+     *
+     * @return a set of ProjectDto
+     */
     @Transactional
     public Set<ProjectDto> getAllProjectsNoQueries() {
         try {
             List<ProjectEntity> projects = projectDao.getAllProjectsNoQueries();
-            System.out.println(projects.size() + ": size");
             return projects.stream()
                     .map(ProjectMapper::toDto)
                     .collect(Collectors.toCollection(LinkedHashSet::new));
@@ -320,6 +342,12 @@ public class ProjectBean {
         }
     }
 
+    /**
+     * Retrieves a project by its ID.
+     *
+     * @param projectId the project ID
+     * @return the ProjectDto or null if not found
+     */
     @Transactional
     public ProjectDto getProjectById(Long projectId) {
         ProjectEntity project = projectDao.findProjectById(projectId);
@@ -327,22 +355,28 @@ public class ProjectBean {
             return null;
         }
         List<TaskEntity> orderedTasks = taskDao.findTasksByProjectId(projectId);
-        for (TaskEntity task : orderedTasks) {
-            System.out.println(task.getStatus());
-        }
+
         project.setTasks(orderedTasks);
         projectDao.merge(project);
-        for (TaskEntity task2 : project.getTasks()) {
-            System.out.println("2 " + task2.getStatus());
-        }
+
         return ProjectMapper.toDto(project);
     }
 
-
+    /**
+     * Gets the total number of projects.
+     *
+     * @return the total project count
+     */
     public long getTotalProjectCount() {
         return projectDao.getTotalProjectCount();
     }
 
+    /**
+     * Retrieves tasks associated with a project.
+     *
+     * @param projectId the project ID
+     * @return a list of TaskDto
+     */
     @Transactional
     public List<TaskDto> getTasksByProjectId(Long projectId) {
         List<TaskEntity> taskEntities = taskDao.findTasksByProjectId(projectId);
@@ -351,6 +385,13 @@ public class ProjectBean {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Updates a project's details.
+     *
+     * @param projectId the project ID
+     * @param projectDto the updated project details
+     * @param token the user token
+     */
     @Transactional
     public void updateProject(Long projectId, ProjectDto projectDto, String token) {
         // Extract user ID from the token
@@ -390,6 +431,12 @@ public class ProjectBean {
         }
     }
 
+    /**
+     * Retrieves users associated with a project.
+     *
+     * @param projectId the project ID
+     * @return a list of UserProjectDto
+     */
     public List<UserProjectDto> getUsersByProject (Long projectId) {
         List<UserProjectEntity> userProjectEntities = projectDao.findUserProjectsByProjectId(projectId);
         return userProjectEntities.stream()
@@ -397,6 +444,13 @@ public class ProjectBean {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves possible dependent tasks for a project.
+     *
+     * @param projectId the project ID
+     * @param plannedStartingDate the planned starting date
+     * @return a list of TaskDto
+     */
     @Transactional
     public List<TaskDto> getPossibleDependentTasks (Long projectId, TaskEndDateDto plannedStartingDate) {
         List <TaskEntity> taskEntities = projectDao.findTasksByProjectIdAndEndingDate(projectId, plannedStartingDate.getPlannedStartingDate());
@@ -405,6 +459,11 @@ public class ProjectBean {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Calculates the average number of users per project.
+     *
+     * @return the average users per project
+     */
     public double getAverageUsersPerProject() {
         long totalProjects = projectDao.getTotalProjectCount();
         long totalUsers = projectDao.getTotalUserCount();
@@ -414,6 +473,14 @@ public class ProjectBean {
         return (double) totalUsers / totalProjects;
     }
 
+    /**
+     * Calculates the percentage of a part in relation to a total.
+     *
+     * @param part the part value
+     * @param total the total value
+     * @return the percentage
+     */
+
     public double getPercentage(long part, long total) {
         if (total == 0) {
             return 0;
@@ -421,27 +488,32 @@ public class ProjectBean {
         return (double) part / total * 100;
     }
 
+    /**
+     * Searches for projects based on criteria.
+     *
+     * @param searchTerm the search term
+     * @param skillString the skill string
+     * @param interestString the interest string
+     * @param status the project status
+     * @return a set of ProjectDto
+     */
     @Transactional
     public Set<ProjectDto> searchProjects(String searchTerm, String skillString, String interestString, ProjectStatus status) {
         List<ProjectEntity> projects = projectDao.searchProjects(searchTerm, skillString, interestString, status);
-        System.out.println("Project names:");
-        for (ProjectEntity project : projects) {
-            System.out.println(project.getTitle());
-        }
 
         projects.sort(Comparator.comparing(ProjectEntity::getCreationDate).reversed());
-
-        System.out.println("Project names after sort:");
-        for (ProjectEntity project : projects) {
-            System.out.println(project.getTitle());
-        }
 
         return projects.stream()
                 .map(ProjectMapper::toDto)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-
+    /**
+     * Sends a notification for a new component or resource required for a project.
+     *
+     * @param user the user entity
+     * @param componentName the name of the component
+     */
     private void sendNewComponentResourceNotification(UserEntity user, String componentName) {
         NotificationEntity notification = new NotificationEntity();
         notification.setTimestamp(LocalDateTime.now());
@@ -453,7 +525,6 @@ public class ProjectBean {
 
         UserNotificationEntity userNotification = new UserNotificationEntity();
         userNotification.setUser(user);
-        System.out.println(user.getUsername());
         userNotification.setNotification(notification);
         userNotification.setSeen(false);
 
@@ -466,6 +537,15 @@ public class ProjectBean {
         activeTokens.forEach(token -> ApplicationSocket.sendNotification(token.getTokenValue(), "notification"));
     }
 
+    /**
+     * Changes the status of a user in a project.
+     *
+     * @param projectId the project ID
+     * @param userId the user ID
+     * @param newStatus the new status
+     * @param token the user token
+     * @throws Exception if user not found in the specified project
+     */
     @Transactional
     public void changeUserStatus(Long projectId, Long userId, Boolean newStatus, String token) throws Exception {
         UserProjectEntity userProject = userProjectDao.findByUserAndProjectActive(userId, projectId);
@@ -481,6 +561,14 @@ public class ProjectBean {
         projectHistoryBean.logUserStatusChange(userProject, newStatus, userSending);
     }
 
+    /**
+     * Changes a user to inactive in a project.
+     *
+     * @param projectId the project ID
+     * @param userId the user ID
+     * @param token the user token
+     * @throws Exception if user not found in the specified project
+     */
     @Transactional
     public void changeUserToInactive(Long projectId, Long userId, String token) throws Exception {
         UserProjectEntity userProject = userProjectDao.findByUserAndProjectActive(userId, projectId);
@@ -496,6 +584,13 @@ public class ProjectBean {
         projectHistoryBean.logUserInactiveChange(userProject, userSending);
     }
 
+    /**
+     * Adds a skill to a project.
+     *
+     * @param projectId the project ID
+     * @param skillDto the skill details
+     * @param token the user token
+     */
     @Transactional
     public void addSkillToProject(Long projectId, SkillDto skillDto, String token) {
         // Find the project by ID
@@ -535,6 +630,13 @@ public class ProjectBean {
         projectDao.merge(projectEntity);
     }
 
+    /**
+     * Adds an interest to a project.
+     *
+     * @param projectId the project ID
+     * @param interestDto the interest details
+     * @param token the user token
+     */
     @Transactional
     public void addInterestToProject(Long projectId, InterestDto interestDto, String token) {
         // Find the project by ID
@@ -573,6 +675,13 @@ public class ProjectBean {
         projectDao.merge(projectEntity);
     }
 
+    /**
+     * Adds a component to a project.
+     *
+     * @param projectId the project ID
+     * @param componentDto the component details
+     * @param token the user token
+     */
     @Transactional
     public void addComponentToProject(Long projectId, ComponentDto componentDto, String token) {
         // Find the project by ID
@@ -603,6 +712,13 @@ public class ProjectBean {
         componentDao.merge(componentEntity);
     }
 
+    /**
+     * Adds a resource to a project.
+     *
+     * @param projectId the project ID
+     * @param resourceDto the resource details
+     * @param token the user token
+     */
     @Transactional
     public void addResourceToProject(Long projectId, ResourceDto resourceDto, String token) {
         // Find the project by ID
@@ -642,7 +758,12 @@ public class ProjectBean {
         resourceDao.merge(resourceEntity);
     }
 
-
+    /**
+     * Removes skills from a project.
+     *
+     * @param skillsToRemove the list of skill IDs to remove
+     * @param projectId the project ID
+     */
     @Transactional
     public void removeSKillsProject(List<Long> skillsToRemove, Long projectId) {
         // Get project by ID
@@ -666,6 +787,12 @@ public class ProjectBean {
         projectDao.merge(projectEntity);
     }
 
+    /**
+     * Removes interests from a project.
+     *
+     * @param interestsToRemove the list of interest IDs to remove
+     * @param projectId the project ID
+     */
     @Transactional
     public void removeInterestsProject(List<Long> interestsToRemove, Long projectId) {
         // Get project by ID
@@ -689,6 +816,12 @@ public class ProjectBean {
         projectDao.merge(projectEntity);
     }
 
+    /**
+     * Removes components from a project.
+     *
+     * @param componentsToRemove the list of component IDs to remove
+     * @param projectId the project ID
+     */
     public void removeComponentsFromProject(List<Long> componentsToRemove, Long projectId) {
         ProjectEntity projectEntity = projectDao.findProjectById(projectId);
         if (projectEntity == null) {
@@ -705,6 +838,12 @@ public class ProjectBean {
         }
     }
 
+    /**
+     * Removes resources from a project.
+     *
+     * @param resourcesToRemove the list of resource IDs to remove
+     * @param projectId the project ID
+     */
     @Transactional
     public void removeResourcesFromProject(List<Long> resourcesToRemove, Long projectId) {
         ProjectEntity projectEntity = projectDao.findProjectById(projectId);

@@ -16,21 +16,48 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Bean responsible for handling operations related to interests, such as fetching all interests,
+ * adding interests to a user, and removing interests from a user.
+ *
+ * @see InterestDao
+ * @see UserDao
+ * @see InterestDto
+ * @see InterestEntity
+ * @see UserEntity
+ * @see InterestMapper
+ * @see JwtUtil
+ * @see Claims
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @ApplicationScoped
 public class InterestBean implements TagBean<InterestDto> {
 
     @EJB
-    private UserDao userDao;
+    UserDao userDao;
 
     @EJB
-    private InterestDao interestDao;
+    InterestDao interestDao;
 
+    /**
+     * Retrieves the user ID from the provided JWT token.
+     *
+     * @param token the JWT token
+     * @return the user ID extracted from the token
+     */
     @Override
     public Long getUserIdFromToken(String token) {
         Claims claims = JwtUtil.validateToken(token);
         return claims.get("id", Long.class);
     }
 
+    /**
+     * Retrieves all interests from the database.
+     *
+     * @return a list of InterestDto representing all interests
+     */
     @Override
     public List<InterestDto> getAllAttributes() {
         try {
@@ -43,6 +70,12 @@ public class InterestBean implements TagBean<InterestDto> {
         }
     }
 
+    /**
+     * Adds a list of interests to the user identified by the provided JWT token.
+     *
+     * @param dtos the list of InterestDto to add
+     * @param token the JWT token identifying the user
+     */
     @Override
     @Transactional
     public void addAttributes(List<InterestDto> dtos, String token) {
@@ -66,6 +99,12 @@ public class InterestBean implements TagBean<InterestDto> {
         userDao.merge(creator);
     }
 
+    /**
+     * Removes a list of interests from the user identified by the provided JWT token.
+     *
+     * @param interestIds the list of interest IDs to remove
+     * @param token the JWT token identifying the user
+     */
     @Override
     @Transactional
     public void removeAttributes(List<Long> interestIds, String token) {
@@ -83,5 +122,4 @@ public class InterestBean implements TagBean<InterestDto> {
         }
         userDao.merge(user);
     }
-
 }

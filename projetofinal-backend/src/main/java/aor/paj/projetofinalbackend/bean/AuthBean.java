@@ -1,33 +1,56 @@
 package aor.paj.projetofinalbackend.bean;
 
-import aor.paj.projetofinalbackend.bean.TokenBean;
-import aor.paj.projetofinalbackend.bean.UserBean;
 import aor.paj.projetofinalbackend.entity.TokenEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.security.JwtUtil;
-import aor.paj.projetofinalbackend.utils.Role;
 import io.jsonwebtoken.Claims;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
-
 import java.time.LocalDateTime;
 
+/**
+ * Class that deals with authentication before accessing endpoints and returns a response.
+ * It checks if the token is valid, not expired, and if the user associated with
+ * the token exists in the system.
+ *
+ * @see TokenBean
+ * @see UserBean
+ * @see JwtUtil
+ * @see TokenEntity
+ * @see UserEntity
+ * @see Response
+ * @see ContainerRequestContext
+ * @see LocalDateTime
+ * @see Claims
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @ApplicationScoped
 public class AuthBean {
 
     @Inject
-    TokenBean tokenBean;
+    private TokenBean tokenBean;
 
     @Inject
-    UserBean userBean;
+    private UserBean userBean;
 
     @Context
     private ContainerRequestContext requestContext;
 
+    /**
+     * Validates the user token.
+     * This method checks if the token is valid, not expired, and if the user associated with the token exists.
+     * If these checks fail, it returns a response indicating the failure.
+     *
+     * @param tokenValue the token to validate
+     * @return a Response indicating the result of the validation
+     *         - 200 OK if the token is valid
+     *         - 401 UNAUTHORIZED if the token is invalid, expired, or the user is not found
+     */
     public Response validateUserToken(String tokenValue) {
         TokenEntity token = tokenBean.findTokenByValue(tokenValue);
 
@@ -54,11 +77,4 @@ public class AuthBean {
 
         return Response.ok().build();
     }
-
-    public boolean isUserInRole(Role requiredRole) {
-        String role = (String) requestContext.getProperty("role");
-        return requiredRole.name().equals(role);
-    }
-
-
 }
