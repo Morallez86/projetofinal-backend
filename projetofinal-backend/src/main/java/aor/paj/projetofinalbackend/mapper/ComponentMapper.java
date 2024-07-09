@@ -3,8 +3,20 @@ package aor.paj.projetofinalbackend.mapper;
 import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.entity.ComponentEntity;
 
+/**
+ * Mapper class for converting between ComponentEntity and ComponentDto.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 public class ComponentMapper {
 
+    /**
+     * Converts a ComponentEntity to a ComponentDto.
+     *
+     * @param entity The ComponentEntity to convert.
+     * @return The corresponding ComponentDto.
+     */
     public static ComponentDto toDto(ComponentEntity entity) {
         ComponentDto dto = new ComponentDto();
         dto.setId(entity.getId());
@@ -22,6 +34,12 @@ public class ComponentMapper {
         return dto;
     }
 
+    /**
+     * Converts a ComponentDto to a ComponentEntity.
+     *
+     * @param dto The ComponentDto to convert.
+     * @return The corresponding ComponentEntity.
+     */
     public static ComponentEntity toEntity(ComponentDto dto) {
         ComponentEntity entity = new ComponentEntity();
         entity.setId(dto.getId());

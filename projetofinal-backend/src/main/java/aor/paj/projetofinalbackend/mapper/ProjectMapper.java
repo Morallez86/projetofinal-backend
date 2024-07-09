@@ -2,13 +2,23 @@ package aor.paj.projetofinalbackend.mapper;
 
 import aor.paj.projetofinalbackend.dto.*;
 import aor.paj.projetofinalbackend.entity.*;
-import aor.paj.projetofinalbackend.utils.ProjectStatus;
 
 import java.util.stream.Collectors;
 
-
+/**
+ * Mapper class for converting between ProjectEntity and ProjectDto.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 public class ProjectMapper {
 
+    /**
+     * Converts a ProjectEntity to a ProjectDto.
+     *
+     * @param entity The ProjectEntity to convert.
+     * @return The corresponding ProjectDto.
+     */
     public static ProjectDto toDto(ProjectEntity entity) {
         ProjectDto dto = new ProjectDto();
 
@@ -39,6 +49,12 @@ public class ProjectMapper {
         return dto;
     }
 
+    /**
+     * Converts a ProjectDto to a ProjectEntity.
+     *
+     * @param dto The ProjectDto to convert.
+     * @return The corresponding ProjectEntity.
+     */
     public static ProjectEntity toEntity(ProjectDto dto) {
         ProjectEntity entity = new ProjectEntity();
 

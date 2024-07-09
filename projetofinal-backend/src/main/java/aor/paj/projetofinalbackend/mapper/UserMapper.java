@@ -2,10 +2,21 @@ package aor.paj.projetofinalbackend.mapper;
 
 import aor.paj.projetofinalbackend.dto.UserDto;
 import aor.paj.projetofinalbackend.entity.UserEntity;
-import aor.paj.projetofinalbackend.utils.Role;
 
+/**
+ * Mapper class for converting between UserEntity and UserDto.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 public class UserMapper {
 
+    /**
+     * Converts a UserEntity to a UserDto.
+     *
+     * @param user The UserEntity to convert.
+     * @return The corresponding UserDto.
+     */
     public static UserDto toDto(UserEntity user) {
         if (user == null) {
             return null;
@@ -27,6 +38,12 @@ public class UserMapper {
         return dto;
     }
 
+    /**
+     * Converts a UserDto to a UserEntity.
+     *
+     * @param dto The UserDto to convert.
+     * @return The corresponding UserEntity.
+     */
     public static UserEntity toEntity(UserDto dto) {
         if (dto == null) {
             return null;

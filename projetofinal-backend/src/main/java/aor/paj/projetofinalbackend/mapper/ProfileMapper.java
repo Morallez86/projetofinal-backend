@@ -10,8 +10,20 @@ import aor.paj.projetofinalbackend.entity.UserEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper class for converting between UserEntity and ProfileDto.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 public class ProfileMapper {
 
+    /**
+     * Converts a UserEntity to a ProfileDto.
+     *
+     * @param user The UserEntity to convert.
+     * @return The corresponding ProfileDto.
+     */
     public static ProfileDto toDto(UserEntity user) {
         if (user == null) {
             return null;
@@ -44,6 +56,12 @@ public class ProfileMapper {
         return dto;
     }
 
+    /**
+     * Converts a ProfileDto to a UserEntity.
+     *
+     * @param dto The ProfileDto to convert.
+     * @return The corresponding UserEntity.
+     */
     public static UserEntity toEntity(ProfileDto dto) {
         if (dto == null) {
             return null;
@@ -60,6 +78,12 @@ public class ProfileMapper {
         return user;
     }
 
+    /**
+     * Converts an InterestEntity to an InterestDto.
+     *
+     * @param interest The InterestEntity to convert.
+     * @return The corresponding InterestDto.
+     */
     private static InterestDto interestToDto(InterestEntity interest) {
         if (interest == null) {
             return null;
@@ -68,6 +92,12 @@ public class ProfileMapper {
         return new InterestDto(interest.getId(), interest.getName());
     }
 
+    /**
+     * Converts a SkillEntity to a SkillDto.
+     *
+     * @param skill The SkillEntity to convert.
+     * @return The corresponding SkillDto.
+     */
     private static SkillDto skillToDto(SkillEntity skill) {
         if (skill == null) {
             return null;

@@ -2,15 +2,25 @@ package aor.paj.projetofinalbackend.mapper;
 
 
 import aor.paj.projetofinalbackend.dto.InterestDto;
-import aor.paj.projetofinalbackend.dto.SkillDto;
 import aor.paj.projetofinalbackend.entity.InterestEntity;
-import aor.paj.projetofinalbackend.entity.SkillEntity;
 
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Mapper class for converting between InterestEntity and InterestDto.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 public class InterestMapper {
 
+    /**
+     * Converts an InterestEntity to an InterestDto.
+     *
+     * @param interest The InterestEntity to convert.
+     * @return The corresponding InterestDto.
+     */
     public static InterestDto toDto(InterestEntity interest) {
         if (interest == null) {
             return null;
@@ -21,6 +31,12 @@ public class InterestMapper {
         return dto;
     }
 
+    /**
+     * Converts an InterestDto to an InterestEntity.
+     *
+     * @param dto The InterestDto to convert.
+     * @return The corresponding InterestEntity.
+     */
     public static InterestEntity toEntity(InterestDto dto) {
         if (dto == null) {
             return null;
@@ -31,6 +47,12 @@ public class InterestMapper {
         return interest;
     }
 
+    /**
+     * Converts a Set of InterestEntity objects to a Set of InterestDto objects.
+     *
+     * @param entitiesList The Set of InterestEntity objects to convert.
+     * @return A Set of InterestDto objects corresponding to the input Set of InterestEntity objects.
+     */
     public static Set<InterestDto> listToDto (Set<InterestEntity> entitiesList){
         Set<InterestDto> listDto = new HashSet<>();
         for (InterestEntity entity : entitiesList) {

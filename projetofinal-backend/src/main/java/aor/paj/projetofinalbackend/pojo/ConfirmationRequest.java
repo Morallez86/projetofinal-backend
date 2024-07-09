@@ -4,7 +4,7 @@ public class ConfirmationRequest {
     private String token;
     private String password;
 
-    // Getters and setters
+
     public String getToken() {
         return token;
     }
