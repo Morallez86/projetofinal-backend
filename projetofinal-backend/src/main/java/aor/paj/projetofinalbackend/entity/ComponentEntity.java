@@ -2,7 +2,6 @@ package aor.paj.projetofinalbackend.entity;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
-import java.util.*;
 
 @Entity
 @Table(name = "component")
