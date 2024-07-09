@@ -21,6 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Service class for managing notifications.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/notifications")
 public class NotificationService {
 
@@ -33,6 +39,16 @@ public class NotificationService {
     @Inject
     TokenBean tokenBean;
 
+    /**
+     * Retrieves notifications based on type and seen status for a specific user.
+     *
+     * @param authorizationHeader Authorization token in the request header.
+     * @param type Type of notifications to retrieve (optional).
+     * @param seen Seen status of notifications (true/false).
+     * @param page Page number for pagination.
+     * @param limit Limit of notifications per page.
+     * @return Response with notifications and pagination info in JSON format, or an appropriate error response.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNotifications(
@@ -82,6 +98,13 @@ public class NotificationService {
         }
     }
 
+    /**
+     * Adds a new notification.
+     *
+     * @param authorizationHeader Authorization token in the request header.
+     * @param notificationDto NotificationDto object containing notification details.
+     * @return Response with OK status upon successful addition, or an appropriate error response.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -107,6 +130,13 @@ public class NotificationService {
         }
     }
 
+    /**
+     * Updates the seen status of notifications.
+     *
+     * @param updateSeenStatusDto UpdateSeenStatusDto object containing notification IDs and seen status.
+     * @param authorizationHeader Authorization token in the request header.
+     * @return Response with OK status upon successful update, or an appropriate error response.
+     */
     @PUT
     @Path("/seen")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -130,6 +160,12 @@ public class NotificationService {
         }
     }
 
+    /**
+     * Retrieves the count of unread notifications for the user.
+     *
+     * @param authorizationHeader Authorization token in the request header.
+     * @return Response with the count of unread notifications in JSON format, or an appropriate error response.
+     */
     @GET
     @Path("/unread/count")
     @Produces(MediaType.APPLICATION_JSON)
@@ -153,6 +189,13 @@ public class NotificationService {
         }
     }
 
+    /**
+     * Approves or rejects a notification, based on the notification type.
+     *
+     * @param authorizationHeader Authorization token in the request header.
+     * @param notificationDto    NotificationDto object containing notification details.
+     * @return Response with OK status upon successful operation, or an appropriate error response.
+     */
     @PUT
     @Path("/approval")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -160,7 +203,6 @@ public class NotificationService {
     public Response approveOrRejectNotification(
             @HeaderParam("Authorization") String authorizationHeader, NotificationDto notificationDto) {
         try {
-            System.out.println(notificationDto);
             String token = authorizationHeader.substring("Bearer".length()).trim();
             UserEntity user = tokenBean.findUserByToken(token);
             NotificationEntity notification = notificationBean.findNotificationById(notificationDto.getId());
@@ -169,7 +211,6 @@ public class NotificationService {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("User not authorized").build();
             }
             if(notification.getAction() == NotificationManagingActions.INVITATION) {
-                System.out.println("pvoan");
                 // Check if the notification type is INVITATION (type 400)
                 boolean isInvitation = "400".equals(notificationDto.getType());
 
@@ -187,7 +228,6 @@ public class NotificationService {
 
                 notificationBean.approveOrRejectNotificationParticipateProject(notificationDto, user, isInvitation);
             }else{
-                System.out.println("pvsjdvpdsv");
                 notificationBean.approveOrRejectNotificationReadyProject(notificationDto, user);
             }
 

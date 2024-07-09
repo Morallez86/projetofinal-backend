@@ -12,6 +12,13 @@ import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
 
+/**
+ * Service endpoint for handling PDF generation requests.
+ * This service allows authenticated users to generate a PDF document.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/pdf")
 public class PdfService {
 
@@ -21,6 +28,12 @@ public class PdfService {
     @Inject
     TokenDao tokenDao;
 
+    /**
+     * Generates a PDF document and returns it as an octet-stream response.
+     *
+     * @param authorizationHeader the Authorization header containing the bearer token
+     * @return a Response object containing the generated PDF as octet-stream
+     */
     @GET
     @Path("/generate")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)

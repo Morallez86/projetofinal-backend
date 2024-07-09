@@ -1,11 +1,8 @@
 package aor.paj.projetofinalbackend.service;
 
-import aor.paj.projetofinalbackend.bean.ComponentBean;
 import aor.paj.projetofinalbackend.bean.ProjectHistoryBean;
 import aor.paj.projetofinalbackend.dao.TokenDao;
-import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.dto.ProjectHistoryDto;
-import aor.paj.projetofinalbackend.entity.ProjectHistoryEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.utils.LoggerUtil;
 import jakarta.inject.Inject;
@@ -14,9 +11,15 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service endpoint for managing project history logs.
+ * This service allows authenticated users to create logs for specific projects.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/projectHistory")
 public class ProjectHistoryService {
 
@@ -26,6 +29,14 @@ public class ProjectHistoryService {
     @Inject
     TokenDao tokenDao;
 
+    /**
+     * Creates a new project history log entry for the specified project.
+     *
+     * @param authorizationHeader the Authorization header containing the bearer token
+     * @param projectHistoryDto the ProjectHistoryDto object containing log details
+     * @param projectId the ID of the project to which the log belongs
+     * @return a Response object containing the created project history log
+     */
     @POST
     @Path("/{projectId}")
     @Consumes(MediaType.APPLICATION_JSON)

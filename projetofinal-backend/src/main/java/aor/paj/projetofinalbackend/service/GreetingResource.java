@@ -12,25 +12,33 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.Locale;
 
+/**
+ * Service class for generating greetings based on client's country.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/greetings")
 public class GreetingResource {
 
     @Context
     private HttpServletRequest request;
 
+    /**
+     * Retrieves the greeting message based on the client's IP address.
+     *
+     * @return Response containing the client's locale in JSON format.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGreeting() {
         try {
             // Teste com um endereço IP real
             String ipAddress =   "95.94.55.210"; // request.getRemoteAddr();//"95.94.55.210";    //"1.1.1.14" // Endereço IP público para teste
-            System.out.println("IP Address: " + ipAddress);
 
             String countryCode = GeoLocationService.getCountryCode(ipAddress);
-            System.out.println("Country Code: " + countryCode);
 
             Locale locale = LocaleService.getLocaleForCountry(countryCode);
-            System.out.println("Locale: " + locale);
 
             return Response.ok("{\"locale\": \"" + locale.toLanguageTag() + "\"}").build();
         } catch (Exception e) {

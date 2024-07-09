@@ -10,6 +10,12 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
+/**
+ * Service endpoints for managing workplaces.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/workplaces")
 public class WorkplaceService {
 
@@ -17,6 +23,12 @@ public class WorkplaceService {
     WorkplaceBean workplaceBean;
 
 
+    /**
+     * Endpoint to create a new workplace.
+     *
+     * @param workplaceDto The data transfer object containing the details of the new workplace to be created.
+     * @return Response with status CREATED and the created WorkplaceEntity if successful, otherwise appropriate error response.
+     */
     @POST
     @Path("/createWorkplace")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -36,6 +48,11 @@ public class WorkplaceService {
         }
     }
 
+    /**
+     * Endpoint to retrieve all workplaces.
+     *
+     * @return Response with status OK and a list of WorkplaceDto objects representing all workplaces, otherwise appropriate error response.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllWorkplaces() {
