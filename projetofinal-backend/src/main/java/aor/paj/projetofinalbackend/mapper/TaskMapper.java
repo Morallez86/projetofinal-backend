@@ -58,7 +58,6 @@ public class TaskMapper {
         if (entity.getDependencies()!=null) {
        List<Long> longList = new ArrayList<>();
        for (TaskEntity entity1 : entity.getDependencies()) {
-           System.out.println(entity1.getId());
            longList.add(entity1.getId());
        }
        dto.setDependencies(longList);
