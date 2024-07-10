@@ -19,6 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service class for managing messages.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/messages")
 public class MessageService {
 
@@ -28,6 +34,17 @@ public class MessageService {
     @Inject
     TokenDao tokenDao;
 
+    /**
+     * Retrieves messages based on type (received, sent, unread).
+     *
+     * @param authorizationHeader Authorization token in the request header.
+     * @param type Type of messages to retrieve (received, sent, unread).
+     * @param page Page number for pagination.
+     * @param limit Limit of messages per page.
+     * @param username Username filter for message sender or receiver.
+     * @param content Content filter for message content.
+     * @return Response with messages and pagination info in JSON format, or a BAD_REQUEST response if the type is invalid.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMessages(
@@ -82,15 +99,18 @@ public class MessageService {
         }
     }
 
-
-
-
+    /**
+     * Adds a new message.
+     *
+     * @param messageDto MessageDto object containing message details.
+     * @param authorizationHeader Authorization token in the request header.
+     * @return Response with the newly added message in JSON format, or an INTERNAL_SERVER_ERROR response if an error occurs.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addMessage(MessageDto messageDto, @HeaderParam("Authorization") String authorizationHeader) {
         try {
-            System.out.println(messageDto.getContent());
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
             UserEntity sender = tokenDao.findUserByTokenValue(token);
@@ -113,6 +133,13 @@ public class MessageService {
         }
     }
 
+    /**
+     * Updates the seen status of messages.
+     *
+     * @param updateSeenStatusDto UpdateSeenStatusDto object containing message IDs and seen status.
+     * @param authorizationHeader Authorization token in the request header.
+     * @return Response with OK status upon successful update, or an INTERNAL_SERVER_ERROR response if an error occurs.
+     */
     @PUT
     @Path("/seen")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -133,6 +160,12 @@ public class MessageService {
         }
     }
 
+    /**
+     * Retrieves the count of unread messages for the user.
+     *
+     * @param authorizationHeader Authorization token in the request header.
+     * @return Response with the count of unread messages in JSON format, or an INTERNAL_SERVER_ERROR response if an error occurs.
+     */
     @GET
     @Path("/unread/count")
     @Produces(MediaType.APPLICATION_JSON)

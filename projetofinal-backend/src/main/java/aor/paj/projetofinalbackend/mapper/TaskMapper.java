@@ -7,16 +7,37 @@ import aor.paj.projetofinalbackend.utils.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * Mapper class for converting between TaskEntity and TaskDto.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 public class TaskMapper {
 
+    /**
+     * Maximum recursion depth for mapping dependencies and dependent tasks.
+     */
     private static final int MAX_RECURSION_DEPTH = 2;
 
+    /**
+     * Converts a TaskEntity to a TaskDto.
+     *
+     * @param entity The TaskEntity to convert.
+     * @return The corresponding TaskDto.
+     */
     public static TaskDto toDto(TaskEntity entity) {
         return toDto(entity, 0);
     }
 
+    /**
+     * Converts a TaskEntity to a TaskDto with recursion handling.
+     *
+     * @param entity The TaskEntity to convert.
+     * @param depth  The current recursion depth.
+     * @return The corresponding TaskDto.
+     */
     private static TaskDto toDto(TaskEntity entity, int depth) {
         if (depth > MAX_RECURSION_DEPTH) {
             return null;
@@ -37,7 +58,6 @@ public class TaskMapper {
         if (entity.getDependencies()!=null) {
        List<Long> longList = new ArrayList<>();
        for (TaskEntity entity1 : entity.getDependencies()) {
-           System.out.println(entity1.getId());
            longList.add(entity1.getId());
        }
        dto.setDependencies(longList);
@@ -54,14 +74,23 @@ public class TaskMapper {
         return dto;
     }
 
-    private static List<TaskDto> mapDependencies(List<TaskEntity> dependencies, int depth) {
-        return dependencies.stream().map(dep -> toDto(dep, depth + 1)).collect(Collectors.toList());
-    }
-
+    /**
+     * Converts a TaskDto to a TaskEntity.
+     *
+     * @param dto The TaskDto to convert.
+     * @return The corresponding TaskEntity.
+     */
     public static TaskEntity toEntity(TaskDto dto) {
         return toEntity(dto, 0);
     }
 
+    /**
+     * Converts a TaskDto to a TaskEntity with recursion handling.
+     *
+     * @param dto   The TaskDto to convert.
+     * @param depth The current recursion depth.
+     * @return The corresponding TaskEntity.
+     */
     private static TaskEntity toEntity(TaskDto dto, int depth) {
         if (depth > MAX_RECURSION_DEPTH) {
             return null;
@@ -78,9 +107,5 @@ public class TaskMapper {
         entity.setPriority(TaskPriority.fromValue(dto.getPriority()));
         entity.setContributors(dto.getContributors());
         return entity;
-    }
-
-    private static List<TaskEntity> mapEntities(List<TaskDto> dependencies, int depth) {
-        return dependencies.stream().map(dep -> toEntity(dep, depth + 1)).collect(Collectors.toList());
     }
 }

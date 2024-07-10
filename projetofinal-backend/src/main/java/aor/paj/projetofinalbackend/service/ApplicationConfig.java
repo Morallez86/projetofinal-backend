@@ -1,15 +1,27 @@
 package aor.paj.projetofinalbackend.service;
 
 import aor.paj.projetofinalbackend.security.JwtFilter;
-import aor.paj.projetofinalbackend.websocket.ApplicationSocket;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Configuration class for the JAX-RS application.
+ * Specifies the base path for RESTful services and registers resources and filters.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @ApplicationPath("/rest")
 public class ApplicationConfig extends Application{
+
+    /**
+     * Retrieves the set of classes (resources and filters) to be registered by JAX-RS.
+     *
+     * @return Set of classes to be registered by JAX-RS.
+     */
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();

@@ -1,15 +1,12 @@
 package aor.paj.projetofinalbackend.service;
 
-import aor.paj.projetofinalbackend.bean.ComponentBean;
 import aor.paj.projetofinalbackend.bean.ResourceBean;
 import aor.paj.projetofinalbackend.bean.UserBean;
 import aor.paj.projetofinalbackend.dao.TokenDao;
-import aor.paj.projetofinalbackend.dto.ComponentDto;
 import aor.paj.projetofinalbackend.dto.ResourceDto;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.LoggerUtil;
-import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -20,6 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service endpoints for managing resources.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/resources")
 public class ResourceService {
 
@@ -32,6 +35,15 @@ public class ResourceService {
     @Inject
     TokenDao tokenDao;
 
+    /**
+     * Retrieves all resources with optional pagination and filtering.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param page The page number for pagination (default is 1).
+     * @param limit The maximum number of resources per page (default is 10).
+     * @param keyWord The keyword to filter resources by name.
+     * @return Response with status OK and a map containing resources list and pagination details.
+     */
     @GET
     @Path(("/toTables"))
     @Consumes(MediaType.APPLICATION_JSON)
@@ -71,6 +83,13 @@ public class ResourceService {
         }
     }
 
+    /**
+     * Creates a new resource.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param resourceDto The ResourceDto object containing resource details.
+     * @return Response with status CREATED if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -96,6 +115,13 @@ public class ResourceService {
         }
     }
 
+    /**
+     * Updates an existing resource.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param resourceDto The ResourceDto object containing updated resource details.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -130,6 +156,12 @@ public class ResourceService {
         }
     }
 
+    /**
+     * Retrieves all resources without any filters.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @return Response with status OK and a list of all resources.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response allResourcesWithoutFilters(@HeaderParam("Authorization") String authorizationHeader) {

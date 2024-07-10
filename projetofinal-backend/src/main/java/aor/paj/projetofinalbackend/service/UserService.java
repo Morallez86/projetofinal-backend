@@ -5,9 +5,7 @@ import aor.paj.projetofinalbackend.bean.ImageBean;
 import aor.paj.projetofinalbackend.bean.TokenBean;
 import aor.paj.projetofinalbackend.bean.UserBean;
 import aor.paj.projetofinalbackend.dto.*;
-import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
-import aor.paj.projetofinalbackend.mapper.ProjectMapper;
 import aor.paj.projetofinalbackend.pojo.ConfirmationRequest;
 import aor.paj.projetofinalbackend.pojo.ResponseMessage;
 import aor.paj.projetofinalbackend.security.JwtUtil;
@@ -26,7 +24,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.hibernate.Hibernate;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -35,8 +32,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
+/**
+ * Service endpoints for managing users.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/users")
 public class UserService {
 
@@ -55,6 +57,17 @@ public class UserService {
     @Inject
     EmailSender emailSender;
 
+
+    /**
+     * Retrieves users based on optional search criteria.
+     *
+     * @param searchTerm Optional search term for filtering users.
+     * @param workplace Optional workplace filter.
+     * @param skills Optional skills filter.
+     * @param interests Optional interests filter.
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @return Response with status OK and a list of users if successful, otherwise appropriate error response.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers(@QueryParam("searchTerm") String searchTerm,
@@ -91,9 +104,12 @@ public class UserService {
         return Response.ok(users).build();
     }
 
-
-
-
+    /**
+     * Endpoint for user login.
+     *
+     * @param credentials UserCredentials object containing email and password.
+     * @return Response with status OK and a token if login is successful, otherwise UNAUTHORIZED.
+     */
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -115,6 +131,13 @@ public class UserService {
         return Response.ok(new TokenResponse(tokenValue)).build();
     }
 
+    /**
+     * Endpoint for user logout.
+     *
+     * @param authHeader Authorization header containing the bearer token.
+     * @param jsonBody JSON body containing project timestamps for chat.
+     * @return Response with status OK if logout is successful, otherwise appropriate error response.
+     */
     @POST
     @Path("/logout")
     @Produces(MediaType.APPLICATION_JSON)
@@ -137,17 +160,6 @@ public class UserService {
 
         String token = authHeader.substring("Bearer".length()).trim();
         UserEntity user = tokenBean.findUserByToken(token);
-
-       /* if (user != null) {
-            Hibernate.initialize(user.getUserProjects());
-        }*/
-
-
-        if (user != null) {
-            System.out.println("User email: " + user.getEmail());
-        } else {
-            System.out.println("User not found for token: " + token);
-        }
 
         HashMap<Long, LocalDateTime> mapTimersChat = new HashMap<>();
         if (outerMap.containsKey("projectTimestamps")) {
@@ -184,7 +196,12 @@ public class UserService {
         }
     }
 
-
+    /**
+     * Endpoint for user registration.
+     *
+     * @param userDto UserDto object containing user registration information.
+     * @return Response with status CREATED if registration is successful, otherwise appropriate error response.
+     */
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -202,7 +219,12 @@ public class UserService {
         }
     }
 
-    //Ask for a new Password. Requires email and sends an email to an existing user.
+    /**
+     * Sends an email for password recovery.
+     *
+     * @param email User's email for password recovery.
+     * @return Response with status OK if email is sent successfully, otherwise appropriate error response.
+     */
     @POST
     @Path("/emailRecoveryPassword")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -224,7 +246,12 @@ public class UserService {
         }
     }
 
-    // Confirmation via link to register a new password. Receives the token from the URL and the new password
+    /**
+     * Resets the password using a confirmation token.
+     *
+     * @param request ConfirmationRequest object containing token and new password.
+     * @return Response with status OK if password reset is successful, otherwise appropriate error response.
+     */
     @PUT
     @Path("/forgotPassword")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -246,6 +273,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Confirms user registration via email token.
+     *
+     * @param emailToken Email token used for confirming registration.
+     * @return Response with status OK if registration is confirmed, otherwise appropriate error response.
+     */
     @GET
     @Path("/confirmRegistration")
     public Response confirmRegistration(@HeaderParam("emailToken") String emailToken){
@@ -266,6 +299,14 @@ public class UserService {
 
     }
 
+    /**
+     * Uploads a user profile image.
+     *
+     * @param imageData Input stream containing image data.
+     * @param originalFileName Original filename of the uploaded image.
+     * @param email User's email for associating the image.
+     * @return Response with status OK if image upload is successful, otherwise appropriate error response.
+     */
     @POST
     @Path("/image")
     @Consumes("image/*")
@@ -280,6 +321,12 @@ public class UserService {
         return Response.ok().build();
     }
 
+    /**
+     * Retrieves a user's profile picture by user ID.
+     *
+     * @param id User ID for retrieving the profile picture.
+     * @return Response with the user's profile picture if successful, otherwise appropriate error response.
+     */
     @GET
     @Path("{id}/image")
     @Produces("image/*")
@@ -303,12 +350,18 @@ public class UserService {
 
     }
 
+    /**
+     * Retrieves profile pictures of multiple users.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param ids List of user IDs for retrieving profile pictures.
+     * @return Response with a list of user profile pictures if successful, otherwise appropriate error response.
+     */
     @POST
     @Path("/images")
     @Consumes("application/json")
     @Produces("application/json")
     public Response getUserPictures(@HeaderParam("Authorization") String authorizationHeader, List<Long> ids) {
-        System.out.println(ids);
         if (ids == null || ids.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity("No user IDs provided").build();
         }
@@ -347,11 +400,16 @@ public class UserService {
         if (imagesList.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).entity("No valid user images found").build();
         }
-
         return Response.ok(imagesList).build();
     }
 
-
+    /**
+     * Retrieves user profile details by user ID.
+     *
+     * @param headers HTTP headers containing Authorization header.
+     * @param userId  User ID for retrieving profile details.
+     * @return Response with user profile details if successful, otherwise appropriate error response.
+     */
     @GET
     @Path("/profile/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -378,7 +436,6 @@ public class UserService {
 
         // Check if the requested user ID matches the user ID from the token
         if (tokenUserId.equals(userId)) {
-            System.out.println("1 " + userId);
             // Return the profile if the id and token is the sae
             ProfileDto profileDto = userBean.getProfileDtoById(userId);
             if (profileDto == null) {
@@ -387,7 +444,6 @@ public class UserService {
             LoggerUtil.logInfo("CHECK PROFILE USER: " + profileDto.getEmail()  , "at " + LocalDateTime.now(), user.getEmail(), token);
             return Response.ok(profileDto).build();
         } else {
-            System.out.println("2 " + userId);
             // Check the visibility of the requested user's profile
             ProfileDto profileDto = userBean.getProfileDtoById(userId);
             if (profileDto == null) {
@@ -402,13 +458,19 @@ public class UserService {
         }
     }
 
-
+    /**
+     * Updates user profile details by user ID.
+     *
+     * @param headers HTTP headers containing Authorization header.
+     * @param userId User ID for updating profile details.
+     * @param profileDto ProfileDto object containing updated profile information.
+     * @return Response with status OK if profile update is successful, otherwise appropriate error response.
+     */
     @PUT
     @Path("/profile/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUserProfile(@Context HttpHeaders headers, @PathParam("userId") Long userId, ProfileDto profileDto) {
-        System.out.println(profileDto.toString());
         String authorizationHeader = headers.getHeaderString("Authorization");
 
         // Extract the token
@@ -431,6 +493,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Updates user password.
+     *
+     * @param u UserPasswordUpdateDto object containing old and new passwords.
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @return Response with status OK if password update is successful, otherwise appropriate error response.
+     */
     @PUT
     @Path("/updatePassword")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -473,6 +542,14 @@ public class UserService {
         }
     }
 
+    /**
+     * Retrieves projects associated with a user.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param userId User ID for retrieving associated projects.
+     * @param limit Maximum number of projects to retrieve (pagination).
+     * @return Response with projects associated with the user if successful, otherwise appropriate error response.
+     */
     @GET
     @Path("/{userId}/myProjects")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -505,6 +582,13 @@ public class UserService {
         return Response.ok(responseMap).build();
     }
 
+    /**
+     * Searches users based on a query string.
+     *
+     * @param query Query string for searching users.
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @return Response with users matching the query if successful, otherwise appropriate error response.
+     */
     @GET
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
@@ -528,6 +612,14 @@ public class UserService {
         return Response.ok(users).build();
     }
 
+    /**
+     * Updates the role of a user identified by userId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token for authentication.
+     * @param userId The ID of the user whose role is to be updated.
+     * @param userDto UserDto object containing the updated role information.
+     * @return Response with status OK and a success message if the role update is successful, otherwise appropriate error response.
+     */
     @PUT
     @Path("/role/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -567,6 +659,4 @@ public class UserService {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
-
-
 }

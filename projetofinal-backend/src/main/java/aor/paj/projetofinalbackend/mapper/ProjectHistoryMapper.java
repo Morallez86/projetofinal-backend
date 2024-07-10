@@ -4,10 +4,20 @@ import aor.paj.projetofinalbackend.dto.ProjectHistoryDto;
 import aor.paj.projetofinalbackend.entity.ProjectHistoryEntity;
 import aor.paj.projetofinalbackend.utils.HistoryType;
 
-import java.util.stream.Collectors;
-
+/**
+ * Mapper class for converting between ProjectHistoryEntity and ProjectHistoryDto.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 public class ProjectHistoryMapper {
 
+    /**
+     * Converts a ProjectHistoryEntity to a ProjectHistoryDto.
+     *
+     * @param entity The ProjectHistoryEntity to convert.
+     * @return The corresponding ProjectHistoryDto.
+     */
     public static ProjectHistoryDto toDto(ProjectHistoryEntity entity) {
         ProjectHistoryDto dto = new ProjectHistoryDto();
         dto.setId(entity.getId());
@@ -37,6 +47,12 @@ public class ProjectHistoryMapper {
         return dto;
     }
 
+    /**
+     * Converts a ProjectHistoryDto to a ProjectHistoryEntity.
+     *
+     * @param dto The ProjectHistoryDto to convert.
+     * @return The corresponding ProjectHistoryEntity.
+     */
     public static ProjectHistoryEntity toEntity(ProjectHistoryDto dto) {
         ProjectHistoryEntity entity = new ProjectHistoryEntity();
         entity.setId(dto.getId());

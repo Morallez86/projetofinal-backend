@@ -19,6 +19,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Service endpoints for managing skills.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/skills")
 public class SkillService {
 
@@ -28,6 +34,12 @@ public class SkillService {
     @Inject
     TokenDao tokenDao;
 
+    /**
+     * Retrieves all skills.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @return Response with status OK and a list of all skills if found, otherwise NOT_FOUND.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSkills(@HeaderParam("Authorization") String authorizationHeader) {
@@ -37,17 +49,23 @@ public class SkillService {
         } else return Response.status(Response.Status.NOT_FOUND).entity("Skills not found").build();
     }
 
-
-    /* No front ele precisa de dar set das novas já com o id, então este método tem de enviar o dto com o id
-    * o duplo for verifica quais as skils novas e adiciona a uma nova lista que, tendo apenas as novas, é enviada para o front
-    * o duplo for começa com a lista das novas para ser corrido o menor numero de vezes possiveis
-    * o duplo for tem um counter para ele não continuar a correr desnecessariamente depois de já ter encontrado o id de todas as novas
-    * */
+    /**
+     * Adds new skills to the user's profile.
+     *
+     * @param skillDtos The list of SkillDto objects containing new skills to add.
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @return Response with status CREATED and the list of newly added skills if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Response addSkills(List<SkillDto> skillDtos, @HeaderParam("Authorization") String authorizationHeader) {
+        /* No front ele precisa de dar set das novas já com o id, então este método tem de enviar o dto com o id
+         * o duplo for verifica quais as skils novas e adiciona a uma nova lista que, tendo apenas as novas, é enviada para o front
+         * o duplo for começa com a lista das novas para ser corrido o menor numero de vezes possiveis
+         * o duplo for tem um counter para ele não continuar a correr desnecessariamente depois de já ter encontrado o id de todas as novas
+         * */
         try {
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
@@ -85,6 +103,13 @@ public class SkillService {
         }
     }
 
+    /**
+     * Removes skills from the user's profile.
+     *
+     * @param skillIds The list of skill IDs to remove.
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @return Response with status NO_CONTENT if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeSkills(List<Long> skillIds, @HeaderParam("Authorization") String authorizationHeader) {
@@ -92,7 +117,6 @@ public class SkillService {
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
             UserEntity user = tokenDao.findUserByTokenValue(token);
-            System.out.println(skillIds);
 
             // Remove the skills
             skillBean.removeAttributes(skillIds, token);

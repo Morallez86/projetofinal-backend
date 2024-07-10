@@ -4,9 +4,7 @@ package aor.paj.projetofinalbackend.service;
 import aor.paj.projetofinalbackend.bean.InterestBean;
 import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dto.InterestDto;
-import aor.paj.projetofinalbackend.dto.SkillDto;
 import aor.paj.projetofinalbackend.entity.InterestEntity;
-import aor.paj.projetofinalbackend.entity.SkillEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.mapper.InterestMapper;
 import aor.paj.projetofinalbackend.utils.LoggerUtil;
@@ -23,6 +21,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Service class for managing user interests.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/interests")
 public class InterestService {
 
@@ -32,6 +36,12 @@ public class InterestService {
     @Inject
     TokenDao tokenDao;
 
+    /**
+     * Retrieves all interests.
+     *
+     * @param authorizationHeader Authorization token in the request header.
+     * @return Response with a list of all interests in JSON format, or a NOT_FOUND response if no interests are found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllInterests(@HeaderParam("Authorization") String authorizationHeader) {
@@ -43,16 +53,23 @@ public class InterestService {
         }
     }
 
-    /* No front ele precisa de dar set das novas já com o id, então este método tem de enviar o dto com o id
-     * o duplo for verifica quais os interesses novas e adiciona a uma nova lista que, tendo apenas as novas, é enviada para o front
-     * o duplo for começa com a lista das novas para ser corrido o menor numero de vezes possiveis
-     * o duplo for tem um counter para ele não continuar a correr desnecessariamente depois de já ter encontrado o id de todas as novas
-     * */
+    /**
+     * Adds new interests to the user.
+     *
+     * @param interestDtos List of InterestDto objects containing interests to add.
+     * @param authorizationHeader Authorization token in the request header.
+     * @return Response with the newly added interests in JSON format, or an INTERNAL_SERVER_ERROR response if an error occurs.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Response addInterests(List<InterestDto> interestDtos, @HeaderParam("Authorization") String authorizationHeader) {
+        /* No front ele precisa de dar set das novas já com o id, então este método tem de enviar o dto com o id
+         * o duplo for verifica quais os interesses novas e adiciona a uma nova lista que, tendo apenas as novas, é enviada para o front
+         * o duplo for começa com a lista das novas para ser corrido o menor numero de vezes possiveis
+         * o duplo for tem um counter para ele não continuar a correr desnecessariamente depois de já ter encontrado o id de todas as novas
+         * */
         try {
             // Extract the token from the header
             String token = authorizationHeader.substring("Bearer".length()).trim();
@@ -94,6 +111,13 @@ public class InterestService {
         }
     }
 
+    /**
+     * Removes interests to the user.
+     *
+     * @param interestIds List of interest IDs to remove.
+     * @param authorizationHeader  Authorization token in the request header.
+     * @return Response with NO_CONTENT status upon successful removal, or an INTERNAL_SERVER_ERROR response if an error occurs.
+     */
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeSkills(List<Long> interestIds, @HeaderParam("Authorization") String authorizationHeader) {

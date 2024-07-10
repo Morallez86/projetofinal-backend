@@ -6,9 +6,21 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
 
+/**
+ * Singleton class responsible for sending emails using SMTP(Simple Mail Transfer Protocol) server configuration.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Singleton
 public class EmailSender {
 
+    /**
+     * Sends a confirmation email to the specified recipient with a token for account confirmation.
+     *
+     * @param recipientEmail The recipient's email address.
+     * @param token The token to include in the confirmation email.
+     */
     public void sendConfirmationEmail(String recipientEmail, String token) {
 
         // Configurações do servidor SMTP do Outlook
@@ -48,12 +60,15 @@ public class EmailSender {
         }
     }
 
+    /**
+     * Sends a recovery email to the specified recipient with a token for password recovery.
+     *
+     * @param recipientEmail The recipient's email address.
+     * @param token The token to include in the recovery email.
+     */
     public void sendRecoveryPassword(String recipientEmail, String token) {
-        System.out.println(recipientEmail);
-        System.out.println(token);
-        recipientEmail= "testeAor@hotmail.com";
-        System.out.println(recipientEmail);
 
+        recipientEmail= "testeAor@hotmail.com";
         // Configurações do servidor SMTP do Outlook
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
@@ -85,7 +100,6 @@ public class EmailSender {
 
             // Send email
             Transport.send(message);
-            System.out.println("Email send to " + recipientEmail);
         } catch (MessagingException e) {
             e.printStackTrace();
             System.err.println("Error sending email to " + recipientEmail);

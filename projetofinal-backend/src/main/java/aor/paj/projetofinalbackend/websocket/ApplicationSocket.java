@@ -1,7 +1,6 @@
 package aor.paj.projetofinalbackend.websocket;
 
 import aor.paj.projetofinalbackend.bean.TokenBean;
-import aor.paj.projetofinalbackend.dto.NotificationDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.inject.Inject;
@@ -14,6 +13,13 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * WebSocket endpoint for handling application-specific communication.
+ * This endpoint manages WebSocket connections based on a provided token.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Singleton
 @ServerEndpoint("/websocket/application/{token}")
 public class ApplicationSocket {
@@ -28,6 +34,12 @@ public class ApplicationSocket {
         mapper.registerModule(new JavaTimeModule());
     }
 
+    /**
+     * Handles WebSocket connection opening.
+     *
+     * @param session The WebSocket session object.
+     * @param token   The token path parameter used for authentication.
+     */
     @OnOpen
     public void onOpen(Session session, @PathParam("token") String token) {
         if (tokenBean.isTokenActive(token)) {
@@ -43,12 +55,25 @@ public class ApplicationSocket {
         }
     }
 
+    /**
+     * Handles WebSocket connection closure.
+     *
+     * @param session The WebSocket session object.
+     * @param reason The reason for the connection closure.
+     * @param token The token path parameter used for authentication.
+     */
     @OnClose
     public void onClose(Session session, CloseReason reason, @PathParam("token") String token) {
         sessions.remove(token);
         System.out.println("WebSocket connection closed for token: " + token + " Reason: " + reason);
     }
 
+    /**
+     * Handles incoming WebSocket messages.
+     *
+     * @param session The WebSocket session object.
+     * @param message The incoming message string.
+     */
     @OnMessage
     public void onMessage(Session session, String message) {
         System.out.println("Received message: " + message);
@@ -59,7 +84,12 @@ public class ApplicationSocket {
         }
     }
 
-    // Method to send notifications to frontend based on events
+    /**
+     * Method to send notifications to WebSocket clients.
+     *
+     * @param token The token identifying the WebSocket session.
+     * @param notificationType The type of notification to send.
+     */
     public static void sendNotification(String token, String notificationType) {
         try {
             // You can construct a simple JSON or text message indicating the event

@@ -4,10 +4,8 @@ import aor.paj.projetofinalbackend.bean.AuthBean;
 import aor.paj.projetofinalbackend.bean.ChatMesssageBean;
 import aor.paj.projetofinalbackend.bean.ProjectBean;
 import aor.paj.projetofinalbackend.bean.ProjectHistoryBean;
-import aor.paj.projetofinalbackend.dao.TaskDao;
 import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dto.*;
-import aor.paj.projetofinalbackend.entity.ProjectEntity;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.utils.LoggerUtil;
 import aor.paj.projetofinalbackend.utils.ProjectStatus;
@@ -24,6 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Service endpoints for managing projects.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/projects")
 public class ProjectService {
 
@@ -34,20 +38,23 @@ public class ProjectService {
     AuthBean authBean;
 
     @Inject
-    ProjectHistoryBean projectHistoryBean;
-
-    @Inject
     ChatMesssageBean chatMessageBean;
 
     @Inject
     TokenDao tokenDao;
 
+    /**
+     * Endpoint to create a new project.
+     *
+     * @param authorizationHeader Authorization header containing bearer token.
+     * @param projectDto ProjectDto object containing project details.
+     * @return Response indicating success or failure of project creation.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createProject(@HeaderParam("Authorization") String authorizationHeader, ProjectDto projectDto) {
         try {
-            System.out.println(projectDto.getUserProjectDtos().get(0).getId());
             String token = authorizationHeader.substring("Bearer".length()).trim();
             UserEntity user = tokenDao.findUserByTokenValue(token);
             projectBean.addProject(projectDto, token);
@@ -63,6 +70,18 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Endpoint for retrieving all projects, optionally filtered by various parameters.
+     *
+     * @param authorizationHeader The authorization header containing the bearer token.
+     * @param page The page number for pagination (optional).
+     * @param limit The limit of projects per page (optional).
+     * @param searchTerm The search term to filter projects by (optional).
+     * @param skills The skills to filter projects by (optional).
+     * @param interests The interests to filter projects by (optional).
+     * @param status The status to filter projects by (optional).
+     * @return Response containing a list of projects and total number of pages.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProjects(@HeaderParam("Authorization") String authorizationHeader,
@@ -79,7 +98,6 @@ public class ProjectService {
             Set<ProjectDto> projectDtos;
             long totalProjects;
             int totalPages;
-            System.out.println(status);
 
             ProjectStatus projectStatus = null;
             if (status != null) {
@@ -97,14 +115,6 @@ public class ProjectService {
             } else if (searchTerm != null || skills != null || interests != null || status != null) {
                 // Search parameters provided, return filtered projects
                 projectDtos = projectBean.searchProjects(searchTerm, skills, interests, projectStatus);
-                System.out.println(searchTerm);
-                System.out.println(skills);
-                System.out.println(interests);
-                System.out.println(status);
-                for (ProjectDto project : projectDtos) {
-                    System.out.println(project.getTitle());
-                }
-
                 totalProjects = projectDtos.size(); // Total projects based on search criteria
                 totalPages = (int) Math.ceil((double) totalProjects / (limit != null ? limit : totalProjects));
             } else {
@@ -128,6 +138,13 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Endpoint for retrieving details of a specific project.
+     *
+     * @param authorizationHeader The authorization header containing the bearer token.
+     * @param projectId The ID of the project to retrieve.
+     * @return Response containing the project details.
+     */
     @GET
     @Path("/{projectId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -154,6 +171,13 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Retrieves tasks associated with a project identified by projectId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project to fetch tasks for.
+     * @return Response with status OK and a list of TaskDto objects if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @GET
     @Path("/{id}/tasks")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -168,6 +192,13 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Retrieves users associated with a project identified by projectId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project to fetch users for.
+     * @return Response with status OK and a list of UserProjectDto objects if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @GET
     @Path("/{projectId}/users")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -183,6 +214,14 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Retrieves tasks dependent on a project identified by projectId and planned starting date.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project to fetch dependent tasks for.
+     * @param plannedStartingDate The planned starting date in format "yyyy-MM-dd HH:mm:ss".
+     * @return Response with status OK and a list of TaskDto objects if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @GET
     @Path("/{projectId}/possibleDependentTasks")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -222,8 +261,14 @@ public class ProjectService {
         }
     }
 
-
-
+    /**
+     * Updates details of a project identified by projectId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project to update.
+     * @param projectDto The ProjectDto object containing updated project details.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @PUT
     @Path("/{projectId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -247,6 +292,13 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Creates a chat message associated with a project identified by projectId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param chatMessageDto The ChatMessageDto object containing the chat message details.
+     * @return Response with status CREATED and the created ChatMessageDto if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @POST
     @Path("/createChatMsg")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -265,6 +317,15 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Changes the status of a user in a project identified by projectId and userId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project.
+     * @param userId The ID of the user to update status.
+     * @param userProjectDto The UserProjectDto object containing updated user status.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @PUT
     @Path("/{projectId}/users/{userId}/status")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -297,6 +358,15 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Changes the status of a user to inactive in a project identified by projectId and userId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project.
+     * @param userId The ID of the user to set inactive.
+     * @param userProjectDto The UserProjectDto object containing updated user status.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @PUT
     @Path("/{projectId}/users/{userId}/inactive")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -331,6 +401,14 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Adds a skill to a project identified by projectId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project.
+     * @param addSkillToProjectDto  The AddSkillToProjectDto object containing the skill to add.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @POST
     @Path("/{projectId}/addSkill")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -370,12 +448,19 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Adds an interest to a project identified by projectId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project.
+     * @param addInterestToProjectDto  The AddInterestToProjectDto object containing the interest to add.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @POST
     @Path("/{projectId}/addInterest")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addInterestToProject(@HeaderParam("Authorization") String authorizationHeader, @PathParam("projectId") Long projectId, AddInterestToProjectDto addInterestToProjectDto) {
-        System.out.println("ocdnsvvnsdo");
         try {
             // Validate token
             String token = authorizationHeader.substring("Bearer".length()).trim();
@@ -410,6 +495,14 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Adds a component to a project identified by projectId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project.
+     * @param addComponentToProjectDto  The AddComponentToProjectDto object containing the component to add.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @POST
     @Path("/{projectId}/addComponent")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -442,6 +535,14 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Adds a resource to a project identified by projectId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project.
+     * @param addResourceToProjectDto The AddResourceToProjectDto object containing the resource to add.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @POST
     @Path("/{projectId}/addResource")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -482,8 +583,14 @@ public class ProjectService {
         }
     }
 
-
-
+    /**
+     * Removes skills from a project identified by projectId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project.
+     * @param skillsToRemove List of IDs of skills to remove from the project.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @DELETE
     @Path("/{projectId}/removeSkills")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -511,6 +618,14 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Removes interests from a project identified by projectId.
+     *
+     * @param authorizationHeader  The Authorization header containing the bearer token.
+     * @param projectId The ID of the project.
+     * @param interestsToRemove List of IDs of interests to remove from the project.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @DELETE
     @Path("/{projectId}/removeInterests")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -539,6 +654,14 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Removes components from a project identified by projectId.
+     *
+     * @param authorizationHeader The Authorization header containing the bearer token.
+     * @param projectId The ID of the project.
+     * @param componentsToRemove List of IDs of components to remove from the project.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @DELETE
     @Path("/{projectId}/removeComponents")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -567,6 +690,14 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Removes resources from a project identified by projectId.
+     *
+     * @param authorizationHeader  The Authorization header containing the bearer token.
+     * @param projectId The ID of the project.
+     * @param resourcesToRemove List of IDs of resources to remove from the project.
+     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     */
     @DELETE
     @Path("/{projectId}/removeResources")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -593,7 +724,5 @@ public class ProjectService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-
-
 }
 

@@ -1,16 +1,12 @@
 package aor.paj.projetofinalbackend.service;
 
-import aor.paj.projetofinalbackend.bean.AuthBean;
 import aor.paj.projetofinalbackend.bean.ComponentBean;
 import aor.paj.projetofinalbackend.bean.UserBean;
-import aor.paj.projetofinalbackend.dao.ComponentDao;
 import aor.paj.projetofinalbackend.dao.TokenDao;
 import aor.paj.projetofinalbackend.dto.ComponentDto;
-import aor.paj.projetofinalbackend.dto.ProjectDto;
 import aor.paj.projetofinalbackend.entity.UserEntity;
 import aor.paj.projetofinalbackend.security.JwtUtil;
 import aor.paj.projetofinalbackend.utils.LoggerUtil;
-import aor.paj.projetofinalbackend.utils.Role;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -21,6 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service class that handles HTTP requests related to components.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Path("/components")
 public class ComponentService {
 
@@ -31,11 +33,15 @@ public class ComponentService {
     UserBean userBean;
 
     @Inject
-    AuthBean authBean;
-
-    @Inject
     TokenDao tokenDao;
 
+    /**
+     * Creates a new component.
+     *
+     * @param authorizationHeader Authorization header containing the JWT token.
+     * @param componentDto ComponentDto object containing component data.
+     * @return Response indicating success or failure of component creation.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -61,14 +67,19 @@ public class ComponentService {
         }
     }
 
+    /**
+     * Updates an existing component.
+     *
+     * @param authorizationHeader Authorization header containing the JWT token.
+     * @param componentDto ComponentDto object containing updated component data.
+     * @return Response indicating success or failure of component update.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateComponent(@HeaderParam("Authorization") String authorizationHeader, ComponentDto componentDto) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
         UserEntity user = tokenDao.findUserByTokenValue(token);
-
-        System.out.println("yo");
 
         Long tokenUserId;
         try {
@@ -93,7 +104,15 @@ public class ComponentService {
         }
     }
 
-
+    /**
+     * Retrieves all components with pagination support.
+     *
+     * @param authorizationHeader Authorization header containing the JWT token.
+     * @param page Page number for pagination (default is 1).
+     * @param limit Number of items per page (default is 10).
+     * @param keyWord Keyword for searching components (default is empty).
+     * @return Response with a list of components and pagination information.
+     */
     @GET
     @Path(("/toTables"))
     @Consumes(MediaType.APPLICATION_JSON)
@@ -130,6 +149,13 @@ public class ComponentService {
         }
     }
 
+    /**
+     * Retrieves all components optionally filtered by workplace.
+     *
+     * @param authorizationHeader Authorization header containing the JWT token.
+     * @param workplaceId Optional workplace ID to filter components.
+     * @return Response with a list of components filtered by workplace.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response allComponents(@HeaderParam("Authorization") String authorizationHeader,
@@ -152,6 +178,13 @@ public class ComponentService {
         }
     }
 
+    /**
+     * Retrieves available component names grouped by name for a given workplace.
+     *
+     * @param authorizationHeader Authorization header containing the JWT token.
+     * @param workplaceId Workplace ID for filtering components.
+     * @return Response with a list of available component names grouped by name.
+     */
     @GET
     @Path("/availableGroupedByName")
     @Produces(MediaType.APPLICATION_JSON)

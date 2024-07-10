@@ -6,8 +6,20 @@ import aor.paj.projetofinalbackend.entity.ResourceEntity;
 
 import java.util.stream.Collectors;
 
+/**
+ * Mapper class for converting between ResourceEntity and ResourceDto.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 public class ResourceMapper {
 
+    /**
+     * Converts a ResourceEntity to a ResourceDto.
+     *
+     * @param entity The ResourceEntity to convert.
+     * @return The corresponding ResourceDto.
+     */
     public static ResourceDto toDto(ResourceEntity entity) {
         ResourceDto dto = new ResourceDto();
         dto.setId(entity.getId());
@@ -24,6 +36,12 @@ public class ResourceMapper {
         return dto;
     }
 
+    /**
+     * Converts a ResourceDto to a ResourceEntity.
+     *
+     * @param dto The ResourceDto to convert.
+     * @return The corresponding ResourceEntity.
+     */
     public static ResourceEntity toEntity(ResourceDto dto) {
         ResourceEntity entity = new ResourceEntity();
         entity.setId(dto.getId());

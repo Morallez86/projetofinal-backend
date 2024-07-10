@@ -17,6 +17,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+/**
+ * JWT filter to authenticate and authorize incoming requests based on JWT tokens.
+ * Excludes certain paths and methods from JWT validation.
+ *
+ * @author João Morais
+ * @author Ricardo Elias
+ */
 @Provider
 public class JwtFilter implements ContainerRequestFilter {
 
@@ -25,6 +32,7 @@ public class JwtFilter implements ContainerRequestFilter {
 
     private static final Logger LOGGER = Logger.getLogger(JwtFilter.class.getName());
 
+    // Paths and methods excluded from JWT validation
     private static final Map<String, Set<String>> EXCLUDED_PATHS_AND_METHODS = new HashMap<>();
 
     static {
@@ -45,6 +53,12 @@ public class JwtFilter implements ContainerRequestFilter {
         EXCLUDED_PATHS_AND_METHODS.put("/greetings", anyMethods);
     }
 
+    /**
+     * Filters incoming HTTP requests.
+     *
+     * @param requestContext The context of the incoming request.
+     * @throws IOException If an I/O exception occurs.
+     */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String path = requestContext.getUriInfo().getPath();
