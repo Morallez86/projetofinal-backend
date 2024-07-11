@@ -407,6 +407,11 @@ public class ProjectBean {
             throw new IllegalArgumentException("Project not found");
         }
 
+        // Validate dates
+        if (projectDto.getStartingDate().isAfter(projectDto.getPlannedEndDate())) {
+            throw new IllegalArgumentException("Starting date cannot be after planned end date");
+        }
+
         // Update project details
         projectEntity.setTitle(projectDto.getTitle());
         projectEntity.setStatus(ProjectStatus.fromValue(projectDto.getStatus()));
