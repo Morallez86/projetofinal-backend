@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * @see NotificationDao
  * @see UserNotificationDao
  * @see ServiceBean
+ * @see TaskBean
  * @see ProjectHistoryBean
  * @see TokenBean
  * @see NotificationBean
@@ -77,6 +78,9 @@ public class ProjectBean {
 
     @Inject
     private ServiceBean serviceBean;
+
+    @Inject
+    private TaskBean taskBean;
 
     @Inject
     private ProjectHistoryBean projectHistoryBean;
@@ -429,6 +433,14 @@ public class ProjectBean {
             }
         }
         projectDao.merge(projectEntity);
+
+        // Update the final task dates if it exists
+        TaskEntity finalTask = taskBean.getFinalTaskOfProject(projectEntity.getId());
+        if (finalTask != null) {
+            finalTask.setPlannedStartingDate(projectEntity.getPlannedEndDate());
+            finalTask.setPlannedEndingDate(projectEntity.getPlannedEndDate());
+            taskDao.merge(finalTask);
+        }
 
         // Check if project status is READY
         if (ProjectStatus.fromValue(projectDto.getStatus()) == ProjectStatus.READY) {

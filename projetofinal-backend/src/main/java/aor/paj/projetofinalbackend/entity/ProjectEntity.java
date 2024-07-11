@@ -39,7 +39,9 @@ import java.util.*;
                         "  AND (:skillString IS NULL OR EXISTS (SELECT s FROM p.skills s WHERE LOWER(s.name) LIKE CONCAT('%', LOWER(:skillString), '%'))) " +
                         "  AND (:interestString IS NULL OR EXISTS (SELECT i FROM p.interests i WHERE LOWER(i.name) LIKE CONCAT('%', LOWER(:interestString), '%'))) " +
                         "  AND (:status IS NULL OR p.status = :status) " +
-                        "ORDER BY p.creationDate DESC")
+                        "ORDER BY p.creationDate DESC"),
+        @NamedQuery(name = "ProjectEntity.findTaskByTitleAndProjectId",
+                query = "SELECT t FROM TaskEntity t WHERE t.project.id = :projectId AND LOWER(t.title) LIKE LOWER(CONCAT('%', :title, '%'))")
 })
 public class ProjectEntity implements Serializable {
 

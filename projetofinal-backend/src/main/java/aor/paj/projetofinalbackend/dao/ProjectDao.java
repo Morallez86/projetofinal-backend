@@ -183,4 +183,22 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
             return Collections.emptyList(); // Return an empty list if no results found
         }
     }
+
+    /**
+     * Retrieves tasks of a project filtered by project ID and task title.
+     *
+     * @param projectId The ID of the project to retrieve tasks for.
+     * @param title     The title of the tasks.
+     * @return A list of TaskEntity objects that match the criteria.
+     */
+    public List<TaskEntity> findTasksByTitleAndProjectId(Long projectId, String title) {
+        try {
+            return em.createNamedQuery("ProjectEntity.findTaskByTitleAndProjectId", TaskEntity.class)
+                    .setParameter("projectId", projectId)
+                    .setParameter("title", title)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return Collections.emptyList(); // Return an empty list if no results found
+        }
+    }
 }
