@@ -18,7 +18,8 @@ import java.util.*;
         @NamedQuery(
                 name = "Workplace.findProjectCountPerWorkplace",
                 query = "SELECT w.name, COUNT(p.id) as projectCount FROM WorkplaceEntity w LEFT JOIN w.projects p GROUP BY w.name"
-        )
+        ),
+        @NamedQuery(name = "Workplace.countTotalWorkplaces", query = "SELECT COUNT(w) FROM WorkplaceEntity w")
 })
 public class WorkplaceEntity implements Serializable {
     private static final long serialVersionUID = 1L;

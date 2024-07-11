@@ -33,7 +33,7 @@ public class ComponentService {
     UserBean userBean;
 
     @Inject
-    TokenDao tokenDao;
+    TokenDao tokenBean;
 
     /**
      * Creates a new component.
@@ -47,7 +47,7 @@ public class ComponentService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createComponent(@HeaderParam("Authorization") String authorizationHeader, ComponentDto componentDto) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
-        UserEntity user = tokenDao.findUserByTokenValue(token);
+        UserEntity user = tokenBean.findUserByTokenValue(token);
         try {
             if (componentDto.getProjectId()== null) {
                 componentBean.addComponentDefault(componentDto);
@@ -79,7 +79,7 @@ public class ComponentService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateComponent(@HeaderParam("Authorization") String authorizationHeader, ComponentDto componentDto) {
         String token = authorizationHeader.substring("Bearer".length()).trim();
-        UserEntity user = tokenDao.findUserByTokenValue(token);
+        UserEntity user = tokenBean.findUserByTokenValue(token);
 
         Long tokenUserId;
         try {

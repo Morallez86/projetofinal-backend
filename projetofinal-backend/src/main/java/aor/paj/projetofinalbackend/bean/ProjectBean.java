@@ -407,12 +407,17 @@ public class ProjectBean {
             throw new IllegalArgumentException("Project not found");
         }
 
+        // Validate dates
+        if (projectDto.getStartingDate().isAfter(projectDto.getPlannedEndDate())) {
+            throw new IllegalArgumentException("Starting date cannot be after planned end date");
+        }
+
         // Update project details
         projectEntity.setTitle(projectDto.getTitle());
         projectEntity.setStatus(ProjectStatus.fromValue(projectDto.getStatus()));
         projectEntity.setDescription(projectDto.getDescription());
         projectEntity.setMotivation(projectDto.getMotivation());
-        projectEntity.setCreationDate(projectDto.getCreationDate());
+        projectEntity.setStartingDate(projectDto.getStartingDate());
         projectEntity.setPlannedEndDate(projectDto.getPlannedEndDate());
         projectEntity.setMaxUsers(projectDto.getMaxUsers());
 

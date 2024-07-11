@@ -19,8 +19,7 @@ import java.time.LocalDateTime;
  * @see UserDao
  * @see WorkplaceDao
  *
- * @author João Morais
- * @author Ricardo Elias
+ * Authors: João Morais, Ricardo Elias
  */
 @Singleton
 @Startup
@@ -28,7 +27,7 @@ public class StartupBean {
     private static final Logger logger = LogManager.getLogger(StartupBean.class);
 
     @Inject
-    private UserDao userdao;
+    private UserDao userDao;
 
     @Inject
     private WorkplaceDao workplaceDao;
@@ -36,57 +35,73 @@ public class StartupBean {
     /**
      * Initializes the application during startup.
      * Creates a default admin user if no users exist in the database.
-     * Creates predefined workplace entities.
+     * Creates predefined workplace entities if no workplaces exist in the database.
      */
     @PostConstruct
     public void init() {
         try {
-            if (userdao.countTotalUsers() == 0) {
-                // Retrieve the default password from environment variable
-                String defaultPassword = System.getenv("DEFAULT_ADMIN_PASSWORD");
-                if (defaultPassword == null) {
-                    throw new IllegalStateException("DEFAULT_ADMIN_PASSWORD environment variable not set");
-                }
-
-                // Create default admin user
-                UserEntity admin = new UserEntity();
-                admin.setFirstName("Admin");
-                admin.setLastName("User");
-                admin.setUsername("admin");
-                admin.setPassword(EncryptHelper.encryptPassword(defaultPassword));
-                admin.setEmail("admin@example.com");
-                admin.setRole(Role.ADMIN);
-                admin.setActive(true);
-                admin.setPending(false);
-                admin.setRegistTime(LocalDateTime.now());
-                admin.setVisibility(true);
-                admin.setActiveProject(false);
-                admin.setBiography("The GOAT");
-
-                userdao.persist(admin);
-                logger.info("Default admin user created.");
-
+            if (userDao.countTotalUsers() == 0) {
+                createDefaultAdminUser();
             }
-            WorkplaceEntity lisbon = new WorkplaceEntity();
-            lisbon.setName("Lisbon");
-            workplaceDao.persist(lisbon);
-            WorkplaceEntity porto = new WorkplaceEntity();
-            porto.setName("Porto");
-            workplaceDao.persist(porto);
-            WorkplaceEntity coimbra = new WorkplaceEntity();
-            coimbra.setName("Coimbra");
-            workplaceDao.persist(coimbra);
-            WorkplaceEntity tomar = new WorkplaceEntity();
-            tomar.setName("Tomar");
-            workplaceDao.persist(tomar);
-            WorkplaceEntity viseu = new WorkplaceEntity();
-            viseu.setName("Viseu");
-            workplaceDao.persist(viseu);
-            WorkplaceEntity vilaReal = new WorkplaceEntity();
-            vilaReal.setName("Vila Real");
-            workplaceDao.persist(vilaReal);
+
+            if (workplaceDao.countTotalWorkplaces() == 0) {
+                createDefaultWorkplaces();
+            }
+
         } catch (Exception e) {
-            logger.error("Failed to create default admin user: " + e.getMessage());
+            logger.error("Initialization failed: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Creates a default admin user with predefined properties.
+     * @throws IllegalStateException if the DEFAULT_ADMIN_PASSWORD environment variable is not set.
+     */
+    private void createDefaultAdminUser() {
+        String defaultPassword = System.getenv("DEFAULT_ADMIN_PASSWORD");
+        if (defaultPassword == null) {
+            throw new IllegalStateException("DEFAULT_ADMIN_PASSWORD environment variable not set");
+        }
+
+        UserEntity admin = new UserEntity();
+        admin.setFirstName("Admin");
+        admin.setLastName("User");
+        admin.setUsername("admin");
+        admin.setPassword(EncryptHelper.encryptPassword(defaultPassword));
+        admin.setEmail("admin@example.com");
+        admin.setRole(Role.ADMIN);
+        admin.setActive(true);
+        admin.setPending(false);
+        admin.setRegistTime(LocalDateTime.now());
+        admin.setVisibility(true);
+        admin.setActiveProject(false);
+        admin.setBiography("The GOAT");
+
+        userDao.persist(admin);
+        logger.info("Default admin user created.");
+    }
+
+    /**
+     * Creates predefined workplace entities.
+     */
+    private void createDefaultWorkplaces() {
+        persistWorkplace("Lisbon");
+        persistWorkplace("Porto");
+        persistWorkplace("Coimbra");
+        persistWorkplace("Tomar");
+        persistWorkplace("Viseu");
+        persistWorkplace("Vila Real");
+
+        logger.info("Default workplaces created.");
+    }
+
+    /**
+     * Persists a workplace entity with the given name.
+     * @param name The name of the workplace.
+     */
+    private void persistWorkplace(String name) {
+        WorkplaceEntity workplace = new WorkplaceEntity();
+        workplace.setName(name);
+        workplaceDao.persist(workplace);
     }
 }

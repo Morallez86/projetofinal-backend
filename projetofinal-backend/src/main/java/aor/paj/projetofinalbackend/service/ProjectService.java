@@ -267,7 +267,7 @@ public class ProjectService {
      * @param authorizationHeader The Authorization header containing the bearer token.
      * @param projectId The ID of the project to update.
      * @param projectDto The ProjectDto object containing updated project details.
-     * @return Response with status OK if successful, otherwise INTERNAL_SERVER_ERROR.
+     * @return Response with status OK if successful, otherwise BAD_REQUEST or INTERNAL_SERVER_ERROR.
      */
     @PUT
     @Path("/{projectId}")
@@ -284,8 +284,10 @@ public class ProjectService {
                 return validationResponse;
             }
             projectBean.updateProject(projectId, projectDto, token);
-            LoggerUtil.logInfo("UPDATE PROJECT WITH THIS ID: " + projectDto, "at " + LocalDateTime.now(), user.getEmail(),token);
+            LoggerUtil.logInfo("UPDATE PROJECT WITH THIS ID: " + projectDto, "at " + LocalDateTime.now(), user.getEmail(), token);
             return Response.status(Response.Status.OK).entity("Project updated successfully").build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
