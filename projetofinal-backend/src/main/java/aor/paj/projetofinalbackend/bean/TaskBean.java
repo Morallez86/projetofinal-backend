@@ -74,6 +74,7 @@ public class TaskBean {
 
         if (task.getStatus().equals(TaskStatus.DOING) && task.getStatus()!=taskDataBase.getStatus()) {
             taskDataBase.setStartingDate(LocalDateTime.now());
+            taskDataBase.setEndingDate(null);
         } else if (task.getStatus().equals(TaskStatus.DONE) && task.getStatus()!=taskDataBase.getStatus()) {
             taskDataBase.setEndingDate(LocalDateTime.now());
         } else if (task.getStatus().equals(TaskStatus.TODO) && task.getStatus()!=taskDataBase.getStatus()){
