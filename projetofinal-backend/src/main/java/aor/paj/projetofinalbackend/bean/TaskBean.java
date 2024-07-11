@@ -105,26 +105,54 @@ public class TaskBean {
      *
      * @param dto The TaskDto containing task information to be created.
      */
-    public void createTask (TaskDto dto) {
+    public void createTask(TaskDto dto) {
+        // Check for existing tasks with the same title in the project
+        List<TaskEntity> existingTasks = projectDao.findTasksByTitleAndProjectId(dto.getProjectId(), dto.getTitle());
+        if (!existingTasks.isEmpty()) {
+            throw new IllegalArgumentException("A task with the same title already exists in the project.");
+        }
+
+        // Convert the TaskDto to a TaskEntity
         TaskEntity taskEntity = TaskMapper.toEntity(dto);
-        List<TaskEntity> taskEntityList=new ArrayList<>();
+
+        // Find and set task dependencies
+        List<TaskEntity> taskEntityList = new ArrayList<>();
         for (Long id : dto.getDependencies()) {
             taskEntityList.add(taskDao.find(id));
         }
+
+        // Set task properties
         taskEntity.setStatus(TaskStatus.TODO);
         taskEntity.setProject(projectDao.findProjectById(dto.getProjectId()));
         taskEntity.setUser(userDao.findUserById(dto.getUserId()));
         taskEntity.setDependencies(taskEntityList);
+
+        // Persist the new task
         taskDao.persist(taskEntity);
 
+        // Create and persist a project history log
         ProjectHistoryEntity log = new ProjectHistoryEntity();
-        log.setTitle( taskEntity.getTitle() + " was created");
+        log.setTitle(taskEntity.getTitle() + " was created");
         log.setTask(taskEntity);
         log.setTimestamp(LocalDateTime.now());
         log.setType(HistoryType.ADD);
         log.setUser(userDao.findUserById(dto.getUserId()));
         log.setProject(taskEntity.getProject());
         projectHistoryDao.persist(log);
+    }
 
+    /**
+     * Retrieves the final task of a project with the title "Final Presentation".
+     *
+     * @param projectId The ID of the project.
+     * @return The task entity object representing the final task.
+     */
+    @Transactional
+    public TaskEntity getFinalTaskOfProject(Long projectId) {
+        List<TaskEntity> finalTasks = projectDao.findTasksByTitleAndProjectId(projectId, "Final Presentation");
+        if (!finalTasks.isEmpty()) {
+            return finalTasks.get(0);  // Return the first task if found
+        }
+        return null;
     }
 }
