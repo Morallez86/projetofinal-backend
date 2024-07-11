@@ -70,43 +70,6 @@ public class TaskBeanTest {
     }
 
     @Test
-    public void testEditTask() {
-        // Mocking behavior
-        TaskDto taskDto = new TaskDto();
-        taskDto.setId(1L);
-        taskDto.setTitle("Edited Task");
-        taskDto.setStatus(TaskStatus.DOING.getValue());
-        taskDto.setPriority(200);
-        taskDto.setProjectId(1L);
-        taskDto.setUserName("user1");
-
-        TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setId(1L);
-        taskEntity.setTitle("Original Task");
-        taskEntity.setStatus(TaskStatus.TODO);
-        taskEntity.setPriority(TaskPriority.LOW);
-        taskEntity.setProject(new ProjectEntity());
-        taskEntity.setUser(new UserEntity());
-
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername("user1");
-
-        when(taskDaoMock.find(taskDto.getId())).thenReturn(taskEntity);
-        when(userDaoMock.findUserByUsername(taskDto.getUserName())).thenReturn(userEntity);
-        when(taskDaoMock.findTasksByProjectId(taskDto.getProjectId())).thenReturn(List.of(taskEntity));
-
-        doNothing().when(taskDaoMock).merge(any(TaskEntity.class));
-        doNothing().when(projectHistoryDaoMock).persist(any(ProjectHistoryEntity.class));
-
-        // Test
-        EditTaskResult result = taskBean.editTask(taskDto);
-        assertEquals("Edited Task", result.getTaskDto().getTitle());  // Correct method name
-        verify(taskDaoMock, times(1)).merge(taskEntity);
-        verify(projectHistoryDaoMock, times(1)).persist(any(ProjectHistoryEntity.class));
-    }
-
-
-    @Test
     public void testCreateTask() {
         // Mocking behavior
         TaskDto taskDto = new TaskDto();

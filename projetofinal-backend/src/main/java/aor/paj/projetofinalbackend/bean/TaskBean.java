@@ -41,6 +41,9 @@ public class TaskBean {
     @Inject
     ProjectHistoryDao projectHistoryDao;
 
+    @Inject
+    TokenDao tokenDao;
+
     /**
      * Retrieves all tasks from the database.
      *
@@ -61,7 +64,8 @@ public class TaskBean {
      * @return EditTaskResult object containing the edited TaskDto and its index.
      */
     @Transactional
-    public EditTaskResult editTask (TaskDto dto) {
+    public EditTaskResult editTask (TaskDto dto, String token) {
+        UserEntity userEdit = tokenDao.findUserByTokenValue(token);
         int compare = 0;
         TaskEntity task = TaskMapper.toEntity(dto);
         TaskEntity taskDataBase = taskDao.find(dto.getId());
@@ -100,7 +104,7 @@ public class TaskBean {
         log.setType(HistoryType.TASKS);
         log.setTimestamp(LocalDateTime.now());
         log.setProject(taskDataBase.getProject());
-        log.setUser(user);
+        log.setUser(userEdit);
         projectHistoryDao.persist(log);
 
 
