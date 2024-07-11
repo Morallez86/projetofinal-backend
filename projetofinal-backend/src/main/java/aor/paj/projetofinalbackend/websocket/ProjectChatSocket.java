@@ -61,7 +61,7 @@ public class ProjectChatSocket {
 
         for (UserProjectEntity userProject : project.getUserProjects()) {
             UserEntity user = userProject.getUser();
-            if (user != null) {
+            if (user != null && userProject.isActive()) {
                 usersFromProject.add(user);
             }
         }
