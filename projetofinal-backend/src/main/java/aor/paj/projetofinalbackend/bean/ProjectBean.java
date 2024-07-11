@@ -412,7 +412,7 @@ public class ProjectBean {
         projectEntity.setStatus(ProjectStatus.fromValue(projectDto.getStatus()));
         projectEntity.setDescription(projectDto.getDescription());
         projectEntity.setMotivation(projectDto.getMotivation());
-        projectEntity.setCreationDate(projectDto.getCreationDate());
+        projectEntity.setStartingDate(projectDto.getStartingDate());
         projectEntity.setPlannedEndDate(projectDto.getPlannedEndDate());
         projectEntity.setMaxUsers(projectDto.getMaxUsers());
 

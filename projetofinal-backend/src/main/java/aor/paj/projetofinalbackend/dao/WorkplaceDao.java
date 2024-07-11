@@ -73,4 +73,19 @@ public class WorkplaceDao extends AbstractDao<WorkplaceEntity> {
             return Collections.emptyList();
         }
     }
+
+    /**
+     * Retrieves the total count of workplaces stored in the database.
+     *
+     * @return The total count of workplaces.
+     */
+    public long countTotalWorkplaces() {
+        try {
+            return em.createNamedQuery("Workplace.countTotalWorkplaces", Long.class)
+                    .getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }
