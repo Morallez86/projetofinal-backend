@@ -88,4 +88,17 @@ public class TokenBean {
             }
         }
     }
+
+    /**
+     * Extends the time of tokens in the database.
+     */
+    public void extendTokenExpirationTime(String token) {
+        TokenEntity tokenEntity = findTokenByValue(token);
+
+        if (tokenEntity != null) {
+            // Extend the expiration time by a predefined amount
+            tokenEntity.setExpirationTime(LocalDateTime.now().plusHours(1));
+            tokenDao.merge(tokenEntity);
+        }
+    }
 }

@@ -17,7 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +35,9 @@ public class ProjectBeanTest {
 
     @Mock
     private TokenBean tokenBean;
+
+    @Mock
+    private TaskBean taskBean;
 
     @Mock
     private NotificationBean notificationBean;
@@ -160,6 +165,12 @@ public class ProjectBeanTest {
         projectDto.setId(1L);
         projectDto.setTitle("Updated Project");
         projectDto.setStatus(200);
+        projectDto.setStartingDate(LocalDate.of(2023, 7, 1).atStartOfDay());
+        projectDto.setPlannedEndDate(LocalDate.of(2023, 12, 31).atTime(LocalTime.MAX));
+
+        WorkplaceDto workplaceDto = new WorkplaceDto();
+        workplaceDto.setName("Mocked Workplace");
+        projectDto.setWorkplace(workplaceDto);
 
         String token = "mockedToken";
         when(serviceBean.getUserIdFromToken(token)).thenReturn(1L);
@@ -174,10 +185,29 @@ public class ProjectBeanTest {
 
         when(projectDao.findProjectById(anyLong())).thenReturn(projectEntity);
 
+        WorkplaceEntity workplaceEntity = new WorkplaceEntity();
+        workplaceEntity.setName("Mocked Workplace");
+        when(workplaceDao.findWorkplaceByName(anyString())).thenReturn(workplaceEntity);
+
+        TaskEntity finalTaskEntity = new TaskEntity();
+        when(taskBean.getFinalTaskOfProject(anyLong())).thenReturn(finalTaskEntity);
+
         // Test
         assertDoesNotThrow(() -> projectBean.updateProject(1L, projectDto, token));
+
+        // Verify updates
         assertEquals("Updated Project", projectEntity.getTitle());
         assertEquals(ProjectStatus.READY, projectEntity.getStatus());
+        assertEquals(LocalDateTime.of(2023, 7, 1, 0, 0), projectEntity.getStartingDate());
+        assertEquals(LocalDateTime.of(2023, 12, 31, 23, 59, 59, 999999999), projectEntity.getPlannedEndDate());
+        assertEquals(workplaceEntity, projectEntity.getWorkplace());
+
+        // Verify final task updates
+        assertEquals(LocalDateTime.of(2023, 12, 31, 23, 59, 59, 999999999), finalTaskEntity.getPlannedStartingDate());
+        assertEquals(LocalDateTime.of(2023, 12, 31, 23, 59, 59, 999999999), finalTaskEntity.getPlannedEndingDate());
+
+        // Verify notification was sent
+        verify(notificationBean, times(1)).sendProjectAproval(projectEntity);
     }
 
     @Test
