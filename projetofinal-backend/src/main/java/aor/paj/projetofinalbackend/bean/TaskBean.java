@@ -105,6 +105,7 @@ public class TaskBean {
         log.setTimestamp(LocalDateTime.now());
         log.setProject(taskDataBase.getProject());
         log.setUser(userEdit);
+        log.setTask(taskDataBase);
         projectHistoryDao.persist(log);
 
 
