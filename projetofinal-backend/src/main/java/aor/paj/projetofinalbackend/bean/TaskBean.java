@@ -71,10 +71,23 @@ public class TaskBean {
         }
         taskDataBase.setDescription(task.getDescription());
         taskDataBase.setPriority(task.getPriority());
+
+        if (task.getStatus().equals(TaskStatus.DOING) && task.getStatus()!=taskDataBase.getStatus()) {
+            taskDataBase.setStartingDate(LocalDateTime.now());
+            taskDataBase.setEndingDate(null);
+        } else if (task.getStatus().equals(TaskStatus.DONE) && task.getStatus()!=taskDataBase.getStatus()) {
+            taskDataBase.setEndingDate(LocalDateTime.now());
+        } else if (task.getStatus().equals(TaskStatus.TODO) && task.getStatus()!=taskDataBase.getStatus()){
+            taskDataBase.setStartingDate(null);
+            taskDataBase.setEndingDate(null);
+        }
+
         taskDataBase.setStatus(task.getStatus());
         taskDataBase.setContributors(task.getContributors());
         UserEntity user = userDao.findUserByUsername(dto.getUserName());
         taskDataBase.setUser(user);
+
+
 
         taskDao.merge(taskDataBase);
 
