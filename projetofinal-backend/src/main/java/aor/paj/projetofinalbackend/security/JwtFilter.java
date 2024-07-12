@@ -1,6 +1,7 @@
 package aor.paj.projetofinalbackend.security;
 
 import aor.paj.projetofinalbackend.bean.TokenBean;
+import aor.paj.projetofinalbackend.entity.TokenEntity;
 import aor.paj.projetofinalbackend.pojo.ResponseMessage;
 import aor.paj.projetofinalbackend.utils.JsonUtils;
 import io.jsonwebtoken.Claims;
@@ -92,6 +93,9 @@ public class JwtFilter implements ContainerRequestFilter {
                                 .build());
                 return;
             }
+
+            // Extend the expiration time
+            tokenBean.extendTokenExpirationTime(token);
 
             int role = claims.get("role", Integer.class);
             requestContext.setProperty("role", role);
