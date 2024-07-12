@@ -1,0 +1,3006 @@
+{
+	"info": {
+		"_postman_id": "e6c7307e-00b0-473a-82f4-2859ccf9c628",
+		"name": "Projecto final",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32788019",
+		"_collection_link": "https://projectofinal-6729.postman.co/workspace/ProjectoFinal-Workspace~cceea5ed-d803-45d6-b61f-adbae67757e2/collection/32788019-e6c7307e-00b0-473a-82f4-2859ccf9c628?action=share&source=collection_link&creator=32788019"
+	},
+	"item": [
+		{
+			"name": "Components",
+			"item": [
+				{
+					"name": "Get Components",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5MTMzOCwiZXhwIjoxNzIwMzk0OTM4fQ.JZ77yoAM8iZDzRJNK1Aa7DcFpig8HHDgh4mpye2HUuA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/components",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"components"
+							],
+							"query": [
+								{
+									"key": "workplace",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Components Tables",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5MTMzOCwiZXhwIjoxNzIwMzk0OTM4fQ.JZ77yoAM8iZDzRJNK1Aa7DcFpig8HHDgh4mpye2HUuA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/components/toTables",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"components",
+								"toTables"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "filter",
+									"value": "970",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Components Tables Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5MTMzOCwiZXhwIjoxNzIwMzk0OTM4fQ.JZ77yoAM8iZDzRJNK1Aa7DcFpig8HHDgh4mpye2HUuA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/components/availableGroupedByName?workplaceId=1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"components",
+								"availableGroupedByName"
+							],
+							"query": [
+								{
+									"key": "workplaceId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateComponent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbGlhc0BleGFtcGxlLmNvbSIsInJvbGUiOiJDIiwiaWQiOjUsInVzZXJuYW1lIjoiRWxpYXM5OCIsImlhdCI6MTcxNzUxNDU3MywiZXhwIjoxNzE3NTE4MTczfQ.fqNifEB4SjihrrwPvgcY8sgJrB9GCkBqtwDAnnPhH5w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"brand\": \"brand2\",\n    \"name\": \"name50\",\n    \"supplier\": \"suplier\",\n    \"description\": \"description\",\n    \"contact\": \"934951804\",\n    \"observation\": \"observation\",\n    \"identifier\": \"100\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/components",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"components"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Component",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5MTMzOCwiZXhwIjoxNzIwMzk0OTM4fQ.JZ77yoAM8iZDzRJNK1Aa7DcFpig8HHDgh4mpye2HUuA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 19,\n    \"name\": \"name50\",\n    \"description\": \"description\",\n    \"brand\": \"brand3\",\n    \"supplier\": \"suplier\",\n    \"contact\": \"934951804\",\n    \"observation\": \"observation\",\n    \"identifier\": \"100\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/components",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"components"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GreetingResource",
+			"item": [
+				{
+					"name": "GreetingResource",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5MTMzOCwiZXhwIjoxNzIwMzk0OTM4fQ.JZ77yoAM8iZDzRJNK1Aa7DcFpig8HHDgh4mpye2HUuA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/greetings",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"greetings"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Interests",
+			"item": [
+				{
+					"name": "Get Interests",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5MTMzOCwiZXhwIjoxNzIwMzk0OTM4fQ.JZ77yoAM8iZDzRJNK1Aa7DcFpig8HHDgh4mpye2HUuA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "postman-cloud:///1ef16dd1-897a-46b0-9eb9-b587e2131465"
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/interests",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"interests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interests",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5MTMzOCwiZXhwIjoxNzIwMzk0OTM4fQ.JZ77yoAM8iZDzRJNK1Aa7DcFpig8HHDgh4mpye2HUuA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"name\": \"interesting\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/interests",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"interests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interests",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5MTMzOCwiZXhwIjoxNzIwMzk0OTM4fQ.JZ77yoAM8iZDzRJNK1Aa7DcFpig8HHDgh4mpye2HUuA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[5]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/interests",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"interests"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "Messages",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5MTMzOCwiZXhwIjoxNzIwMzk0OTM4fQ.JZ77yoAM8iZDzRJNK1Aa7DcFpig8HHDgh4mpye2HUuA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/messages?type=sent&page=1&limit=10",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"messages"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "sent"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "username",
+									"value": "john",
+									"disabled": true
+								},
+								{
+									"key": "content",
+									"value": "Yes",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Counter Unread",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5NTE4NCwiZXhwIjoxNzIwMzk4Nzg0fQ.ajyRkjPQJoSbKsNa4CHujsZKQ1YcQVk2GNdPg7GQSK4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/messages/unread/count",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"messages",
+								"unread",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Messages",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5NTE4NCwiZXhwIjoxNzIwMzk4Nzg0fQ.ajyRkjPQJoSbKsNa4CHujsZKQ1YcQVk2GNdPg7GQSK4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": \"This is a test message\",\r\n  \"senderId\": 1,\r\n  \"receiverId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/messages",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Seen",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5NTE4NCwiZXhwIjoxNzIwMzk4Nzg0fQ.ajyRkjPQJoSbKsNa4CHujsZKQ1YcQVk2GNdPg7GQSK4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"messageOrNotificationIds\": [22],\r\n  \"seen\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/messages/seen",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"messages",
+								"seen"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notifications",
+			"item": [
+				{
+					"name": "Notifications",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5NTE4NCwiZXhwIjoxNzIwMzk4Nzg0fQ.ajyRkjPQJoSbKsNa4CHujsZKQ1YcQVk2GNdPg7GQSK4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/notifications?type=MESSAGE&page=1&limit=10&seen=true",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "MESSAGE"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "seen",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Notification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5NTE4NCwiZXhwIjoxNzIwMzk4Nzg0fQ.ajyRkjPQJoSbKsNa4CHujsZKQ1YcQVk2GNdPg7GQSK4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"This is a notification description\",\r\n  \"type\": 300,\r\n  \"receiverId\": 4,\r\n  \"projectId\": 2,\r\n  \"senderId\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/notifications",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Seen",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5NTE4NCwiZXhwIjoxNzIwMzk4Nzg0fQ.ajyRkjPQJoSbKsNa4CHujsZKQ1YcQVk2GNdPg7GQSK4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"messageOrNotificationIds\": [1],\r\n  \"seen\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/notifications/seen",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"notifications",
+								"seen"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Counter Unread",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDM5NTE4NCwiZXhwIjoxNzIwMzk4Nzg0fQ.ajyRkjPQJoSbKsNa4CHujsZKQ1YcQVk2GNdPg7GQSK4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/notifications/unread/count",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"notifications",
+								"unread",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RequestNotification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcxOTQyMDM1NCwiZXhwIjoxNzE5NDIzOTU0fQ.rUTTWLuFpZhvF1_STJhQhRY3npvQTdoCcvvbCpphu3g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/notifications/?projectId=1&notificationType=300",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"notifications",
+								""
+							],
+							"query": [
+								{
+									"key": "projectId",
+									"value": "1"
+								},
+								{
+									"key": "notificationType",
+									"value": "300"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ApprovalNotification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ0MzA3NiwiZXhwIjoxNzIwNDQ2Njc2fQ._Ed5G6MW8T4Qqy4PIbuCUwbj1MycG_3tTAA7_1d5uK0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 52,\r\n  \"description\": \"This is a approval\",\r\n  \"type\": 300,\r\n  \"receiverId\": 4,\r\n  \"projectId\": 2,\r\n  \"senderId\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/notifications/approval",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"notifications",
+								"approval"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pdf",
+			"item": [
+				{
+					"name": "Pdf",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ0MzA3NiwiZXhwIjoxNzIwNDQ2Njc2fQ._Ed5G6MW8T4Qqy4PIbuCUwbj1MycG_3tTAA7_1d5uK0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/pdf/generate",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"pdf",
+								"generate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ProjectHistory",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1MTcxOSwiZXhwIjoxNzIwNDU1MzE5fQ.zXwPGP4hsEdRhcz3T_20C5ZJ3LDYkvfRuiSfUIVz8v4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"newDescription\": \"Updated project description\",\r\n  \"type\": 2,\r\n  \"userId\": 1,\r\n  \"taskId\": 1,\r\n  \"taskName\": \"Task Example\",\r\n  \"userName\": \"admnin\",\r\n  \"title\": \"Project Title Example\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projectHistory/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projectHistory",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "Projects",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1MTcxOSwiZXhwIjoxNzIwNDU1MzE5fQ.zXwPGP4hsEdRhcz3T_20C5ZJ3LDYkvfRuiSfUIVz8v4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects?page=1&limit=10&status=100",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "searchTerm",
+									"value": "test",
+									"disabled": true
+								},
+								{
+									"key": "skills",
+									"value": "placa",
+									"disabled": true
+								},
+								{
+									"key": "interests",
+									"value": "anima",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Project",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1MTcxOSwiZXhwIjoxNzIwNDU1MzE5fQ.zXwPGP4hsEdRhcz3T_20C5ZJ3LDYkvfRuiSfUIVz8v4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Project Tasks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1MTcxOSwiZXhwIjoxNzIwNDU1MzE5fQ.zXwPGP4hsEdRhcz3T_20C5ZJ3LDYkvfRuiSfUIVz8v4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/tasks",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Project Users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1MTcxOSwiZXhwIjoxNzIwNDU1MzE5fQ.zXwPGP4hsEdRhcz3T_20C5ZJ3LDYkvfRuiSfUIVz8v4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/users",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Project Possible dependent tasks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1MTcxOSwiZXhwIjoxNzIwNDU1MzE5fQ.zXwPGP4hsEdRhcz3T_20C5ZJ3LDYkvfRuiSfUIVz8v4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/possibleDependentTasks?plannedStartingDate=2024-08-03 09:00:00",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"possibleDependentTasks"
+							],
+							"query": [
+								{
+									"key": "plannedStartingDate",
+									"value": "2024-08-03 09:00:00"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateProject",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1MTcxOSwiZXhwIjoxNzIwNDU1MzE5fQ.zXwPGP4hsEdRhcz3T_20C5ZJ3LDYkvfRuiSfUIVz8v4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test Project 54\",\n    \"description\": \"This is a test project created in Postman2.\",\n    \"motivation\": \"To test the functionality.\",\n    \"status\": 100,\n    \"maxUsers\": 4,\n    \"startingDate\": \"2024-08-03 09:00:00\",\n    \"plannedEndDate\": \"2024-08-10 17:00:00\",\n    \"endDate\": \"2024-08-10 17:00:00\",\n    \"owner\": 1,\n    \"components\": [\n        {\n            \"id\": 1\n        }\n    ],\n    \"resources\": [\n        {\n            \"id\": 1\n        }\n    ],\n    \"interests\": [\n        {\n            \"id\": 1\n        }\n    ],\n    \"skills\": [\n        {\n            \"id\": 5,\n            \"type\": 400\n        }\n    ],\n    \"userProjectDtos\": [\n        {\n            \"userId\": 2,\n            \"username\": \"johndoe\"\n        },\n        {\n            \"userId\": 3,\n            \"username\": \"alicesmith\"\n        }\n    ],\n    \"workplace\": {\n        \"id\": 1,\n        \"name\": \"Lisbon\"\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1MTcxOSwiZXhwIjoxNzIwNDU1MzE5fQ.zXwPGP4hsEdRhcz3T_20C5ZJ3LDYkvfRuiSfUIVz8v4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test Project 44\",\n    \"status\": 500,\n    \"description\": \"Updated project description\",\n    \"motivation\": \"Updated motivation for the project\",\n    \"creationDate\": \"2024-01-01 00:00:00\",\n    \"plannedEndDate\": \"2024-12-31 23:59:59\",\n    \"workplace\": {\n        \"id\": 2,\n        \"name\": \"Porto\"\n    },\n    \"userProjectDtos\": [\n        {\n            \"userId\": 2\n        },\n        {\n            \"userId\": 3\n        }\n    ]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/10",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create chat msg",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1MTcxOSwiZXhwIjoxNzIwNDU1MzE5fQ.zXwPGP4hsEdRhcz3T_20C5ZJ3LDYkvfRuiSfUIVz8v4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"msg created in postman\",\n    \"senderId\": 1,\n    \"senderUsername\": \"admin\",\n    \"senderOnline\": true,\n    \"projectId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/createChatMsg",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"createChatMsg"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Status User on Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isAdmin\": true\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/users/1/status",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"users",
+								"1",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deactivate User on Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1MTcxOSwiZXhwIjoxNzIwNDU1MzE5fQ.zXwPGP4hsEdRhcz3T_20C5ZJ3LDYkvfRuiSfUIVz8v4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/users/2/inactive",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"users",
+								"2",
+								"inactive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add skill",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"skill\": \n        {\n            \"id\": 5,\n            \"name\": 200,\n            \"type\": 100\n        }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/addSkill",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"addSkill"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add interest",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"interest\": \n        {\n            \"id\": 5,\n            \"name\": \"interesting\"\n        }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/addInterest",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"addInterest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add component",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"component\": \n        {\n            \"id\": 5,\n            \"name\": \"Core i5-8600K\"\n        }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/addComponent",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"addComponent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add resource",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"resource\": \n        {\n            \"id\": 6,\n            \"name\": \"GitHub Enterprise\"\n        }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/addResource",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"addResource"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Skills from project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[6]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/removeSkills",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"removeSkills"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interests from project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[5]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/removeInterests",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"removeInterests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Components from project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[5]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/removeComponents",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"removeComponents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resources from project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[6]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/projects/1/removeResources",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"projects",
+								"1",
+								"removeResources"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Resources",
+			"item": [
+				{
+					"name": "Get Resources",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/resources",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Resources Tables",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/resources/toTables",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"resources",
+								"toTables"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "filter",
+									"value": "adobe",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Resource",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"brand\": \"BrandName2\",\n  \"name\": \"ResourceName\",\n  \"supplier\": \"SupplierName\",\n  \"description\": \"This is a description of the resource.\",\n  \"observation\": \"This is an observation.\",\n  \"expirationDate\": \"2024-08-03 09:00:00\",\n  \"identifier\": \"ResourceIdentifier2\",\n  \"contact\": \"ContactInformation\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/resources",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Resource",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 11,\n    \"brand\": \"brandddd\",\n    \"name\": \"nameeee\",\n    \"supplier\": \"suplierrr\",\n    \"description\": \"desdesdes\",\n    \"expirationDate\": \"2024-06-02 10:00:00\",\n    \"identifier\": \"312312\",\n    \"contact\": \"2312321\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/resources",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"resources"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Skill",
+			"item": [
+				{
+					"name": "Get Skills",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/projetofinal-backend-1.0-SNAPSHOT/rest/skills",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"skills"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interests Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1NTM1MCwiZXhwIjoxNzIwNDU4OTUwfQ.qXOGgp89wYxcB3qxunwbezPIR_X1DgC-8J9tvQZCNyI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"name\": \"Cool\",\r\n        \"type\": 100\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/skills",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"skills"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Skills from user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1ODM2NSwiZXhwIjoxNzIwNDYxOTY1fQ.nasQsvkI9tV-YuYGJ60M1v-QKt9GM8P70HiYO6CgIrM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[2]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/interests",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"interests"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Tasks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1ODM2NSwiZXhwIjoxNzIwNDYxOTY1fQ.nasQsvkI9tV-YuYGJ60M1v-QKt9GM8P70HiYO6CgIrM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/tasks",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1ODM2NSwiZXhwIjoxNzIwNDYxOTY1fQ.nasQsvkI9tV-YuYGJ60M1v-QKt9GM8P70HiYO6CgIrM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"test task\",\n    \"description\": \"description\",\n    \"plannedStartingDate\": \"2025-06-16 09:00:00\",\n    \"plannedEndingDate\" : \"2025-06-18 09:00:00\",\n    \"status\":100,\n    \"priority\": 100,\n    \"contributors\": \"rekaweaew\",\n    \"userId\": 1,\n    \"dependencies\": [\n        1\n    ],\n    \"projectId\": 1,\n    \"userName\": \"admin\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/tasks",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1ODM2NSwiZXhwIjoxNzIwNDYxOTY1fQ.nasQsvkI9tV-YuYGJ60M1v-QKt9GM8P70HiYO6CgIrM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":17,\n    \"title\": \"Login and Registerr\",\n    \"description\": \"You can choose the design\",\n    \"status\": 200,\n    \"priority\": 300,\n    \"userName\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/tasks",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1ODM2NSwiZXhwIjoxNzIwNDYxOTY1fQ.nasQsvkI9tV-YuYGJ60M1v-QKt9GM8P70HiYO6CgIrM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "eva",
+									"disabled": true
+								},
+								{
+									"key": "workplace",
+									"value": "Lisbon",
+									"disabled": true
+								},
+								{
+									"key": "skills",
+									"value": "Java",
+									"disabled": true
+								},
+								{
+									"key": "interests",
+									"value": "CyberSecurity",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract and save token\", function () {\r",
+									"  var jsonData = pm.response.json();\r",
+									"  pm.environment.set(\"token\", jsonData.token);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"admin\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Elias",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"admin\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract and save token\", function () {\r",
+									"  var jsonData = pm.response.json();\r",
+									"  pm.environment.set(\"token\", jsonData.token);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"admin\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Regist",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Bob2\",\r\n    \"lastName\": \"Dylan\",\r\n    \"username\": \"bobdylan\",\r\n    \"password\": \"password123\",\r\n    \"email\": \"bobdylan@example.com\",\r\n    \"role\": 200,\r\n    \"active\": true,\r\n    \"pending\": false,\r\n    \"emailToken\": \"randomEmailToken124\",\r\n    \"biography\": false,\r\n    \"visibility\": false,\r\n    \"activeProject\": true,\r\n    \"workplace\": \"Coimbra\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/register",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Email Recovery Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"johndoe@example.com\"\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/emailRecoveryPassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"emailRecoveryPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"token\": \"exampleToken12345\",\r\n  \"password\": \"examplePassword\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/forgotPassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"forgotPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"oldPassword\": \"admin\",\r\n  \"newPassword\": \"admin\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/updatePassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"updatePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Registration",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "emailToken",
+								"value": "solcodzkhi",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"token\": \"exampleToken12345\",\r\n  \"password\": \"examplePassword\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/confirmRegistration",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"confirmRegistration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save photo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "email",
+								"value": "admin@example.com",
+								"type": "text"
+							},
+							{
+								"key": "filename",
+								"value": "example.jpg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "postman-cloud:///1ef16dd1-897a-46b0-9eb9-b587e2131465"
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/image",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Photo",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "email",
+								"value": "admin@example.com",
+								"type": "text"
+							},
+							{
+								"key": "filename",
+								"value": "example.jpg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "postman-cloud:///1ef16dd1-897a-46b0-9eb9-b587e2131465"
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/1/image",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"1",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Photos os Users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "email",
+								"value": "admin@example.com",
+								"type": "text"
+							},
+							{
+								"key": "filename",
+								"value": "example.jpg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "postman-cloud:///1ef16dd1-897a-46b0-9eb9-b587e2131465"
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/localhost:8080/projetofinal-backend-1.0-SNAPSHOT/rest/users/images",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"localhost:8080",
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ1ODM2NSwiZXhwIjoxNzIwNDYxOTY1fQ.nasQsvkI9tV-YuYGJ60M1v-QKt9GM8P70HiYO6CgIrM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "postman-cloud:///1ef16dd1-897a-46b0-9eb9-b587e2131465"
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/profile/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"profile",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ2MjA4NSwiZXhwIjoxNzIwNDY1Njg1fQ.P9sroWY1MCXaTXkvN7gFSA9pSltZOBZs2dLAo0zHX-g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n  \"username\": \"Steven\",\r\n  \"firstName\": \"Steve\",\r\n  \"lastName\": \"Doe\",\r\n  \"biography\": \"A short bio about John Doe.\",\r\n  \"visibility\": true\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/profile/6",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"profile",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Projects",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ2MjkyMSwiZXhwIjoxNzIwNDY2NTIxfQ.r5z8iSHquxqwuh-u4fmyRKcDdPXbTYWCXfF7Di9MBLY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n  \"username\": \"Steven\",\r\n  \"firstName\": \"Steve\",\r\n  \"lastName\": \"Doe\",\r\n  \"biography\": \"A short bio about John Doe.\",\r\n  \"visibility\": true\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/1/myProjects",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"1",
+								"myProjects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get UsersByQuery",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ2MjkyMSwiZXhwIjoxNzIwNDY2NTIxfQ.r5z8iSHquxqwuh-u4fmyRKcDdPXbTYWCXfF7Di9MBLY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/search?query=evan",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"search"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "evan"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ2MjkyMSwiZXhwIjoxNzIwNDY2NTIxfQ.r5z8iSHquxqwuh-u4fmyRKcDdPXbTYWCXfF7Di9MBLY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": 200\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/users/role/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"users",
+								"role",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Workplaces",
+			"item": [
+				{
+					"name": "Get workplace",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/workplaces",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"workplaces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Workplace",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOjIwMCwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJwcm9qZWN0VGltZXN0YW1wcyI6e30sImlhdCI6MTcyMDQ2MjkyMSwiZXhwIjoxNzIwNDY2NTIxfQ.r5z8iSHquxqwuh-u4fmyRKcDdPXbTYWCXfF7Di9MBLY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "filename",
+								"value": "qual.png",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Faro\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8443/projetofinal-backend-1.0-SNAPSHOT/rest/workplaces/createWorkplace",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"projetofinal-backend-1.0-SNAPSHOT",
+								"rest",
+								"workplaces",
+								"createWorkplace"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
