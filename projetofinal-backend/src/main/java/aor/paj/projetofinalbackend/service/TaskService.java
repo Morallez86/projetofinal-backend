@@ -61,7 +61,7 @@ public class TaskService {
         String token = authorizationHeader.substring("Bearer".length()).trim();
         UserEntity user = tokenDao.findUserByTokenValue(token);
         try {
-            EditTaskResult result = taskBean.editTask(taskDto);
+            EditTaskResult result = taskBean.editTask(taskDto,token);
             LoggerUtil.logInfo("TASK UPDATED: " + taskDto.getId(),"at " + LocalDateTime.now(),user.getEmail(), token);
             return Response.ok(result).build();
         }catch (Exception e) {
