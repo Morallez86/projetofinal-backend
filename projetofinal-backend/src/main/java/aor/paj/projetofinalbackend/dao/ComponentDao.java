@@ -181,5 +181,17 @@ public class ComponentDao extends AbstractDao<ComponentEntity> {
             return 0;
         }
     }
+
+    /**
+     * Retrieves a list of components associated with a specific project.
+     *
+     * @param projectId The ID of the project to retrieve components for.
+     * @return A list of ComponentEntity instances associated with the specified project.
+     */
+    public List<ComponentEntity> findComponentsByProjectId(Long projectId) {
+        return em.createNamedQuery("Component.findComponentsByProjectId", ComponentEntity.class)
+                .setParameter("projectId", projectId)
+                .getResultList();
+    }
 }
 

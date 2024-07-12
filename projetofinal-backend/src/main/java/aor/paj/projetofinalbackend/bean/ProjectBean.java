@@ -446,6 +446,28 @@ public class ProjectBean {
         if (ProjectStatus.fromValue(projectDto.getStatus()) == ProjectStatus.READY) {
             notificationBean.sendProjectAproval(projectEntity);
         }
+
+        // Activate all components if the project status is FINISHED
+        if (ProjectStatus.fromValue(projectDto.getStatus()) == ProjectStatus.FINISHED) {
+            activateProjectComponents(projectEntity);
+        }
+
+    }
+
+    /**
+     * Activates all components related to the given project.
+     *
+     * @param projectEntity The project entity whose components are to be activated.
+     */
+    private void activateProjectComponents(ProjectEntity projectEntity) {
+        // Fetch all components related to the project
+        List<ComponentEntity> components = componentDao.findComponentsByProjectId(projectEntity.getId());
+
+        // Activate each component
+        for (ComponentEntity component : components) {
+            component.setAvailability(true);
+            componentDao.merge(component);
+        }
     }
 
     /**
